@@ -24,7 +24,15 @@ def get_stock_data(symbol: str):
 
 @app.get("/api/timeseries/{symbol}")
 def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d"):
-    ticker = yf.Ticker(symbol)
-    hist = ticker.history(period=period, interval=interval)
-    hist.index = hist.index.strftime("%Y-%m-%d")  # convert datetime index to string
-    return hist[["Open", "High", "Low", "Close", "Volume"]].to_dict(orient="index")
+    try:
+        ticker = yf.Ticker(symbol.upper())
+        hist = ticker.history(period=period, interval=interval)
+        
+        if hist.empty:
+            return {}
+        
+        hist.index = hist.index.strftime("%Y-%m-%d %H:%M:%S")
+        return hist[["Open", "High", "Low", "Close", "Volume"]].to_dict(orient="index")
+    except Exception as e:
+        print(f"Error: {e}")
+        return {}

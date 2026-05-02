@@ -7,6 +7,7 @@ function HomePage() {
         <>
             <Navbar isOtherPage={false}></Navbar>
             <HeroSection></HeroSection>
+            
         </>
     )
 }

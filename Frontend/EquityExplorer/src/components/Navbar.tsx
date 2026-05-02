@@ -35,7 +35,7 @@ function Navbar({ isOtherPage }: Props) {
       {
         !isMobile &&
         <>
-          <nav className={` ${isOtherPage ? "" : "fixed top-0 right-0 left-0 z-50 "}  flex px-10 py-2 bg-white justify-between`}>
+          <nav className={` ${isOtherPage ? "bg-white" : "fixed top-0 right-0 left-0 z-50 bg-transparent"}  flex px-10 py-2  justify-between`}>
             <div className=''>
               <a href="/">
                 <p className='font-excon text-xl font-bold ' >EquityExplorer</p>
@@ -48,7 +48,9 @@ function Navbar({ isOtherPage }: Props) {
               <Field orientation="horizontal" className="w-120" >
                 <Input type="search" placeholder="Search..."
                   value={searchWord}
-                  onChange={(e) => setSearchWord(e.target.value)} />
+                  onChange={(e) => setSearchWord(e.target.value)}
+                  className={`bg-white`}
+                  />
 
                 <a href={`${searchWord}`}>
                   <Button className="hover:text-black hover:bg-white">Search</Button>
@@ -59,7 +61,7 @@ function Navbar({ isOtherPage }: Props) {
             </div>
 
             <div className='flex gap-3 px-5 font-bold'>
-              <Button className='text-sm rounded-xl hover:text-white hover:bg-black' variant="outline">Contact</Button>
+              <Button className='text-sm rounded-xl hover:text-white hover:bg-black ' variant="outline">Contact</Button>
               <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">About</Button>
               <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black" >Sign-in</Button>
               <Button variant="outline" className="rounded-xl text-sm outline-xl text-white bg-black hover:text-black hover:bg-white">register</Button>
