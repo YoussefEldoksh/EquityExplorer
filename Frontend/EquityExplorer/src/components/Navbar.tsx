@@ -1,5 +1,5 @@
 import { useIsMobile } from '../hooks/use-mobile'
-import { Button } from "@/components/ui/Button"
+import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from 'react';
@@ -37,7 +37,9 @@ function Navbar({ isOtherPage }: Props) {
         <>
           <nav className={` ${isOtherPage ? "" : "fixed top-0 right-0 left-0 z-50 "}  flex px-10 py-2 bg-white justify-between`}>
             <div className=''>
-              <p className='font-excon text-xl font-bold ' >EquityExplorer</p>
+              <a href="/">
+                <p className='font-excon text-xl font-bold ' >EquityExplorer</p>
+              </a>
 
             </div>
 
@@ -47,8 +49,9 @@ function Navbar({ isOtherPage }: Props) {
                 <Input type="search" placeholder="Search..."
                   value={searchWord}
                   onChange={(e) => setSearchWord(e.target.value)} />
-                <a href={`stock/${searchWord}`}>
-                <Button className="hover:text-black hover:bg-white">Search</Button>
+
+                <a href={`${searchWord}`}>
+                  <Button className="hover:text-black hover:bg-white">Search</Button>
 
                 </a>
               </Field>
