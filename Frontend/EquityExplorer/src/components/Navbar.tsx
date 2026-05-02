@@ -67,7 +67,11 @@ function Navbar({ isOtherPage }: Props) {
                   Sign-in
                 </Button>
               </Link>
-              <Button variant="outline" className="rounded-xl text-sm outline-xl text-white bg-black hover:text-black hover:bg-white">register</Button>
+              <Link to="/register">
+                <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black">
+                  register
+                  </Button>
+              </Link>
             </div>
           </nav>
         </>

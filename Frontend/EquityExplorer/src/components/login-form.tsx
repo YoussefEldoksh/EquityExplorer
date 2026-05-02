@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import dollarImg from "../assets/Dollar.jpg"
+import { Link } from "react-router-dom"
 export function LoginForm({
   className,
   ...props
@@ -83,7 +84,10 @@ export function LoginForm({
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Don&apos;t have an account? <a href="#">Sign up</a>
+                Don&apos;t have an account? 
+                  <Link to="/register" className="underline hover:text-black">
+                Sign up
+                  </Link>
               </FieldDescription>
             </FieldGroup>
           </form>

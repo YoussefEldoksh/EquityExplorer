@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import HomePage from "./pages/HomePage"
 import TickerPage from "./pages/TickerPage"
 import SignInPage from "./pages/SignInPage"
-
+import RegisterPage from "./pages/RegisterPage"
 function App() {
 
   return (
@@ -13,6 +13,7 @@ function App() {
           <Route path="/" element={<HomePage/>} />
           <Route path="/:stockTicker" element={<TickerPage/>} />
           <Route path="/signin" element={<SignInPage/>} />
+          <Route path="/register" element={<RegisterPage/>} />
         </Routes>
         </BrowserRouter>
 
