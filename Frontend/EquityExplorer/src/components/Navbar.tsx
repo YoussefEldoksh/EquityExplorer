@@ -4,24 +4,38 @@ import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from 'react';
 
-function Navbar() {
+
+interface Props {
+  isOtherPage: boolean
+}
+
+
+function Navbar({ isOtherPage }: Props) {
 
   const isMobile = useIsMobile();
   const [searchWord, setSearchWord] = useState("");
 
-  const handleSearch = async () => {
-    if (!searchWord.trim()) return;
-    const response = await fetch(`http://localhost:8000/api/stock/${searchWord.toUpperCase()}`);
-    const data = await response.json();
-    console.log(data);
-  };
+  // const handleSearch = async () => {
+  //   if (!searchWord.trim()) return;
+  //   console.log(searchWord);
+
+  //   try {
+  //     const response = await fetch(`http://127.0.0.1:8000/api/stock/${searchWord.toUpperCase()}`);
+  //     const data = await response.json();
+  //     console.log(data);
+
+  //   } catch (error) {
+  //        console.error('Error fetching stock data:', error);
+  //   }
+
+  // };
 
   return (
     <>
       {
         !isMobile &&
         <>
-          <nav className='flex px-10 py-4 bg-transparent fixed top-0 right-0 left-0 z-50 justify-between'>
+          <nav className={` ${isOtherPage ? "" : "fixed top-0 right-0 left-0 z-50 "}  flex px-10 py-2 bg-white justify-between`}>
             <div className=''>
               <p className='font-excon text-xl font-bold ' >EquityExplorer</p>
 
@@ -32,9 +46,11 @@ function Navbar() {
               <Field orientation="horizontal" className="w-120" >
                 <Input type="search" placeholder="Search..."
                   value={searchWord}
-                  onChange={(e) => setSearchWord(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()} />
-                <Button className="hover:text-black hover:bg-white" onClick={handleSearch}>Search</Button>
+                  onChange={(e) => setSearchWord(e.target.value)} />
+                <a href={`stock/${searchWord}`}>
+                <Button className="hover:text-black hover:bg-white">Search</Button>
+
+                </a>
               </Field>
 
             </div>
