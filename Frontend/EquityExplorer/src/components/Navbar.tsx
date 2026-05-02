@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from 'react';
-
+import { Link } from 'react-router-dom';
 
 interface Props {
   isOtherPage: boolean
@@ -52,10 +52,9 @@ function Navbar({ isOtherPage }: Props) {
                   className={`bg-white`}
                   />
 
-                <a href={`${searchWord}`}>
+                <Link to={`/${searchWord}`}>
                   <Button className="hover:text-black hover:bg-white">Search</Button>
-
-                </a>
+                </Link>
               </Field>
 
             </div>
@@ -63,7 +62,11 @@ function Navbar({ isOtherPage }: Props) {
             <div className='flex gap-3 px-5 font-bold'>
               <Button className='text-sm rounded-xl hover:text-white hover:bg-black ' variant="outline">Contact</Button>
               <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">About</Button>
-              <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black" >Sign-in</Button>
+              <Link to="/signin">
+                <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black">
+                  Sign-in
+                </Button>
+              </Link>
               <Button variant="outline" className="rounded-xl text-sm outline-xl text-white bg-black hover:text-black hover:bg-white">register</Button>
             </div>
           </nav>
