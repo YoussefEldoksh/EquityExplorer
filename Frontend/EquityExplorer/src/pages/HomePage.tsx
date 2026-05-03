@@ -1,16 +1,19 @@
-import React from 'react'
-import HeroSection from '../components/HeroSection'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
+import Navbar from '../components/Navbar';
+import HeroSection from '../components/HeroSection';
+import FeaturesSection from '../components/FeaturesSection';
+import ToolsSection from '../components/ToolsSection';
+import Footer from '../components/Footer';
 
 function HomePage() {
-    return (
-        <>
-            <Navbar isOtherPage={false}></Navbar>
-            <HeroSection></HeroSection>
-            <Footer></Footer>
-        </>
-    )
+  return (
+    <>
+      <Navbar isOtherPage={false} />
+      <HeroSection />
+      <FeaturesSection />
+      <ToolsSection />
+      <Footer />
+    </>
+  );
 }
 
-export default HomePage
+export default HomePage;
