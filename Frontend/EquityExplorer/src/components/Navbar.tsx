@@ -4,7 +4,18 @@ import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { StaggeredMenu } from './StaggeredMenu';
+// import { StaggeredMenu } from './StaggeredMenu';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Menu } from 'lucide-react';
 
 interface Props {
   isOtherPage: boolean
@@ -19,6 +30,7 @@ function Navbar({ isOtherPage }: Props) {
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' },
   ];
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isMobile = useIsMobile();
   const [searchWord, setSearchWord] = useState("");
@@ -89,8 +101,8 @@ function Navbar({ isOtherPage }: Props) {
 
           <nav className={`
       ${isOtherPage ? "bg-white" : "bg-white/10 backdrop-blur-md border border-white/20"}
-      fixed top-0 left-0 right-0 z-40
-      flex px-4 py-2 items-center justify-evenly
+      fixed top-0 left-0 right-0 z-50
+      flex px-4 py-2 items-center justify-between
     `}>
             {/* Logo */}
             <a href="/">
@@ -99,37 +111,40 @@ function Navbar({ isOtherPage }: Props) {
               </p>
             </a>
 
-            {/* Search */}
-            {/* <div className="flex flex-1 mx-3">
-              <Field orientation="horizontal">
-                <Input
-                  type="search"
-                  placeholder="Search ticker..."
-                  value={searchWord}
-                  onChange={(e) => setSearchWord(e.target.value)}
-                  className="bg-white h-8 text-sm"
-                />
-                <Link to={`/${searchWord}`}>
-                  <Button size="sm">Go</Button>
-                </Link>
-              </Field>
-            </div> */}
-            {/* <div style={{ height: 'h-full', background: '#1a1a1a' }}>
-              <StaggeredMenu
-                position="right"
-                items={menuItems}
-                socialItems={[]}
-                displaySocials
-                displayItemNumbering={true}
-                menuButtonColor="#ffffff"
-                openMenuButtonColor="#fff"
-                changeMenuColorOnOpen={true}
-                colors={['#B497CF', '#5227FF']}
-                logoUrl="/path-to-your-logo.svg"
-                accentColor="#5227FF"
-                onMenuOpen={() => console.log('Menu opened')}
-                onMenuClose={() => console.log('Menu closed')} isFixed={true}              />
-            </div> */}
+            <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"}>
+              <DrawerTrigger asChild>
+                <Button  className="rounded-md uppercase bg-white text-black font-bold font-excon">    Menu</Button>
+              </DrawerTrigger>
+              <DrawerContent>
+
+                <div className='flex px-5 pt-10 '>
+
+                  <Field orientation="horizontal" className="w-120" >
+                    <Input type="search" placeholder="Search..."
+                      value={searchWord}
+                      onChange={(e) => setSearchWord(e.target.value)}
+                      className={`bg-white`}
+                    />
+
+                    <Link to={`/${searchWord}`}>
+                      <Button className="hover:text-black hover:bg-white">Search</Button>
+                    </Link>
+                  </Field>
+
+                </div>
+                {/* ... search ... */}
+
+                <div className="flex flex-col gap-2 px-4 py-2 pt-5">
+                  {menuItems.map((item) => (
+                    <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
+                      <p className="w-full font-excon uppercase font-bold text-5xl ">{item.label}</p>
+                    </Link>
+                  ))}
+                </div>
+
+
+              </DrawerContent>
+            </Drawer>
           </nav>
         </>
       )}
