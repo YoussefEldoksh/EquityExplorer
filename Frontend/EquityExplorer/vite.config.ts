@@ -12,6 +12,16 @@ export default defineConfig({
        presets: [reactCompilerPreset()] }),
     tailwindcss()
   ],
+  server: {
+    host: true,  // exposes on 0.0.0.0 so mobile can reach it
+    proxy: {
+      '/api': {
+        target: 'http://192.168.56.1:8000',
+        changeOrigin: true,
+      }
+    }
+  },
+
     resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

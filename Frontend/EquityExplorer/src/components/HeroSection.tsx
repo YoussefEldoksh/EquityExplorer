@@ -5,13 +5,13 @@ function HeroSection() {
   const isMobile = useIsMobile();
   return (
     <>
-      {!isMobile &&
+      
         <div className='relative h-screen bg-black'>
           <Aurora
-            colorStops={["#ffffff", "#000000", "#fefefe"]}
+            colorStops={["#7943d7", "#000000", "#fefefe"]}
             blend={0.35}
             amplitude={1}
-            speed={0.7}
+            speed={2}
           />
 
           <div className='absolute inset-0 z-40 flex flex-col items-center justify-center text-center px-10'>
@@ -30,7 +30,7 @@ function HeroSection() {
           </div>
 
         </div>
-      }
+      
     </>
   )
 }

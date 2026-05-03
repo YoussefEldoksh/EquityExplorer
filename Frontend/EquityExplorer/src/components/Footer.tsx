@@ -1,29 +1,36 @@
+import { useIsMobile } from "../hooks/use-mobile"
 
 function Footer() {
+
+    const isMobile = useIsMobile();
     return (
         <div className="px-5 py-7 bg-zinc-100">
 
-            <div className="grid grid-cols-4 ">
-                <div className="p-5 border-t border-l border-b border-black h-[400px]">
+            <div className={`${isMobile ? "grid grid-cols-3" : "grid grid-cols-4" } `}>
+                <div className="pt-5 px-2 border-t border-l border-b border-black h-[400px]">
                     <p>Work</p>
                     <p>Services</p>
                     <p>About</p>
                     <p>Contact</p>
                 </div>
-                <div className="p-5 border border-black">
+                <div className="pt-5 px-2 border border-black">
                     <p>Instagram</p>
                     <p>Facebook</p>
                     <p>Linkedin</p>
                     <p>Patrion</p>
                 </div>
-                <div className="p-5 border-t  border-b border-black">
+                <div className={`pt-5 px-2 border-t ${isMobile ?  "border-r border-t" : "" }  border-b border-black`}>
                     <p>Paupio g. 50,</p>
-                    <p>Vilnius, Lithuania</p>
+                    <p className="text-wrap">Vilnius, Lithuania</p>
                 </div>
-                <div className="p-5 border-t border-l border-b border-r border-black">
+        { !isMobile &&
+
+                <div className="pt-5 px-2 border-t border-l border-b border-r border-black">
                     <p>+37061747093</p>
                     <p>hello@flair.digital</p>
                 </div>
+        }
+
             </div>
 
 
@@ -31,7 +38,7 @@ function Footer() {
                 <div className="border-r border-l border-b border-black ">
 
                     <div>
-                        <p className="font-excon font-medium text-[200px]">Equity Explorer </p>
+                        <p className={`font-excon font-medium ${isMobile ? "text-8xl" : "text-[200px]"}`}>Equity Explorer </p>
                     </div>
                 </div>
 
