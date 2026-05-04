@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // CORS Headers (Required for React)
 header("Access-Control-Allow-Origin: http://localhost:5173"); 
 header("Access-Control-Allow-Methods: POST, OPTIONS");

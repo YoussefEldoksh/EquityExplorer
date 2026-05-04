@@ -1,25 +1,69 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import dollarImg from "../assets/Dollar.jpg"
-import { Link } from "react-router-dom"
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import dollarImg from '../assets/Dollar.jpg';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState, type ChangeEvent } from 'react';
 export function LoginForm({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<'div'>) {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    usermail: '',
+    userpass: '',
+  });
+
+  const handleChange = (e: ChangeEvent) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(
+        'http://localhost/EquityExplorer/Backend/PHP/login.php',
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(form),
+        },
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.success) {
+        navigate('/');
+      } else {
+        alert(data.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+      alert('Something went wrong: ' + error.message);
+    }
+  };
   return (
-    <div className={cn("w-5/6 flex flex-col gap-6", className)} {...props}>
+    <div className={cn('w-5/6 flex flex-col gap-6', className)} {...props}>
       <Card className="rounded-lg overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -34,6 +78,8 @@ export function LoginForm({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  name="usermail"
+                  onChange={handleChange}
                 />
               </Field>
               <Field>
@@ -46,7 +92,13 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  name="userpass"
+                  onChange={handleChange}
+                />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>
@@ -84,10 +136,10 @@ export function LoginForm({
                 </Button>
               </Field>
               <FieldDescription className="text-center">
-                Don&apos;t have an account? 
-                  <Link to="/register" className="underline hover:text-black">
-                Sign up
-                  </Link>
+                Don&apos;t have an account?
+                <Link to="/register" className="underline hover:text-black">
+                  Sign up
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>
@@ -101,9 +153,9 @@ export function LoginForm({
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{' '}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
-  )
+  );
 }

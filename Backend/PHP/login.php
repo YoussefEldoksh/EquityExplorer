@@ -1,4 +1,5 @@
 <?php
+session_start();
 // CORS Headers (Required for React)
 header("Access-Control-Allow-Origin: http://localhost:5173"); 
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user["password_hash"])) {
             $token = bin2hex(random_bytes(32));
             
-            session_start();
+            
             $_SESSION["user_id"] = $user["id"];
             $_SESSION["token"] = $token;
             
