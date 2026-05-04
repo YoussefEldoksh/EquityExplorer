@@ -1100,6 +1100,50 @@ function TickerPage() {
                           </div>
                         </div>
                       </div>
+                      <div className="mb-2">
+                        <p className="font-bold  uppercase text-zinc-500 mb-2">
+                          Liquidity Ratios
+                        </p>
+                        <div className=" grid grid-cols-3 gap-2">
+                          <div className="bg-zinc-200 rounded p-2">
+                            <div className="flex justify-between">
+                              <p className="text-zinc-500">Current Ratio</p>
+                              <div className="justify-self-end">
+                                <ToolTip explain="Quick Ratio = (Current Assets − Inventory) ÷ Current Liabilities. This is the stricter version of the current ratio. By stripping out inventory, it only counts assets that can realistically be converted to cash quickly — cash, marketable securities, and receivables. A quick ratio above 1 means the company can cover its short-term liabilities without needing to sell a single unit of product. For asset-heavy businesses like retailers or manufacturers, the quick ratio is often significantly lower than the current ratio, and that gap itself is a useful signal about how liquid the business truly is."></ToolTip>
+                              </div>
+                            </div>
+                            <p className="font-semibold">
+                              {stockData.currentRatio?.toFixed(2) ?? 'N/A'}
+                            </p>
+                          </div>
+                          <div className="bg-zinc-200 rounded p-2">
+                            <div className="flex justify-between">
+                              <p className="text-zinc-500">Quick Ratio</p>
+                              <div className="justify-self-end">
+                                <ToolTip explain="Current Ratio = Current Assets ÷ Current Liabilities. Current assets include everything the company expects to convert to cash within a year — cash itself, accounts receivable, and inventory. A ratio above 1 means the company has more short-term assets than short-term obligations, which is the bare minimum for comfort. A ratio between 1.5 and 2 is generally considered healthy. Below 1 signals the company may struggle to meet near-term obligations. The weakness of this ratio is that it treats inventory as equivalent to cash, which it isn't — unsold goods can sit on shelves for months."></ToolTip>
+                              </div>
+                            </div>
+                            <p className="font-semibold">
+                              {stockData.quickRatio?.toFixed(2) ?? 'N/A'}
+                            </p>
+                          </div>
+                          <div className="bg-zinc-200 rounded p-2">
+                            <div className="flex justify-between">
+                              <p className="text-zinc-500">Free Cash flow</p>
+                              <div className="justify-self-end">
+                                <ToolTip explain="Free Cash Flow (FCF) is calculated as operating cash flow minus capital expenditures. It answers the most fundamental liquidity question: after the business pays to keep itself running and invest in its assets, how much real cash is left over? Unlike net income, FCF can't be manipulated by accounting choices — it reflects actual cash in hand. Positive FCF means the company can service debt, return money to shareholders, or fund growth without needing external financing. Persistent negative FCF is a red flag, though it's acceptable for early-stage companies still building infrastructure"></ToolTip>
+                              </div>
+                            </div>
+                            <p className="font-semibold">
+                              {stockData.freeCashflow
+                                ? (stockData.freeCashflow / 10e6).toFixed(
+                                    2,
+                                  ) + 'M'
+                                : 'N/A'}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </CardDescription>
                   </CardHeader>
                 </Card>

@@ -58,7 +58,7 @@ function Navbar({ isOtherPage }: Props) {
           <nav className={` ${isOtherPage ? "bg-white" : "fixed top-0 right-0 left-0 z-50 bg-white/10 backdrop-blur-md border border-white/20"}  flex px-10 py-2  justify-between`}>
             <div className=''>
               <a href="/">
-                <p className='font-excon text-xl font-bold ' >EquityExplorer</p>
+                <p className='font-excon text-xl font-bold text-white' >EquityExplorer</p>
               </a>
 
             </div>

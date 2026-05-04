@@ -17,9 +17,9 @@ function ToolsSection() {
 
         {/* RIGHT */}
         <div className="flex justify-center md:justify-end">
-          <div className="relative h-[500px] -translate-y-16">
+          <div className="relative h-[500px] -translate-y-16 ">
             <CardSwap
-              cardDistance={60}
+              cardDistance={60}   
               verticalDistance={70}
               delay={5000}
               pauseOnHover={false}
