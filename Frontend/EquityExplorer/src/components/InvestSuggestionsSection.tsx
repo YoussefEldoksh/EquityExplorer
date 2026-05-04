@@ -148,63 +148,70 @@ function InvestSuggestions() {
   );
 
   return (
-    <div className="flex w-full justify-center my-5 px-5">
-      <Tabs defaultValue="company" className="w-full">
-        <TabsList className="w-full bg-zinc-300 p-1 rounded-none flex">
-          <TabsTrigger value="company" className="flex-1 rounded-none">
-            Company Stocks
-          </TabsTrigger>
+    <div className="w-full my-5 px-5">
+      <div className="w-full py-8 px-8 mb-6">
+        <h2 className="text-4xl font-bold">
+          What tools do financial markets provide ? 
+        </h2>
+      </div>
+      <div className="flex w-full justify-center my-5 px-5">
+        <Tabs defaultValue="company" className="w-full">
+          <TabsList className="w-full bg-zinc-300 p-1 rounded-none flex">
+            <TabsTrigger value="company" className="flex-1 rounded-none">
+              Company Stocks
+            </TabsTrigger>
 
-          <TabsTrigger value="equity" className="flex-1 rounded-none">
-            Equity Funds
-          </TabsTrigger>
+            <TabsTrigger value="equity" className="flex-1 rounded-none">
+              Equity Funds
+            </TabsTrigger>
 
-          <TabsTrigger value="mutual" className="flex-1 rounded-none">
-            Mutual Funds
-          </TabsTrigger>
+            <TabsTrigger value="mutual" className="flex-1 rounded-none">
+              Mutual Funds
+            </TabsTrigger>
 
-          <TabsTrigger value="gold" className="flex-1 rounded-none">
-            Gold
-          </TabsTrigger>
-        </TabsList>
+            <TabsTrigger value="gold" className="flex-1 rounded-none">
+              Gold
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Content */}
-        <TabsContent value="company">
-          <Card>
-            <CardHeader>
-              <CardTitle>Company Stocks</CardTitle>
-              {renderGrid(companyStocks)}
-            </CardHeader>
-          </Card>
-        </TabsContent>
+          {/* Content */}
+          <TabsContent value="company">
+            <Card>
+              <CardHeader>
+                <CardTitle>Company Stocks</CardTitle>
+                {renderGrid(companyStocks)}
+              </CardHeader>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="equity">
-          <Card>
-            <CardHeader>
-              <CardTitle>Equity Funds</CardTitle>
-              {renderGrid(equityFunds)}
-            </CardHeader>
-          </Card>
-        </TabsContent>
+          <TabsContent value="equity">
+            <Card>
+              <CardHeader>
+                <CardTitle>Equity Funds</CardTitle>
+                {renderGrid(equityFunds)}
+              </CardHeader>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="mutual">
-          <Card>
-            <CardHeader>
-              <CardTitle>Mutual Funds</CardTitle>
-              {renderGrid(mutualFunds)}
-            </CardHeader>
-          </Card>
-        </TabsContent>
+          <TabsContent value="mutual">
+            <Card>
+              <CardHeader>
+                <CardTitle>Mutual Funds</CardTitle>
+                {renderGrid(mutualFunds)}
+              </CardHeader>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="gold">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gold</CardTitle>
-              {renderGrid(goldAssets)}
-            </CardHeader>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="gold">
+            <Card>
+              <CardHeader>
+                <CardTitle>Gold</CardTitle>
+                {renderGrid(goldAssets)}
+              </CardHeader>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
