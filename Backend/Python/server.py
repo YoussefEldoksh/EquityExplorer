@@ -1,8 +1,7 @@
-from turtle import pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware 
 import yfinance as yf
-
+import pandas as pd
 
 
 app = FastAPI()
@@ -40,13 +39,23 @@ def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d")
         return {}
     
 
-# # FOR MAIN PAGE SCREENER
-# # 1. Get S&P 500 list
-# def get_sp500_list():
-#     url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-#     table = pd.read_html(url)[0]
-#     #returns stock tickers as list of strings
-#     return table["Symbol"].tolist()
+# FOR MAIN PAGE SCREENER
+# 1. Get S&P 500 list --> still not working
+headers = {"User-Agent": "Mozilla/5.0"}
+
+@app.get("/api/snp500")
+def get_sp500_list():
+    try:
+        data = requests.get(
+            "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
+        )
+        from io import StringIO
+        df = pd.read_csv(StringIO(data.text))
+        tickers = df["Symbol"].str.replace(".", "-", regex=False).tolist()
+        return {"tickers": tickers}
+    except Exception as e:
+        print(f"Error: {e}")
+        return {"tickers": []}
 
 
 # # Cache S&P 500 list to avoid repeated web scraping for Wikipedia 
