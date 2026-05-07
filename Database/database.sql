@@ -1,6 +1,6 @@
 -- Create Database
-    CREATE DATABASE IF NOT EXISTS EquityExplorer;
-    USE EquityExplorer;
+CREATE DATABASE IF NOT EXISTS EquityExplorer;
+USE EquityExplorer;
 
 -- 1. Users Table
 CREATE TABLE users (

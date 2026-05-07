@@ -28,6 +28,7 @@ function Navbar({ isOtherPage }: Props) {
     { label: 'Sign In', ariaLabel: 'Sign in to your account', link: '/signin' },
     { label: 'Register', ariaLabel: 'Create an account', link: '/register' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' },
+    { label: 'Screener', ariaLabel: 'Get in touch', link: '/tickerslist' },
   ];
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -55,10 +56,10 @@ function Navbar({ isOtherPage }: Props) {
       {
         !isMobile &&
         <>
-          <nav className={` ${isOtherPage ? "bg-white" : "fixed top-0 right-0 left-0 z-50 bg-white/10 backdrop-blur-md border border-white/20"}  flex px-10 py-2  justify-between`}>
+          <nav className={` ${isOtherPage ? "bg-white " : "fixed top-0 right-0 left-0 z-50 bg-white/10 backdrop-blur-md border border-white/20"}  flex px-10 py-2  justify-between`}>
             <div className=''>
               <a href="/">
-                <p className='font-excon text-xl font-bold text-white' >EquityExplorer</p>
+                <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white" }`} >EquityExplorer</p>
               </a>
 
             </div>
@@ -81,7 +82,9 @@ function Navbar({ isOtherPage }: Props) {
 
             <div className='flex gap-3 px-5 font-bold'>
               <Button className='text-sm rounded-xl hover:text-white hover:bg-black ' variant="outline">Contact</Button>
-              <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">About</Button>
+              <Link to="/tickerslist">
+                <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">Screener</Button>
+              </Link>
               <Link to="/signin">
                 <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black">
                   Sign-in
@@ -113,7 +116,7 @@ function Navbar({ isOtherPage }: Props) {
 
             <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"}>
               <DrawerTrigger asChild>
-                <Button  className="rounded-md uppercase bg-white text-black font-bold font-excon">    Menu</Button>
+                <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">    Menu</Button>
               </DrawerTrigger>
               <DrawerContent>
 

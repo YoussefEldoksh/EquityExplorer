@@ -78,7 +78,7 @@ function TickerPage() {
         <>
           <div className=" px-15 mt-5">
             <p className="font-excon text-md">
-              {stockData.fullExchangeName} - {stockData.exchange} -{' '}
+              {stockData.fullExchangeName} . {stockData.exchange} . {' '}
               {stockData.currency}
             </p>
           </div>

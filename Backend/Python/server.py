@@ -2,7 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware 
 import yfinance as yf
 import pandas as pd
-
+import requests
+from io import StringIO
+import numpy as np
+import time
+from concurrent.futures import ThreadPoolExecutor
+from functools import lru_cache
 
 app = FastAPI()
 
@@ -38,134 +43,71 @@ def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d")
         print(f"Error: {e}")
         return {}
     
-
-# FOR MAIN PAGE SCREENER
-# 1. Get S&P 500 list --> still not working
-headers = {"User-Agent": "Mozilla/5.0"}
-
-@app.get("/api/snp500")
-def get_sp500_list():
+@app.get("/api/index")
+def get_index_data(symbols: str):
     try:
-        data = requests.get(
-            "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
-        )
-        from io import StringIO
-        df = pd.read_csv(StringIO(data.text))
-        tickers = df["Symbol"].str.replace(".", "-", regex=False).tolist()
-        return {"tickers": tickers}
+        ticker_list = [s.strip() for s in symbols.split(",")]
+        result = {}
+        for symbol in ticker_list:
+            ticker = yf.Ticker(symbol)
+            result[symbol] = ticker.info
+        return result
     except Exception as e:
         print(f"Error: {e}")
-        return {"tickers": []}
+        return {}
 
 
-# # Cache S&P 500 list to avoid repeated web scraping for Wikipedia 
-# SP500 = get_sp500_list()
 
+cache = {"data": None, "timestamp": 0}
+CACHE_TTL = 300  # 5 minutes
 
-# # 2. Simple cache for screener data
-# cache = {
-#     "data": None,
-#     "timestamp": 0
-# }
+def fetch_ticker(symbol):
+    try:
+        ticker = yf.Ticker(symbol)
+        info = ticker.info
+        return {
+            "symbol": info.get("symbol"),
+            "name": info.get("longName"),
+            "vol": info.get("volume"),
+            "pe": info.get("trailingPE"),
+            "eps": info.get("trailingEps"),
+            "price": info.get("regularMarketPrice"),
+            "div": info.get("dividendYield"),
+            "changePct": info.get("regularMarketChangePercent"),
+            "sector": info.get("sector"),
+            "marketCap": info.get("marketCap"),
+        }
+    except:
+        return None
 
-# CACHE_TTL = 60  # seconds before cache expires
+def get_sp500_tickers():
+    url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
+    response = requests.get(url)
+    df = pd.read_csv(StringIO(response.text))
+    return df["Symbol"].str.replace(".", "-", regex=False).tolist()
 
+def build_screener():
+    tickers = get_sp500_tickers()
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(fetch_ticker, tickers))
+    return [r for r in results if r is not None]
 
-# # 3. Fetch stock data in batch 
-# def fetch_data(symbols):
-#     return yf.download(
-#         tickers=symbols,
-#         # yesterday and today's data to compute change %
-#         period="2d",
-#         interval="1d",
-#         group_by="ticker",
-#         threads=True
-#     )
+def get_cached_screener():
+    now = time.time()
+    if cache["data"] and now - cache["timestamp"] < CACHE_TTL:
+        return cache["data"]
+    data = build_screener()
+    cache["data"] = data
+    cache["timestamp"] = now
+    return data
 
-# # 4. Build screener dataset
-# def build_screener():
-#     data = fetch_data(SP500)
-
-#     results = []
-
-#     for symbol in SP500:
-#         try:
-#             df = data[symbol]
-#             # today's and yesterday's data to compute change %
-#             latest = df.iloc[-1]
-#             previous = df.iloc[-2]
-#             # current and yesterday's closing price to compute change %
-#             price = float(latest["Close"])
-#             prev_close = float(previous["Close"])
-
-#             change_pct = ((price - prev_close) / prev_close) * 100
-#             # number of shares traded today
-#             volume = int(latest["Volume"])
-
-#             results.append({
-#                 "symbol": symbol,
-#                 "price": round(price, 2),
-#                 "change_percent": round(change_pct, 2),
-#                 "volume": volume
-#             })
-
-#         except:
-#             continue
-
-#     return results
-
-
-# # 5. Cached screener 
-# def get_cached_screener():
-#     now = time.time()
-#     # if cache is still valid
-#     if cache["data"] and now - cache["timestamp"] < CACHE_TTL:
-#         return cache["data"]
-
-#     data = build_screener()
-
-#     cache["data"] = data
-#     cache["timestamp"] = now
-
-#     return data
-
-
-# # 6. Sorting functions
-# def top_gainers(data):
-#     return sorted(data, key=lambda x: x["change_percent"], reverse=True)[:25]
-
-
-# def top_losers(data):
-#     return sorted(data, key=lambda x: x["change_percent"])[:25]
-
-
-# def most_active(data):
-#     return sorted(data, key=lambda x: x["volume"], reverse=True)[:25]
-
-
-# # 7. API endpoint
-# @app.get("/api/screener")
-# def screener(type: str = "gainers"):
-#     data = get_cached_screener()
-
-#     if type == "gainers":
-#         return top_gainers(data)
-
-#     if type == "losers":
-#         return top_losers(data)
-
-#     if type == "active":
-#         return most_active(data)
-
-#     return data
-
-
-# # Every time frontend calls:
-# #/api/screener?type=gainers
-
-# #Your backend:
-# # Gets list of S&P 500 stocks
-# # Downloads price data for all of them
-# # Computes price change + volume
-# # Sorts them (gainers / losers / active)
-# # Returns top 25
+@app.get("/api/snp500")
+def screener(type: str = "all"):
+    data = get_cached_screener()
+    if type == "gainers":
+        return sorted(data, key=lambda x: x["changePct"] or 0, reverse=True)[:25]
+    if type == "losers":
+        return sorted(data, key=lambda x: x["changePct"] or 0)[:25]
+    if type == "active":
+        return sorted(data, key=lambda x: x["vol"] or 0, reverse=True)[:25]
+    return data
