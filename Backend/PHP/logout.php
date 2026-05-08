@@ -20,6 +20,16 @@ $_SESSION = array();
 
 session_destroy();
 
+// Clear auth cookie
+$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+setcookie('token', '', [
+    'expires' => time() - 3600,
+    'path' => '/',
+    'secure' => $secure,
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
 //Send Response
 echo json_encode([
     "success" => true,
