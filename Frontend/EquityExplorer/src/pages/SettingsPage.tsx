@@ -1,9 +1,11 @@
+import { useState, useEffect, type ChangeEvent } from "react";
 import {
     ArrowUpRight,
     BellRing,
     Palette,
     ShieldCheck,
     UserRound,
+    Loader2
 } from "lucide-react";
 
 import Navbar from "../components/Navbar";
@@ -14,6 +16,85 @@ import { Label } from "../components/ui/label";
 import { Separator } from "../components/ui/separator";
 
 function SettingsPage() {
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [user, setUser] = useState({
+        username: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        bio: ""
+    });
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch('http://localhost/EquityExplorer/Backend/PHP/me.php', {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setUser({
+                        username: data.user.username || "",
+                        firstname: data.user.firstname || "",
+                        lastname: data.user.lastname || "",
+                        email: data.user.email || "",
+                        bio: data.user.bio || ""
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch user data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setUser({
+            ...user,
+            [e.target.id]: e.target.value
+        });
+    };
+
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            const response = await fetch('http://localhost/EquityExplorer/Backend/PHP/update_profile.php', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert("Profile updated successfully!");
+                // Trigger a global auth event to refresh navbar/other components if needed
+                window.dispatchEvent(new Event('auth'));
+            } else {
+                alert(data.message || "Failed to update profile.");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            alert("Something went wrong while saving.");
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center">
+                <Loader2 className="size-10 animate-spin text-blue-600" />
+            </div>
+        );
+    }
+
     return (
         <div className="relative min-h-screen overflow-hidden bg-linear-to-b from-slate-50 via-indigo-50/70 to-white text-slate-900">
             <div className="pointer-events-none absolute -left-24 top-0 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl" />
@@ -38,11 +119,10 @@ function SettingsPage() {
                                             Settings
                                         </p>
                                         <h1 className="mt-2 text-3xl font-semibold md:text-4xl">
-                                            Shape your Equity Explorer workspace
+                                            Hello, {user.firstname || user.username}
                                         </h1>
                                         <p className="mt-3 max-w-xl text-sm leading-6 text-white/75 md:text-base">
-                                            Clean controls, quick access, and a dashboard that feels
-                                            more like a product than a form.
+                                            Manage your account details and preferences.
                                         </p>
                                     </div>
                                 </div>
@@ -99,41 +179,63 @@ function SettingsPage() {
 
                                 <div className="grid gap-4 md:grid-cols-2">
                                     <div className="space-y-2">
-                                        <Label htmlFor="displayName">Display name</Label>
+                                        <Label htmlFor="firstname">First name</Label>
                                         <Input
-                                            id="displayName"
-                                            defaultValue="Equity Explorer User"
+                                            id="firstname"
+                                            value={user.firstname}
+                                            onChange={handleChange}
                                             className="rounded-2xl border-slate-200 bg-white"
+                                            placeholder="First Name"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="email">Email</Label>
+                                        <Label htmlFor="lastname">Last name</Label>
                                         <Input
-                                            id="email"
-                                            defaultValue="user@example.com"
+                                            id="lastname"
+                                            value={user.lastname}
+                                            onChange={handleChange}
                                             className="rounded-2xl border-slate-200 bg-white"
+                                            placeholder="Last Name"
                                         />
                                     </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input
+                                        id="email"
+                                        value={user.email}
+                                        onChange={handleChange}
+                                        className="rounded-2xl border-slate-200 bg-white"
+                                        placeholder="Email Address"
+                                    />
                                 </div>
 
                                 <div className="space-y-2">
                                     <Label htmlFor="bio">Short bio</Label>
                                     <Input
                                         id="bio"
-                                        defaultValue="Tracking stocks, earnings, and macro trends."
+                                        value={user.bio}
+                                        onChange={handleChange}
                                         className="rounded-2xl border-slate-200 bg-white"
+                                        placeholder="Tell us about yourself..."
                                     />
                                 </div>
 
                                 <Separator />
 
                                 <div className="flex flex-wrap gap-3">
-                                    <Button className="rounded-2xl bg-slate-950 px-5 text-white hover:bg-slate-800">
-                                        Save changes
+                                    <Button 
+                                        disabled={saving}
+                                        onClick={handleSave}
+                                        className="rounded-2xl bg-slate-950 px-5 text-white hover:bg-slate-800"
+                                    >
+                                        {saving ? "Saving..." : "Save changes"}
                                         <ArrowUpRight className="ml-2 size-4" />
                                     </Button>
                                     <Button
                                         variant="outline"
+                                        onClick={() => window.location.reload()}
                                         className="rounded-2xl border-slate-200 px-5"
                                     >
                                         Reset
