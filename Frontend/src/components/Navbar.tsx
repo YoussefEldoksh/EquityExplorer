@@ -34,7 +34,7 @@ function Navbar({ isOtherPage }: Props) {
 
   const handleLogout = async () => {
     try {
-        await fetch('http://localhost/EquityExplorer/Backend/PHP/logout.php', {
+        await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
             method: 'POST',
             credentials: 'include',
         });
@@ -72,7 +72,7 @@ function Navbar({ isOtherPage }: Props) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('http://localhost/EquityExplorer/Backend/PHP/me.php', {
+        const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/me.php`, {
           method: 'GET',
           credentials: 'include',
         });
