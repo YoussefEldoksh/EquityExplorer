@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 require_once "db_connection.php";
+require_once "auth_middleware.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = isset($_POST["usermail"]) ? trim($_POST["usermail"]) : "";
@@ -25,23 +26,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $sql = "SELECT id, username, password_hash FROM users WHERE email = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "s", $email);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$email]);
 
-    if ($user = mysqli_fetch_assoc($result)) {
+    if ($user = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if (password_verify($password, $user["password_hash"])) {
-            $token = bin2hex(random_bytes(32));
-            
-            
+            // Create JWT
+            $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+            $secret = $env['JWT_SECRET'] ?? '';
+            $now = time();
+            $payload = [
+                'sub' => $user['id'],
+                'email' => $email,
+                'username' => $user['username'],
+                'iat' => $now,
+                'exp' => $now + 60 * 60 * 24 * 7 // 7 days
+            ];
+            $jwt = jwt_encode($payload, $secret);
+
+            // Set HttpOnly cookie
+            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+            setcookie('token', $jwt, [
+                'expires' => $payload['exp'],
+                'path' => '/',
+                'secure' => $secure,
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
+
             $_SESSION["user_id"] = $user["id"];
-            $_SESSION["token"] = $token;
-            
+
             echo json_encode([
                 "success" => true,
                 "message" => "Login successful!",
-                "token" => $token,
                 "user" => [
                     "id" => $user["id"],
                     "username" => $user["username"],
@@ -54,6 +71,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo json_encode(["success" => false, "message" => "Account not found."]);
     }
-    mysqli_stmt_close($stmt);
 }
 ?>

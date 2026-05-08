@@ -50,6 +50,8 @@ export function LoginForm({
       console.log(data);
 
       if (data.success) {
+        // Server issues an HttpOnly cookie; notify app of auth change
+        window.dispatchEvent(new Event('auth'));
         navigate('/');
       } else {
         alert(data.message);
