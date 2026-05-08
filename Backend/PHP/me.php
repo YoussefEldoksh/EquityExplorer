@@ -12,17 +12,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
 
+require_once "db_connection.php";
 require_once "auth_middleware.php";
 
-// This will verify the HttpOnly cookie and return the JWT payload.
-// If not authenticated, it will return a 401 response and exit.
+// Verify the HttpOnly cookie and get payload
 $payload = require_auth();
+$userId = $payload['sub'];
 
-echo json_encode([
-    "success" => true,
-    "user" => [
-        "id" => $payload['sub'],
-        "email" => $payload['email']
-    ]
-]);
+try {
+    // Fetch latest user data from database
+    $stmt = $conn->prepare("SELECT id, username, firstname, lastname, email, bio FROM users WHERE id = ?");
+    $stmt->execute([$userId]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+        echo json_encode([
+            "success" => true,
+            "user" => $user
+        ]);
+    } else {
+        http_response_code(404);
+        echo json_encode(["success" => false, "message" => "User not found"]);
+    }
+} catch (Throwable $e) {
+    http_response_code(500);
+    echo json_encode(["success" => false, "message" => "Database error: " . $e->getMessage()]);
+}
 ?>

@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payload = [
             'sub' => $new_id,
             'email' => $_usermail,
+            'username' => $_username,
             'iat' => $now,
             'exp' => $now + 60 * 60 * 24 * 7
         ];

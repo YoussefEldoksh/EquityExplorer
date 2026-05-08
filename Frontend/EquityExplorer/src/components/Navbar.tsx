@@ -39,8 +39,6 @@ function Navbar({ isOtherPage }: Props) {
             credentials: 'include',
         });
     } finally {
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
         window.dispatchEvent(new Event('auth'));
         setDrawerOpen(false);
         navigate('/signin');
@@ -50,6 +48,7 @@ function Navbar({ isOtherPage }: Props) {
   const isMobile = useIsMobile();
   const [searchWord, setSearchWord] = useState("");
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
+  const [user, setUser] = useState<{ username?: string } | null>(null);
 
   // const handleSearch = async () => {
   //   if (!searchWord.trim()) return;
@@ -79,8 +78,10 @@ function Navbar({ isOtherPage }: Props) {
         });
         const data = await response.json();
         setIsAuthed(data.success === true);
+        setUser(data.user || null);
       } catch (error) {
         setIsAuthed(false);
+        setUser(null);
       }
     };
 
@@ -129,7 +130,7 @@ function Navbar({ isOtherPage }: Props) {
                 <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">Screener</Button>
               </Link>
               {isAuthed ? (
-                <UserMenu />
+                <UserMenu username={user?.username} />
               ) : (
                 <>
                   <Link to="/signin">
@@ -164,7 +165,7 @@ function Navbar({ isOtherPage }: Props) {
             </a>
 
             <div className="flex items-center gap-2">
-              {isAuthed ? <UserMenu className="shrink-0" /> : null}
+              {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}
               <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"}>
                 <DrawerTrigger asChild>
                   <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">Menu</Button>

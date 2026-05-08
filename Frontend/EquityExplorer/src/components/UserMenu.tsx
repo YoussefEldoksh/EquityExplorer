@@ -3,7 +3,7 @@ import { LogOut, Settings2, UserRound } from 'lucide-react';
 
 import { Button } from './ui/button';
 
-function UserMenu({ className }: { className?: string }) {
+function UserMenu({ className, username }: { className?: string, username?: string }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -13,8 +13,6 @@ function UserMenu({ className }: { className?: string }) {
                 credentials: 'include',
             });
         } finally {
-            localStorage.removeItem('token');
-            sessionStorage.removeItem('token');
             window.dispatchEvent(new Event('auth'));
             navigate('/signin');
         }
@@ -38,7 +36,7 @@ function UserMenu({ className }: { className?: string }) {
                             Account
                         </p>
                         <p className="mt-1 text-sm font-semibold text-slate-900">
-                            Profile actions
+                            {username || "Profile actions"}
                         </p>
                     </div>
 

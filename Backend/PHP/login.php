@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $payload = [
                 'sub' => $user['id'],
                 'email' => $email,
+                'username' => $user['username'],
                 'iat' => $now,
                 'exp' => $now + 60 * 60 * 24 * 7 // 7 days
             ];
