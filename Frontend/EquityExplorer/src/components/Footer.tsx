@@ -7,7 +7,7 @@ function Footer() {
         <div className="px-5 py-7 bg-zinc-100">
 
             <div className={`${isMobile ? "grid grid-cols-3" : "grid grid-cols-4" } `}>
-                <div className="pt-5 px-2 border-t border-l border-b border-black h-[400px]">
+                <div className="pt-5 px-2 border-t border-l border-b border-black h-100">
                     <p>Work</p>
                     <p>Services</p>
                     <p>About</p>

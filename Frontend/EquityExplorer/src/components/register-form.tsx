@@ -50,6 +50,8 @@ export function RegisterForm({
       console.log(data);
 
       if (data.success) {
+        // Server sets HttpOnly cookie. Notify app of auth change.
+        window.dispatchEvent(new Event('auth'));
         alert('Registered successfully!');
       } else {
         alert(data.message);
