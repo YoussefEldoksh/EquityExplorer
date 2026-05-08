@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 session_start(); 
 require_once "db_connection.php"; 
+require_once "auth_middleware.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
     $_username  = isset($_POST["username"]) ? trim($_POST["username"]) : "";
@@ -42,38 +43,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Check for existing user
     $sql = "SELECT id FROM users WHERE email = ? OR username = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ss", $_usermail, $_username);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$_usermail, $_username]);
     
-    if (mysqli_num_rows($result) > 0) {
+    if ($stmt->rowCount() > 0) {
         echo json_encode(["success" => false, "message" => "Email or username already exists!"]);
         exit;
     }
     
     // Insert new user
     $sql = "INSERT INTO users (username, firstname, lastname, email, password_hash) VALUES (?, ?, ?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "sssss", $_username, $_firstname, $_lastname, $_usermail, $_passwordhash);
+    $stmt = $conn->prepare($sql);
     
-    if (mysqli_stmt_execute($stmt)) {
-        $new_id = mysqli_insert_id($conn);
-        $token = bin2hex(random_bytes(32));
-        
+    if ($stmt->execute([$_username, $_firstname, $_lastname, $_usermail, $_passwordhash])) {
+        $new_id = $conn->lastInsertId();
+
+        // Create JWT cookie
+        $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+        $secret = $env['JWT_SECRET'] ?? '';
+        $now = time();
+        $payload = [
+            'sub' => $new_id,
+            'email' => $_usermail,
+            'iat' => $now,
+            'exp' => $now + 60 * 60 * 24 * 7
+        ];
+        $jwt = jwt_encode($payload, $secret);
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        setcookie('token', $jwt, [
+            'expires' => $payload['exp'],
+            'path' => '/',
+            'secure' => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+
         $_SESSION["user_id"] = $new_id;
-        $_SESSION["token"] = $token;
-        
+
         echo json_encode([
             "success" => true,
             "message" => "Registration successful!",
-            "token" => $token,
             "user_id" => $new_id,
             "username" => $_username
         ]);
     } else {
         echo json_encode(["success" => false, "message" => "Registration failed."]);
     }
-    mysqli_stmt_close($stmt);
 }
 ?>
