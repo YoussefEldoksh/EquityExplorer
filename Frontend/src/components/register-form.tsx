@@ -35,7 +35,7 @@ export function RegisterForm({
 
     try {
       const response = await fetch(
-        'http://localhost/EquityExplorer/Backend/PHP/registration.php',
+        `http://${window.location.hostname}/EquityExplorer/Backend/PHP/registration.php`,
         {
           method: 'POST',
           credentials: 'include',
