@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { TrendingUp, TrendingDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, EyeClosed, Eye } from 'lucide-react';
 
 import {
   ChartNoAxesColumn,
@@ -29,6 +29,8 @@ function TickerPage() {
   const [stockData, setStockData] = useState({});
   const [timeseries, setTimeSeries] = useState<Record<string, any>>({});
   const timeseriesEntries = Object.entries(timeseries);
+  const [isClicked, setIsClicked] = useState(false);
+
   const startPrice =
     timeseriesEntries.length > 0 ? timeseriesEntries[0][1].Close : null;
   const isMobile = useIsMobile();
@@ -53,6 +55,11 @@ function TickerPage() {
       console.error('Error fetching stock data:', error);
     }
   };
+
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+  }
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -87,6 +94,24 @@ function TickerPage() {
               <p className="font-excon font-bold text-3xl">
                 {stockData.longName} ({stockData.symbol}){' '}
               </p>
+              <>
+                {isClicked &&
+                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                    <Eye size={20} />
+                  </div>
+                }
+
+              </>
+
+              <>
+                {
+                  !isClicked &&
+                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                    <EyeClosed size={20} />
+                  </div>
+                }
+              </>
+
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
               >
@@ -97,6 +122,7 @@ function TickerPage() {
                   <TrendingDown size={30} />
                 )}
               </p>
+
             </div>
             <div className="flex gap-3 items-center">
               <p
@@ -497,7 +523,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.profitMargins
                                 ? (stockData.profitMargins * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -511,7 +537,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.returnOnEquity
                                 ? (stockData.returnOnEquity * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -525,7 +551,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.grossMargins
                                 ? (stockData.grossMargins * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -568,8 +594,8 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.shortPercentOfFloat
                                 ? (stockData.shortPercentOfFloat * 100).toFixed(
-                                    2,
-                                  ) + '%'
+                                  2,
+                                ) + '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -608,10 +634,30 @@ function TickerPage() {
             </p>
           </div>
           <div className=" px-12   gap-5 mb-5">
-            <div className="flex items-center gap-2">
+            <div className="flex items-end gap-1">
               <p className="font-excon font-bold text-3xl">
                 {stockData.longName} ({stockData.symbol}){' '}
+
+
+                
               </p>
+              <>
+                {isClicked &&
+                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                    <Eye size={20} />
+                  </div>
+                }
+
+              </>
+
+              <>
+                {
+                  !isClicked &&
+                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                    <EyeClosed size={20} />
+                  </div>
+                }
+              </>
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
               >
@@ -1022,7 +1068,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.profitMargins
                                 ? (stockData.profitMargins * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -1036,7 +1082,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.returnOnEquity
                                 ? (stockData.returnOnEquity * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -1050,7 +1096,7 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.grossMargins
                                 ? (stockData.grossMargins * 100).toFixed(2) +
-                                  '%'
+                                '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -1093,8 +1139,8 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.shortPercentOfFloat
                                 ? (stockData.shortPercentOfFloat * 100).toFixed(
-                                    2,
-                                  ) + '%'
+                                  2,
+                                ) + '%'
                                 : 'N/A'}
                             </p>
                           </div>
@@ -1137,8 +1183,8 @@ function TickerPage() {
                             <p className="font-semibold">
                               {stockData.freeCashflow
                                 ? (stockData.freeCashflow / 10e6).toFixed(
-                                    2,
-                                  ) + 'M'
+                                  2,
+                                ) + 'M'
                                 : 'N/A'}
                             </p>
                           </div>
