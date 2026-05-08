@@ -8,7 +8,7 @@ function UserMenu({ className, username }: { className?: string, username?: stri
 
     const handleLogout = async () => {
         try {
-            await fetch('http://localhost/EquityExplorer/Backend/PHP/logout.php', {
+            await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
                 method: 'POST',
                 credentials: 'include',
             });

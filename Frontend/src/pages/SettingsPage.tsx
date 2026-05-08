@@ -29,7 +29,7 @@ function SettingsPage() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch('http://localhost/EquityExplorer/Backend/PHP/me.php', {
+                const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/me.php`, {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -63,7 +63,7 @@ function SettingsPage() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const response = await fetch('http://localhost/EquityExplorer/Backend/PHP/update_profile.php', {
+            const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/update_profile.php`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

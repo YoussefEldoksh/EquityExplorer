@@ -35,7 +35,7 @@ export function LoginForm({
 
     try {
       const response = await fetch(
-        'http://localhost/EquityExplorer/Backend/PHP/login.php',
+        `http://${window.location.hostname}/EquityExplorer/Backend/PHP/login.php`,
         {
           method: 'POST',
           credentials: 'include',
