@@ -37,6 +37,7 @@ export function ContactForm({
   };
 
   return (
+    <>
     <div className={cn('w-5/6 flex flex-col gap-6', className)} {...props}>
       <Card className="rounded-lg overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
@@ -112,5 +113,6 @@ export function ContactForm({
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }
