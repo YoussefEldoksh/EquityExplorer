@@ -27,6 +27,7 @@ function SettingsPage() {
         bio: ""
     });
     const [watchlistCount, setWatchlistCount] = useState(0);
+    const [alertCount, setAlertCount] = useState(0);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -62,8 +63,19 @@ function SettingsPage() {
             }
         };
 
+        const fetchAlertCount = async () => {
+            try {
+                const res = await fetch('/api/alerts', { credentials: 'include' });
+                const data = await res.json();
+                if (Array.isArray(data)) setAlertCount(data.length);
+            } catch (e) {
+                console.error("Failed to fetch alert count:", e);
+            }
+        };
+
         fetchUserData();
         fetchWatchlistCount();
+        fetchAlertCount();
     }, []);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -150,8 +162,9 @@ function SettingsPage() {
                                         },
                                         {
                                             label: "Alerts",
-                                            value: "08",
+                                            value: alertCount.toString().padStart(2, '0'),
                                             note: "Active notifications",
+                                            href: "/alerts"
                                         },
                                         {
                                             label: "Layouts",
