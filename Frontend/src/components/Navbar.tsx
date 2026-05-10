@@ -31,7 +31,11 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
+<<<<<<< HEAD
       await fetch(`/api/auth/logout.php`, {
+=======
+      await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
+>>>>>>> 4fefd6a (feat(frontend): add search suggestions dropdown with debouncing and keyboard navigation)
         method: 'POST',
         credentials: 'include',
       });
@@ -86,7 +90,11 @@ function Navbar() {
     const timer = setTimeout(async () => {
       if (searchWord.trim().length > 1) {
         try {
+<<<<<<< HEAD
           const response = await fetch(`/api/search/suggestions?q=${searchWord}`);
+=======
+          const response = await fetch(`http://127.0.0.1:8000/api/search/suggestions?q=${searchWord}`);
+>>>>>>> 4fefd6a (feat(frontend): add search suggestions dropdown with debouncing and keyboard navigation)
           const data = await response.json();
           setSuggestions(data);
           setSelectedIndex(-1);
@@ -142,9 +150,15 @@ function Navbar() {
         <>
           <nav className={`fixed top-0 right-0 left-0 z-50 flex px-10 py-2 justify-between border-b ${isOtherPage ? "bg-white/80 backdrop-blur-md border-slate-200" : "bg-white/10 backdrop-blur-md border-white/20"}`}>
             <div className=''>
+<<<<<<< HEAD
               <Link to="/">
                 <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
               </Link>
+=======
+              <a href="/">
+                <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
+              </a>
+>>>>>>> 4fefd6a (feat(frontend): add search suggestions dropdown with debouncing and keyboard navigation)
 
             </div>
 
@@ -302,8 +316,11 @@ function Navbar() {
                         list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
                         list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
                       } else {
+<<<<<<< HEAD
                         list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
                         list.push({ label: 'Alerts', ariaLabel: 'Alerts', link: '/alerts' });
+=======
+>>>>>>> 4fefd6a (feat(frontend): add search suggestions dropdown with debouncing and keyboard navigation)
                         list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
                       }
                       return (
