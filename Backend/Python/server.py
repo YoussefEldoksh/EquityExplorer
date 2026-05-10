@@ -80,11 +80,72 @@ def fetch_ticker(symbol):
     except:
         return None
 
-def get_sp500_tickers():
+def get_sp500_data():
     url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
     response = requests.get(url)
     df = pd.read_csv(StringIO(response.text))
-    return df["Symbol"].str.replace(".", "-", regex=False).tolist()
+    # Replace . with - for yfinance compatibility (e.g. BRK.B -> BRK-B)
+    df["Symbol"] = df["Symbol"].str.replace(".", "-", regex=False)
+    return df.rename(columns={"Security": "Name"})[["Symbol", "Name"]].to_dict("records")
+
+# Cache for search suggestions
+stock_list_cache = []
+
+def get_stock_list():
+    global stock_list_cache
+    if not stock_list_cache:
+        try:
+            stock_list_cache = get_sp500_data()
+        except Exception as e:
+            print(f"Error loading stock list: {e}")
+            return []
+    return stock_list_cache
+
+@app.get("/api/search/suggestions")
+def get_suggestions(q: str):
+    if not q:
+        return []
+    
+    q = q.strip().upper()
+    stocks = get_stock_list()
+    
+    # Priority 1: Exact symbol match
+    # Priority 2: Symbol prefix match
+    # Priority 3: Name match
+    
+    exact_symbol = []
+    symbol_prefix = []
+    name_match = []
+    
+    for stock in stocks:
+        symbol = stock["Symbol"].upper()
+        name = stock["Name"].upper()
+        
+        if symbol == q:
+            exact_symbol.append(stock)
+        elif symbol.startswith(q):
+            symbol_prefix.append(stock)
+        elif q in name:
+            name_match.append(stock)
+            
+    # Combine and limit
+    results = exact_symbol + symbol_prefix + name_match
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_results = []
+    for r in results:
+        if r["Symbol"] not in seen:
+            unique_results.append({
+                "symbol": r["Symbol"],
+                "name": r["Name"]
+            })
+            seen.add(r["Symbol"])
+            
+    return unique_results[:8]
+
+def get_sp500_tickers():
+    data = get_stock_list()
+    return [s["Symbol"] for s in data]
 
 def build_screener():
     tickers = get_sp500_tickers()
