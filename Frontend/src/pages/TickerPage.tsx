@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { TrendingUp, TrendingDown, EyeClosed, Eye } from 'lucide-react';
+import AlertModal from '../components/AlertModal';
 
 import {
   ChartNoAxesColumn,
@@ -26,7 +27,7 @@ import { useIsMobile } from '../hooks/use-mobile';
 
 function TickerPage() {
   const { stockTicker } = useParams();
-  const [stockData, setStockData] = useState({});
+  const [stockData, setStockData] = useState<any>({});
   const [timeseries, setTimeSeries] = useState<Record<string, any>>({});
   const timeseriesEntries = Object.entries(timeseries);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
@@ -45,12 +46,10 @@ function TickerPage() {
 
   const fetchStockTimeSeries = async (period, interval) => {
     try {
-      console.log(stockTicker);
       const response = await fetch(
         `/api/timeseries/${stockTicker.toUpperCase()}?period=${period}&interval=${interval}`,
       );
       const data = await response.json();
-      console.log(data);
       setTimeSeries(data);
     } catch (error) {
       console.error('Error fetching stock data:', error);
@@ -64,21 +63,48 @@ function TickerPage() {
       return;
     }
     const method = isInWatchlist ? 'DELETE' : 'POST';
-    const url = isInWatchlist 
-        ? `/api/watchlist/remove/${stockTicker}`
-        : `/api/watchlist/add?symbol=${stockTicker}`;
+    const url = isInWatchlist
+      ? `/api/watchlist/remove/${stockTicker}`
+      : `/api/watchlist/add?symbol=${stockTicker}`;
 
     try {
-        const res = await fetch(url, {
-            method,
-            credentials: 'include'
-        });
-        const data = await res.json();
-        if (data.success) {
-            setIsInWatchlist(!isInWatchlist);
-        }
+      const res = await fetch(url, {
+        method,
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsInWatchlist(!isInWatchlist);
+      }
     } catch (e) {
-        console.error(e);
+      console.error(e);
+    }
+  };
+
+  const handleSetAlert = async (symbol: string, targetPrice: number, condition: string) => {
+    if (!isLogged) {
+      alert("Please sign in to set alerts.");
+      return;
+    }
+    try {
+      const response = await fetch('/api/alerts/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          symbol,
+          target_price: targetPrice,
+          condition
+        }),
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert(`Alert set for ${symbol} at $${targetPrice}`);
+      }
+    } catch (e) {
+      console.error("Failed to set alert:", e);
     }
   };
 
@@ -101,18 +127,18 @@ function TickerPage() {
         });
         const authData = await authRes.json();
         setIsLogged(authData.success);
-        
+
         if (authData.success) {
-            const watchRes = await fetch(`/api/watchlist`, {
-                credentials: 'include'
-            });
-            const watchlist = await watchRes.json();
-            if (Array.isArray(watchlist)) {
-              setIsInWatchlist(watchlist.includes(stockTicker?.toUpperCase() || ""));
-            }
+          const watchRes = await fetch(`/api/watchlist`, {
+            credentials: 'include'
+          });
+          const watchlist = await watchRes.json();
+          if (Array.isArray(watchlist)) {
+            setIsInWatchlist(watchlist.includes(stockTicker?.toUpperCase() || ""));
+          }
         }
       } catch (e) {
-          console.error(e);
+        console.error(e);
       }
     };
 
@@ -153,6 +179,11 @@ function TickerPage() {
                   </div>
                 }
               </>
+              <AlertModal
+                symbol={stockTicker || ""}
+                currentPrice={stockData.currentPrice}
+                onAlertSet={handleSetAlert}
+              />
 
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
@@ -679,9 +710,6 @@ function TickerPage() {
             <div className="flex items-end gap-1">
               <p className="font-excon font-bold text-3xl">
                 {stockData.longName} ({stockData.symbol}){' '}
-
-
-                
               </p>
               <>
                 {isInWatchlist &&
@@ -700,6 +728,12 @@ function TickerPage() {
                   </div>
                 }
               </>
+
+              <AlertModal
+                symbol={stockTicker || ""}
+                currentPrice={stockData.currentPrice}
+                onAlertSet={handleSetAlert}
+              />
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
               >

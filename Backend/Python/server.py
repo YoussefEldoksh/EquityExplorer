@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Cookie, Depends
+from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware 
 import yfinance as yf
 import pandas as pd
@@ -264,6 +265,87 @@ async def remove_from_watchlist(symbol: str, user_id: int = Depends(get_current_
         cur.close()
         conn.close()
         return {"success": True, "message": f"{symbol} removed from watchlist"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class AlertRequest(BaseModel):
+    symbol: str
+    target_price: float
+    condition: str # 'above' or 'below'
+
+# PRICE ALERT ENDPOINTS
+@app.post("/api/alerts/add")
+async def add_alert(alert: AlertRequest, user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO price_alerts (user_id, symbol, target_price, condition) VALUES (%s, %s, %s, %s)",
+            (user_id, alert.symbol.upper(), alert.target_price, alert.condition.lower())
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return {"success": True, "message": f"Alert set for {alert.symbol} at {alert.target_price}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/alerts")
+async def get_alerts(user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT id, symbol, target_price, condition, is_active FROM price_alerts WHERE user_id = %s", (user_id,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        
+        # Fetch current prices for each symbol
+        alerts_with_price = []
+        for row in rows:
+            symbol = row[1]
+            try:
+                # We can cache this or fetch in parallel, but for now, simple fetch
+                ticker = yf.Ticker(symbol)
+                current_price = ticker.info.get("regularMarketPrice") or ticker.info.get("currentPrice")
+            except:
+                current_price = None
+                
+            alerts_with_price.append({
+                "id": row[0],
+                "symbol": symbol,
+                "target_price": float(row[2]),
+                "condition": row[3],
+                "is_active": row[4],
+                "current_price": current_price
+            })
+        return alerts_with_price
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/alerts/remove/{alert_id}")
+async def remove_alert(alert_id: int, user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("DELETE FROM price_alerts WHERE id = %s AND user_id = %s", (alert_id, user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return {"success": True, "message": "Alert removed"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.patch("/api/alerts/toggle/{alert_id}")
+async def toggle_alert(alert_id: int, user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("UPDATE price_alerts SET is_active = NOT is_active WHERE id = %s AND user_id = %s", (alert_id, user_id))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return {"success": True, "message": "Alert toggled"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
