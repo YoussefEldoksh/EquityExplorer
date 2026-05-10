@@ -1,4 +1,5 @@
 import { useState, useEffect, type ChangeEvent } from "react";
+import { Link } from "react-router-dom";
 import {
     ArrowUpRight,
     BellRing,
@@ -25,6 +26,7 @@ function SettingsPage() {
         email: "",
         bio: ""
     });
+    const [watchlistCount, setWatchlistCount] = useState(0);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -50,7 +52,18 @@ function SettingsPage() {
             }
         };
 
+        const fetchWatchlistCount = async () => {
+            try {
+                const res = await fetch('/api/watchlist', { credentials: 'include' });
+                const data = await res.json();
+                if (Array.isArray(data)) setWatchlistCount(data.length);
+            } catch (e) {
+                console.error("Failed to fetch watchlist count:", e);
+            }
+        };
+
         fetchUserData();
+        fetchWatchlistCount();
     }, []);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -131,8 +144,9 @@ function SettingsPage() {
                                     {[
                                         {
                                             label: "Watchlists",
-                                            value: "12",
+                                            value: watchlistCount.toString().padStart(2, '0'),
                                             note: "Curated portfolios",
+                                            href: "/watchlist"
                                         },
                                         {
                                             label: "Alerts",
@@ -144,24 +158,28 @@ function SettingsPage() {
                                             value: "03",
                                             note: "Saved workspace views",
                                         },
-                                    ].map((item) => (
-                                        <Card
-                                            key={item.label}
-                                            className="border-white/10 bg-white/10 text-white shadow-none backdrop-blur"
-                                        >
-                                            <CardContent className="p-5">
-                                                <p className="text-xs uppercase tracking-[0.22em] text-white/55">
-                                                    {item.label}
-                                                </p>
-                                                <p className="mt-2 text-3xl font-semibold">
-                                                    {item.value}
-                                                </p>
-                                                <p className="mt-1 text-sm text-white/70">
-                                                    {item.note}
-                                                </p>
-                                            </CardContent>
-                                        </Card>
-                                    ))}
+                                    ].map((item) => {
+                                        const CardWrapper = item.href ? Link : 'div';
+                                        return (
+                                            <CardWrapper key={item.label} to={item.href || ""}>
+                                                <Card
+                                                    className={`border-white/10 bg-white/10 text-white shadow-none backdrop-blur h-full transition-all ${item.href ? 'hover:bg-white/20 hover:scale-[1.02] cursor-pointer' : ''}`}
+                                                >
+                                                    <CardContent className="p-5">
+                                                        <p className="text-xs uppercase tracking-[0.22em] text-white/55">
+                                                            {item.label}
+                                                        </p>
+                                                        <p className="mt-2 text-3xl font-semibold">
+                                                            {item.value}
+                                                        </p>
+                                                        <p className="mt-1 text-sm text-white/70">
+                                                            {item.note}
+                                                        </p>
+                                                    </CardContent>
+                                                </Card>
+                                            </CardWrapper>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
