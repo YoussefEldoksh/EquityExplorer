@@ -317,10 +317,14 @@ function Navbar() {
                         list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
                       } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
                         list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
                         list.push({ label: 'Alerts', ariaLabel: 'Alerts', link: '/alerts' });
 =======
 >>>>>>> 4fefd6a (feat(frontend): add search suggestions dropdown with debouncing and keyboard navigation)
+=======
+                        list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
+>>>>>>> b67c896 (feat(frontend): integrate watchlist into navbar and settings page)
                         list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
                       }
                       return (
