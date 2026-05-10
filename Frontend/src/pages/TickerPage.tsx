@@ -33,7 +33,11 @@ function TickerPage() {
   const timeseriesEntries = Object.entries(timeseries);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
+<<<<<<< HEAD
   const [loading, setLoading] = useState(true);
+=======
+
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
   const startPrice =
     timeseriesEntries.length > 0 ? timeseriesEntries[0][1].Close : null;
   const isMobile = useIsMobile();
@@ -87,6 +91,7 @@ function TickerPage() {
     }
   };
 
+<<<<<<< HEAD
   const handleSetAlert = async (symbol: string, targetPrice: number, condition: string) => {
     if (!isLogged) {
       alert("Please sign in to set alerts.");
@@ -111,13 +116,41 @@ function TickerPage() {
       }
     } catch {
       toast.error("Failed to set alert:");
+=======
+
+  const handleClick = async () => {
+    if (!isLogged) {
+      alert("Please sign in to use the watchlist.");
+      return;
+    }
+    const method = isInWatchlist ? 'DELETE' : 'POST';
+    const url = isInWatchlist 
+        ? `/api/watchlist/remove/${stockTicker}`
+        : `/api/watchlist/add?symbol=${stockTicker}`;
+
+    try {
+        const res = await fetch(url, {
+            method,
+            credentials: 'include'
+        });
+        const data = await res.json();
+        if (data.success) {
+            setIsInWatchlist(!isInWatchlist);
+        }
+    } catch (e) {
+        console.error(e);
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
     }
   };
 
   useEffect(() => {
     const fetchStockData = async () => {
       try {
+<<<<<<< HEAD
         const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`, { credentials: 'include' });
+=======
+        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`);
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
         const data = await response.json();
         setStockData(data);
         await fetchStockTimeSeries('1mo', '1d');
@@ -128,11 +161,16 @@ function TickerPage() {
 
     const checkStatus = async () => {
       try {
+<<<<<<< HEAD
         const authRes = await fetch(`/api/auth/me.php`, {
+=======
+        const authRes = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/me.php`, {
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
             credentials: 'include'
         });
         const authData = await authRes.json();
         setIsLogged(authData.success);
+<<<<<<< HEAD
 
         if (authData.success) {
           const watchRes = await fetch(`/api/watchlist`, {
@@ -145,11 +183,26 @@ function TickerPage() {
         }
       } catch (e) {
         console.error(e);
+=======
+        
+        if (authData.success) {
+            const watchRes = await fetch(`/api/watchlist`, {
+                credentials: 'include'
+            });
+            const watchlist = await watchRes.json();
+            if (Array.isArray(watchlist)) {
+              setIsInWatchlist(watchlist.includes(stockTicker?.toUpperCase() || ""));
+            }
+        }
+      } catch (e) {
+          console.error(e);
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
       }
     };
 
     fetchStockData();
     checkStatus();
+<<<<<<< HEAD
   }, [stockTicker, fetchStockTimeSeries]);
 
 
@@ -584,10 +637,14 @@ function TickerPage() {
       <Footer></Footer>
       </>
   );
+=======
+  }, [stockTicker]);
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
 
   return (
     <>
       {!isMobile && (
+<<<<<<< HEAD
         loading ? pageSkeleton : (
           <>
             <div className=" px-15 mt-25">
@@ -605,6 +662,75 @@ function TickerPage() {
                   {isInWatchlist &&
                     <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
                       <Eye size={20} />
+=======
+        <>
+          <div className=" px-15 mt-5">
+            <p className="font-excon text-md">
+              {stockData.fullExchangeName} . {stockData.exchange} . {' '}
+              {stockData.currency}
+            </p>
+          </div>
+          <div className=" px-15   gap-5 mb-5">
+            <div className="flex items-center gap-2">
+              <p className="font-excon font-bold text-3xl">
+                {stockData.longName} ({stockData.symbol}){' '}
+              </p>
+              <>
+                {isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
+                    <Eye size={20} />
+                  </div>
+                }
+
+              </>
+
+              <>
+                {
+                  !isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
+                    <EyeClosed size={20} />
+                  </div>
+                }
+              </>
+
+              <p
+                className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
+              >
+                {' '}
+                {isPositive ? (
+                  <TrendingUp size={30}></TrendingUp>
+                ) : (
+                  <TrendingDown size={30} />
+                )}
+              </p>
+
+            </div>
+            <div className="flex gap-3 items-center">
+              <p
+                className={`font-bold text-xl ${isPositive ? 'text-green-700' : 'text-red-700'}  `}
+              >
+                {' '}
+                ${stockData.currentPrice}
+              </p>
+              <p
+                className={`${isPositive ? 'text-green-700' : 'text-red-700'} `}
+              >
+                {priceChangePct}%
+              </p>
+            </div>
+          </div>
+
+          <div className=" px-10 gap-5 grid  grid-cols-4">
+            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-white rounded-lg p-3 flex ">
+                <div className="w-full">
+                  <div className="flex justify-between items-center  ">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2  ">
+                      Total Revenue {<ChartNoAxesColumn size={20} />}
+                    </div>
+                    <div>
+                      <ToolTip explain="Total Revenue — the total amount of money the company earned from selling its products or services over the last 12 months, before any expenses are deducted."></ToolTip>
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
                     </div>
                   }
 
@@ -650,6 +776,7 @@ function TickerPage() {
                 </p>
               </div>
             </div>
+<<<<<<< HEAD
 
             <div className=" px-10 gap-5 grid  grid-cols-4">
               <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
@@ -679,10 +806,23 @@ function TickerPage() {
                       <div>
                         <ToolTip
                           explain="Total Debt — the total amount of money the company owes to lenders, including both short-term and long-term loans and bonds.
+=======
+            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-white rounded-lg p-3 flex">
+                <div className="w-full">
+                  <div className="flex justify-between items-center">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2 ">
+                      Total Debt {<ChartPie size={20} />}
+                    </div>
+                    <div>
+                      <ToolTip
+                        explain="Total Debt — the total amount of money the company owes to lenders, including both short-term and long-term loans and bonds.
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
 "
                         ></ToolTip>
                       </div>
                     </div>
+<<<<<<< HEAD
                     <p className="font-bold">
                       ${(stockData.totalDebt / 1e9).toFixed(2)}B
                     </p>
@@ -701,6 +841,27 @@ function TickerPage() {
                       <div>
                         <ToolTip
                           explain="Ask — the lowest price a seller is currently willing to accept for one share of the stock.
+=======
+                  </div>
+                  <p className="font-bold">
+                    ${(stockData.totalDebt / 1e9).toFixed(2)}B
+                  </p>
+                </div>
+
+                <div></div>
+              </div>
+            </div>
+            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-white rounded-lg p-3 flex">
+                <div className="w-full">
+                  <div className="flex justify-between items-center">
+                    <div className="font-bold uppercase text-zinc-500  flex gap-2">
+                      Total Ask {<ChartCandlestick size={20} />}
+                    </div>
+                    <div>
+                      <ToolTip
+                        explain="Ask — the lowest price a seller is currently willing to accept for one share of the stock.
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
 "
                         ></ToolTip>
                       </div>
@@ -736,6 +897,7 @@ function TickerPage() {
                   <Chart timeseries={timeseries}></Chart>
                 </div>
 
+<<<<<<< HEAD
                 <div className="mx-5 mt-3 flex justify-end gap-1">
                   <Button
                     variant="outline"
@@ -786,6 +948,24 @@ function TickerPage() {
                   >
                     5 Year
                   </Button>
+=======
+                <div></div>
+              </div>
+            </div>
+            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-white rounded-lg p-3 flex">
+                <div className="w-full">
+                  <div className="flex justify-between items-center">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2">
+                      Total Bid {<ChartScatter size={20} />}
+                    </div>
+                    <div>
+                      <ToolTip explain="Bid — the highest price a buyer is currently willing to pay for one share of the stock."></ToolTip>
+                    </div>
+                  </div>
+
+                  <p className="font-bold">${stockData.bid}M</p>
+>>>>>>> 3745110 (feat(frontend): add watchlist toggle functionality to TickerPage)
                 </div>
               </div>
               <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg mt-5 ">
