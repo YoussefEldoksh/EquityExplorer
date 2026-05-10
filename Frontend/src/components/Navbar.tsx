@@ -305,6 +305,7 @@ function Navbar({ isOtherPage }: Props) {
                         list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
                         list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
                       } else {
+                        list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
                         list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
                       }
                       return (
