@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Cookie, Depends
 from fastapi.middleware.cors import CORSMiddleware 
 import yfinance as yf
 import pandas as pd
@@ -6,16 +6,55 @@ import requests
 from io import StringIO
 import numpy as np
 import time
+import os
+import jwt
+import psycopg2
 from concurrent.futures import ThreadPoolExecutor
 from functools import lru_cache
+from dotenv import load_dotenv
+from typing import Optional
+
+load_dotenv()
+
+JWT_SECRET = os.getenv("JWT_SECRET")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+
+# DB Connection Helper
+def get_db_conn():
+    return psycopg2.connect(
+        host=os.getenv("DB_HOST"),
+        port=os.getenv("DB_PORT"),
+        dbname=os.getenv("DB_NAME"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASS")
+    )
+
+# Auth Helper
+async def get_current_user(token: Optional[str] = Cookie(None)):
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    try:
+        # We use verify_sub=False because PHP sends the ID as an int, but PyJWT expects a string.
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_sub": False})
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return int(user_id)
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://192.168.92.1:5173"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
 
 @app.get("/")
@@ -25,8 +64,8 @@ def read_root():
 # FOR STOCK DETAIL PAGE
 @app.get("/api/stock/{symbol}")
 def get_stock_data(symbol: str):
-    ticker = yf.Ticker(symbol)
-    return ticker.info
+        ticker = yf.Ticker(symbol)
+        return ticker.info
 
 @app.get("/api/timeseries/{symbol}")
 def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d"):
@@ -161,6 +200,72 @@ def get_cached_screener():
     cache["data"] = data
     cache["timestamp"] = now
     return data
+
+# WATCHLIST ENDPOINTS
+@app.post("/api/watchlist/add")
+async def add_to_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO watchlist (user_id, symbol) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+            (user_id, symbol.upper())
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return {"success": True, "message": f"{symbol} added to watchlist"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+@app.get("/api/watchlist")
+async def get_watchlist(user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        return [row[0] for row in rows]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/watchlist/details")
+async def get_watchlist_details(user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
+        rows = cur.fetchall()
+        cur.close()
+        conn.close()
+        
+        symbols = [row[0] for row in rows]
+        if not symbols:
+            return []
+            
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            results = list(executor.map(fetch_ticker, symbols))
+            
+        return [r for r in results if r is not None]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/watchlist/remove/{symbol}")
+async def remove_from_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute(
+            "DELETE FROM watchlist WHERE user_id = %s AND symbol = %s",
+            (user_id, symbol.upper())
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+        return {"success": True, "message": f"{symbol} removed from watchlist"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/snp500")
 def screener(type: str = "all"):
