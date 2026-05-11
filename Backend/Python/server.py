@@ -89,7 +89,7 @@ def get_sp500_tickers():
 def build_screener():
     tickers = get_sp500_tickers()
     with ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(fetch_ticker, tickers))
+        results = list(executor.map(fetch_ticker, tickers[:100]))
     return [r for r in results if r is not None]
 
 def get_cached_screener():
