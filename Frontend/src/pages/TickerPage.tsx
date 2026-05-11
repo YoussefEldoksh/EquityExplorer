@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { TrendingUp, TrendingDown, EyeClosed, Eye } from 'lucide-react';
+import AlertModal from '../components/AlertModal';
 
 import {
   ChartNoAxesColumn,
@@ -26,10 +27,11 @@ import { useIsMobile } from '../hooks/use-mobile';
 
 function TickerPage() {
   const { stockTicker } = useParams();
-  const [stockData, setStockData] = useState({});
+  const [stockData, setStockData] = useState<any>({});
   const [timeseries, setTimeSeries] = useState<Record<string, any>>({});
   const timeseriesEntries = Object.entries(timeseries);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
   const startPrice =
     timeseriesEntries.length > 0 ? timeseriesEntries[0][1].Close : null;
@@ -44,12 +46,10 @@ function TickerPage() {
 
   const fetchStockTimeSeries = async (period, interval) => {
     try {
-      console.log(stockTicker);
       const response = await fetch(
         `/api/timeseries/${stockTicker.toUpperCase()}?period=${period}&interval=${interval}`,
       );
       const data = await response.json();
-      console.log(data);
       setTimeSeries(data);
     } catch (error) {
       console.error('Error fetching stock data:', error);
@@ -57,17 +57,62 @@ function TickerPage() {
   };
 
 
-  const handleClick = () => {
-    setIsClicked(!isClicked);
-  }
+  const handleClick = async () => {
+    if (!isLogged) {
+      alert("Please sign in to use the watchlist.");
+      return;
+    }
+    const method = isInWatchlist ? 'DELETE' : 'POST';
+    const url = isInWatchlist
+      ? `/api/watchlist/remove/${stockTicker}`
+      : `/api/watchlist/add?symbol=${stockTicker}`;
+
+    try {
+      const res = await fetch(url, {
+        method,
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsInWatchlist(!isInWatchlist);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSetAlert = async (symbol: string, targetPrice: number, condition: string) => {
+    if (!isLogged) {
+      alert("Please sign in to set alerts.");
+      return;
+    }
+    try {
+      const response = await fetch('/api/alerts/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          symbol,
+          target_price: targetPrice,
+          condition
+        }),
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert(`Alert set for ${symbol} at $${targetPrice}`);
+      }
+    } catch (e) {
+      console.error("Failed to set alert:", e);
+    }
+  };
 
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        console.log(stockTicker);
-        const response = await fetch(`/api/stock/${stockTicker.toUpperCase()}`);
+        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`);
         const data = await response.json();
-        console.log(data);
         setStockData(data);
         await fetchStockTimeSeries('1mo', '1d');
       } catch (error) {
@@ -75,7 +120,30 @@ function TickerPage() {
       }
     };
 
+    const checkStatus = async () => {
+      try {
+        const authRes = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/me.php`, {
+            credentials: 'include'
+        });
+        const authData = await authRes.json();
+        setIsLogged(authData.success);
+
+        if (authData.success) {
+          const watchRes = await fetch(`/api/watchlist`, {
+            credentials: 'include'
+          });
+          const watchlist = await watchRes.json();
+          if (Array.isArray(watchlist)) {
+            setIsInWatchlist(watchlist.includes(stockTicker?.toUpperCase() || ""));
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
     fetchStockData();
+    checkStatus();
   }, [stockTicker]);
 
   return (
@@ -95,8 +163,8 @@ function TickerPage() {
                 {stockData.longName} ({stockData.symbol}){' '}
               </p>
               <>
-                {isClicked &&
-                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                {isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
                     <Eye size={20} />
                   </div>
                 }
@@ -105,12 +173,17 @@ function TickerPage() {
 
               <>
                 {
-                  !isClicked &&
-                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                  !isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
                     <EyeClosed size={20} />
                   </div>
                 }
               </>
+              <AlertModal
+                symbol={stockTicker || ""}
+                currentPrice={stockData.currentPrice}
+                onAlertSet={handleSetAlert}
+              />
 
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
@@ -144,9 +217,9 @@ function TickerPage() {
               <div className="bg-white rounded-lg p-3 flex ">
                 <div className="w-full">
                   <div className="flex justify-between items-center  ">
-                    <p className="font-bold uppercase text-zinc-500 flex gap-2  ">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2  ">
                       Total Revenue {<ChartNoAxesColumn size={20} />}
-                    </p>
+                    </div>
                     <div>
                       <ToolTip explain="Total Revenue — the total amount of money the company earned from selling its products or services over the last 12 months, before any expenses are deducted."></ToolTip>
                     </div>
@@ -161,9 +234,9 @@ function TickerPage() {
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
-                    <p className="font-bold uppercase text-zinc-500 flex gap-2 ">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2 ">
                       Total Debt {<ChartPie size={20} />}
-                    </p>
+                    </div>
                     <div>
                       <ToolTip
                         explain="Total Debt — the total amount of money the company owes to lenders, including both short-term and long-term loans and bonds.
@@ -183,9 +256,9 @@ function TickerPage() {
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
-                    <p className="font-bold uppercase text-zinc-500  flex gap-2">
+                    <div className="font-bold uppercase text-zinc-500  flex gap-2">
                       Total Ask {<ChartCandlestick size={20} />}
-                    </p>
+                    </div>
                     <div>
                       <ToolTip
                         explain="Ask — the lowest price a seller is currently willing to accept for one share of the stock.
@@ -203,9 +276,9 @@ function TickerPage() {
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
-                    <p className="font-bold uppercase text-zinc-500 flex gap-2">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2">
                       Total Bid {<ChartScatter size={20} />}
-                    </p>
+                    </div>
                     <div>
                       <ToolTip explain="Bid — the highest price a buyer is currently willing to pay for one share of the stock."></ToolTip>
                     </div>
@@ -637,13 +710,10 @@ function TickerPage() {
             <div className="flex items-end gap-1">
               <p className="font-excon font-bold text-3xl">
                 {stockData.longName} ({stockData.symbol}){' '}
-
-
-                
               </p>
               <>
-                {isClicked &&
-                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                {isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
                     <Eye size={20} />
                   </div>
                 }
@@ -652,12 +722,18 @@ function TickerPage() {
 
               <>
                 {
-                  !isClicked &&
-                  <div className='p-2 bg-black text-white rounded-lg ' onClick={handleClick}>
+                  !isInWatchlist &&
+                  <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
                     <EyeClosed size={20} />
                   </div>
                 }
               </>
+
+              <AlertModal
+                symbol={stockTicker || ""}
+                currentPrice={stockData.currentPrice}
+                onAlertSet={handleSetAlert}
+              />
               <p
                 className={` ${isPositive ? 'text-green-700' : 'text-red-700'} font-bold`}
               >
@@ -748,14 +824,14 @@ function TickerPage() {
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
-                    <p className="font-bold uppercase text-zinc-500 flex gap-2">
+                    <div className="font-bold uppercase text-zinc-500 flex gap-2">
                       Total Bid{' '}
                       {
                         <div>
                           <ToolTip explain="Bid — the highest price a buyer is currently willing to pay for one share of the stock."></ToolTip>
                         </div>
                       }
-                    </p>
+                    </div>
                   </div>
 
                   <p className="font-bold">${stockData.bid}M</p>
