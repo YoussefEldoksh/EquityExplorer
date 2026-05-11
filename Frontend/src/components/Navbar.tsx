@@ -8,21 +8,18 @@ import UserMenu from './UserMenu';
 import { useEffect } from 'react';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer'
 
-interface Props {
-  isOtherPage: boolean
-}
+import { useLocation } from 'react-router-dom';
 
-
-function Navbar({ isOtherPage }: Props) {
+function Navbar() {
+  const location = useLocation();
+  const isOtherPage = location.pathname !== '/';
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' },
@@ -143,11 +140,11 @@ function Navbar({ isOtherPage }: Props) {
       {
         !isMobile &&
         <>
-          <nav className={` ${isOtherPage ? "bg-white " : "fixed top-0 right-0 left-0 z-50 bg-white/10 backdrop-blur-md border border-white/20"}  flex px-10 py-2  justify-between`}>
+          <nav className={`fixed top-0 right-0 left-0 z-50 flex px-10 py-2 justify-between border-b ${isOtherPage ? "bg-white/80 backdrop-blur-md border-slate-200" : "bg-white/10 backdrop-blur-md border-white/20"}`}>
             <div className=''>
-              <a href="/">
+              <Link to="/">
                 <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
-              </a>
+              </Link>
 
             </div>
 
@@ -231,11 +228,11 @@ function Navbar({ isOtherPage }: Props) {
       flex px-4 py-2 items-center justify-between
     `}>
             {/* Logo */}
-            <a href="/">
+            <Link to="/">
               <p className={`font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`}>
                 EquityExplorer
               </p>
-            </a>
+            </Link>
 
             <div className="flex items-center gap-2">
               {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}

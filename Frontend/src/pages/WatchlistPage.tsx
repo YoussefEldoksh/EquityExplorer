@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
 import { useIsMobile } from '../hooks/use-mobile';
 import {
     Table,
@@ -9,7 +8,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
 import {
     Pagination,
     PaginationContent,
@@ -21,7 +19,6 @@ import {
 } from "@/components/ui/pagination"
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-
 
 function WatchlistPage() {
     const [watchlist, setWatchlist] = useState([]);
@@ -61,7 +58,6 @@ function WatchlistPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-            <Navbar isOtherPage={true}></Navbar>
 
             <div className='px-5 pt-24 pb-10'>
                 <div className="mb-8">

@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import ToolTip from '../components/ToolTip';
-import { ChartNoAxesColumn } from 'lucide-react';
+import { useEffect, useState } from 'react'
 import { useIsMobile } from '../hooks/use-mobile';
 import {
     Table,
     TableBody,
-    // TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
 import {
     Pagination,
     PaginationContent,
@@ -24,7 +19,6 @@ import {
 } from "@/components/ui/pagination"
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-
 
 function TickersListPage() {
     const navigate = useNavigate();
@@ -69,7 +63,6 @@ useEffect(() => {
 
     return (
         <>
-            <Navbar isOtherPage={true}></Navbar>
 
             <div className='pt-18'>
                 <p className='text-3xl font-excon font-bold px-7 ' >Popular Indices</p>

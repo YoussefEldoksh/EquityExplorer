@@ -9,11 +9,14 @@ import SettingsPage from './pages/SettingsPage'
 import ContactPage from './pages/ContactPage'
 import WatchlistPage from './pages/WatchlistPage'
 import AlertsPage from './pages/AlertsPage'
+import Navbar from './components/Navbar'
+
 function App() {
 
   return (
     <>
       <BrowserRouter >
+        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage/>} />
           <Route path="/:stockTicker" element={<TickerPage/>} />
@@ -25,7 +28,7 @@ function App() {
           <Route path="/alerts" element={<AlertsPage/>} />
           <Route path="/contact" element={<ContactPage/>} />
         </Routes>
-        </BrowserRouter>
+      </BrowserRouter>
 
       </>
       )

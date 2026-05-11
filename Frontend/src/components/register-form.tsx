@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useState, type ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Field,
   FieldDescription,
@@ -17,6 +18,7 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     username: '',
     firstname: '',
@@ -89,7 +91,7 @@ export function RegisterForm({
         const data = await response.json();
         if (data.success) {
           window.dispatchEvent(new Event('auth'));
-          window.location.href = '/'
+          navigate('/')
         } else {
           alert(data.message)
         }
@@ -116,6 +118,7 @@ export function RegisterForm({
                   id="username"
                   placeholder="username"
                   name="username"
+                  autoComplete="username"
                   onChange={handleChange}
                   required
                 />
@@ -126,6 +129,7 @@ export function RegisterForm({
                   <Input
                     id="firstName"
                     name="firstname"
+                    autoComplete="given-name"
                     onChange={handleChange}
                     required
                   />
@@ -136,6 +140,7 @@ export function RegisterForm({
                   <Input
                     id="lastName"
                     name="lastname"
+                    autoComplete="family-name"
                     onChange={handleChange}
                     required
                   />
@@ -146,6 +151,7 @@ export function RegisterForm({
                 <Input
                   id="email"
                   type="email"
+                  autoComplete="email"
                   placeholder="m@example.com"
                   name="usermail"
                   onChange={handleChange}
@@ -157,6 +163,7 @@ export function RegisterForm({
                 <Input
                   id="password"
                   type="password"
+                  autoComplete="new-password"
                   name="userpass"
                   onChange={handleChange}
                   required
