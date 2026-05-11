@@ -1,4 +1,4 @@
-  import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -87,7 +87,7 @@ export function LoginForm({
         const data = await response.json();
         if (data.success) {
           window.dispatchEvent(new Event('auth'))
-          window.location.href = '/'
+          navigate('/')
         } else {
           alert(data.message)
         }
@@ -114,6 +114,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
+                  autoComplete="email"
                   placeholder="m@example.com"
                   required
                   name="usermail"
@@ -133,6 +134,7 @@ export function LoginForm({
                 <Input
                   id="password"
                   type="password"
+                  autoComplete="current-password"
                   required
                   name="userpass"
                   onChange={handleChange}

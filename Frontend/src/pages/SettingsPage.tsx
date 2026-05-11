@@ -2,14 +2,12 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import {
     ArrowUpRight,
-    BellRing,
     Palette,
     ShieldCheck,
     UserRound,
     Loader2
 } from "lucide-react";
 
-import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -179,7 +177,6 @@ function SettingsPage() {
         <div className="relative min-h-screen overflow-hidden bg-linear-to-b from-slate-50 via-indigo-50/70 to-white text-slate-900">
             <div className="pointer-events-none absolute -left-24 top-0 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl" />
             <div className="pointer-events-none absolute right-0 top-24 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
-            <Navbar isOtherPage={true} />
 
             <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-16 pt-24 md:px-8 lg:px-10">
                 <section className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_100px_rgba(15,23,42,0.12)] backdrop-blur">
@@ -379,13 +376,14 @@ function SettingsPage() {
                                 </div>
                             </div>
 
-                            <div className="space-y-4">
+                            <form onSubmit={(e) => { e.preventDefault(); handleUpdatePassword(); }} className="space-y-4">
                                 {hasPassword && (
                                     <div className="space-y-2">
                                         <Label htmlFor="old_password">Current Password</Label>
                                         <Input
                                             id="old_password"
                                             type="password"
+                                            autoComplete="current-password"
                                             value={passwords.old_password}
                                             onChange={handlePasswordChange}
                                             className="rounded-2xl border-slate-200 bg-white"
@@ -398,6 +396,7 @@ function SettingsPage() {
                                     <Input
                                         id="new_password"
                                         type="password"
+                                        autoComplete="new-password"
                                         value={passwords.new_password}
                                         onChange={handlePasswordChange}
                                         className="rounded-2xl border-slate-200 bg-white"
@@ -409,6 +408,7 @@ function SettingsPage() {
                                     <Input
                                         id="confirm_password"
                                         type="password"
+                                        autoComplete="new-password"
                                         value={passwords.confirm_password}
                                         onChange={handlePasswordChange}
                                         className="rounded-2xl border-slate-200 bg-white"
@@ -416,13 +416,13 @@ function SettingsPage() {
                                     />
                                 </div>
                                 <Button
+                                    type="submit"
                                     disabled={savingPassword}
-                                    onClick={handleUpdatePassword}
                                     className="w-full h-12 rounded-2xl bg-blue-600 text-white hover:bg-blue-700 mt-2 shadow-sm"
                                 >
                                     {savingPassword ? "Updating..." : (hasPassword ? "Update Password" : "Set Password")}
                                 </Button>
-                            </div>
+                            </form>
                         </CardContent>
                     </Card>
                 </section>
