@@ -48,6 +48,7 @@ function TickerPage() {
     try {
       const response = await fetch(
         `/api/timeseries/${stockTicker.toUpperCase()}?period=${period}&interval=${interval}`,
+        { credentials: 'include' }
       );
       const data = await response.json();
       setTimeSeries(data);
@@ -111,7 +112,7 @@ function TickerPage() {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`);
+        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`, { credentials: 'include' });
         const data = await response.json();
         setStockData(data);
         await fetchStockTimeSeries('1mo', '1d');

@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $secret = $env['JWT_SECRET'] ?? '';
             $now = time();
             $payload = [
-                'sub' => $user_id,
+                'sub' => (string)$user_id,
                 'email' => $email,
                 'username' => $username,
                 'iat' => $now,

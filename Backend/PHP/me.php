@@ -23,14 +23,18 @@ $userId = $payload['sub'];
 
 try {
     // Fetch latest user data from database
-    $stmt = $conn->prepare("SELECT id, username, firstname, lastname, email, bio FROM users WHERE id = ?");
+    $stmt = $conn->prepare("SELECT id, username, firstname, lastname, email, bio, password_hash FROM users WHERE id = ?");
     $stmt->execute([$userId]);
     $user = $stmt->fetch();
 
     if ($user) {
+        $has_password = !empty($user['password_hash']);
+        unset($user['password_hash']); // Don't send the hash to frontend
+        
         echo json_encode([
             "success" => true,
-            "user" => $user
+            "user" => $user,
+            "has_password" => $has_password
         ]);
     } else {
         http_response_code(404);
