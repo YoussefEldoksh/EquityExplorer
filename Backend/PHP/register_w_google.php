@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $secret = $env['JWT_SECRET'] ?? '';
         $now    = time();
         $payload = [
-            'sub'      => $new_id,
+            'sub'      => (string)$new_id,
             'email'    => $jwt_email,
             'username' => $jwt_username,
             'iat'      => $now,
