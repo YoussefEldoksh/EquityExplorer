@@ -88,41 +88,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["success" => false, "message" => "Account not found."]);
     }
 
-    $new_id       = $conn->lastInsertId();
-    $jwt_email    = $_usermail;
-    $jwt_username = $username;
 }
 
-// ─── SHARED: Issue JWT & Session ──────────────────────────
-if (isset($new_id)) {
-    $env    = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-    $secret = $env['JWT_SECRET'] ?? '';
-    $now    = time();
-    $payload = [
-        'sub'      => $new_id,
-        'email'    => $jwt_email,
-        'username' => $jwt_username,
-        'iat'      => $now,
-        'exp'      => $now + 60 * 60 * 24 * 7
-    ];
-    $jwt    = jwt_encode($payload, $secret);
-    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-    setcookie('token', $jwt, [
-        'expires'  => $payload['exp'],
-        'path'     => '/',
-        'secure'   => $secure,
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
-
-    $_SESSION["user_id"] = $new_id;
-
-    echo json_encode([
-        "success"  => true,
-        "message"  => "Registration successful!",
-        "user_id"  => $new_id,
-        "username" => $jwt_username
-    ]);
-} else {
-    echo json_encode(["success" => false, "message" => "Invalid option."]);
-}
