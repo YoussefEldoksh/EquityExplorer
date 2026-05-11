@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, EyeClosed, Eye } from 'lucide-react';
 import AlertModal from '../components/AlertModal';
 
@@ -9,7 +8,6 @@ import {
   ChartPie,
   ChartCandlestick,
   ChartScatter,
-  Info,
 } from 'lucide-react';
 import Chart from '../components/Chart';
 import {
@@ -44,10 +42,11 @@ function TickerPage() {
       : null;
   const isPositive = priceChange ? priceChange >= 0 : true;
 
-  const fetchStockTimeSeries = async (period, interval) => {
+  const fetchStockTimeSeries = async (period: string, interval: string) => {
     try {
       const response = await fetch(
-        `/api/timeseries/${stockTicker.toUpperCase()}?period=${period}&interval=${interval}`,
+        `/api/timeseries/${stockTicker?.toUpperCase()}?period=${period}&interval=${interval}`,
+        { credentials: 'include' }
       );
       const data = await response.json();
       setTimeSeries(data);
@@ -111,7 +110,7 @@ function TickerPage() {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`);
+        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`, { credentials: 'include' });
         const data = await response.json();
         setStockData(data);
         await fetchStockTimeSeries('1mo', '1d');
@@ -148,7 +147,6 @@ function TickerPage() {
 
   return (
     <>
-      <Navbar isOtherPage={true}></Navbar>
       {!isMobile && (
         <>
           <div className=" px-15 mt-5">
@@ -676,20 +674,6 @@ function TickerPage() {
                       </div>
                     </CardDescription>
                   </CardHeader>
-                </Card>
-              </TabsContent>
-              <TabsContent value="reports">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Reports</CardTitle>
-                    <CardDescription>
-                      Generate and download your detailed reports. Export data
-                      in multiple formats for analysis.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm text-muted-foreground">
-                    You have 5 reports ready and available to export.
-                  </CardContent>
                 </Card>
               </TabsContent>
             </Tabs>

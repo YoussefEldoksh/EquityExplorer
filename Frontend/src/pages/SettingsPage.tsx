@@ -2,14 +2,12 @@ import { useState, useEffect, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import {
     ArrowUpRight,
-    BellRing,
     Palette,
     ShieldCheck,
     UserRound,
     Loader2
 } from "lucide-react";
 
-import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
@@ -28,6 +26,13 @@ function SettingsPage() {
     });
     const [watchlistCount, setWatchlistCount] = useState(0);
     const [alertCount, setAlertCount] = useState(0);
+    const [hasPassword, setHasPassword] = useState(false);
+    const [passwords, setPasswords] = useState({
+        old_password: "",
+        new_password: "",
+        confirm_password: ""
+    });
+    const [savingPassword, setSavingPassword] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -45,6 +50,7 @@ function SettingsPage() {
                         email: data.user.email || "",
                         bio: data.user.bio || ""
                     });
+                    setHasPassword(data.has_password);
                 }
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
@@ -112,6 +118,53 @@ function SettingsPage() {
         }
     };
 
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setPasswords({
+            ...passwords,
+            [e.target.id]: e.target.value
+        });
+    };
+
+    const handleUpdatePassword = async () => {
+        if (!passwords.new_password) {
+            alert("New password is required.");
+            return;
+        }
+        if (passwords.new_password !== passwords.confirm_password) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        setSavingPassword(true);
+        try {
+            const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/update_password.php`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(passwords)
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert("Password updated successfully!");
+                setPasswords({
+                    old_password: "",
+                    new_password: "",
+                    confirm_password: ""
+                });
+                setHasPassword(true);
+            } else {
+                alert(data.message || "Failed to update password.");
+            }
+        } catch (error) {
+            console.error("Error updating password:", error);
+            alert("Something went wrong while updating password.");
+        } finally {
+            setSavingPassword(false);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex h-screen w-full items-center justify-center">
@@ -124,7 +177,6 @@ function SettingsPage() {
         <div className="relative min-h-screen overflow-hidden bg-linear-to-b from-slate-50 via-indigo-50/70 to-white text-slate-900">
             <div className="pointer-events-none absolute -left-24 top-0 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl" />
             <div className="pointer-events-none absolute right-0 top-24 h-80 w-80 rounded-full bg-emerald-300/20 blur-3xl" />
-            <Navbar isOtherPage={true} />
 
             <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 pb-16 pt-24 md:px-8 lg:px-10">
                 <section className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-[0_30px_100px_rgba(15,23,42,0.12)] backdrop-blur">
@@ -308,10 +360,10 @@ function SettingsPage() {
                         </CardContent>
                     </Card>
 
-                    <Card className="rounded-[1.75rem] border-slate-200 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+                    <Card className="rounded-[1.75rem] border-slate-200 bg-white/90 shadow-[0_20px_60px_rgba(15,23,42,0.08)] overflow-hidden">
                         <CardContent className="p-7">
-                            <div className="flex items-center gap-3">
-                                <div className="flex size-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="flex size-11 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                                     <ShieldCheck className="size-5" />
                                 </div>
                                 <div>
@@ -319,27 +371,58 @@ function SettingsPage() {
                                         Security
                                     </p>
                                     <p className="text-sm text-slate-500">
-                                        Session control and account safety actions.
+                                        {hasPassword ? "Change your account password." : "Set a password for your account."}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="mt-6 space-y-3">
+                            <form onSubmit={(e) => { e.preventDefault(); handleUpdatePassword(); }} className="space-y-4">
+                                {hasPassword && (
+                                    <div className="space-y-2">
+                                        <Label htmlFor="old_password">Current Password</Label>
+                                        <Input
+                                            id="old_password"
+                                            type="password"
+                                            autoComplete="current-password"
+                                            value={passwords.old_password}
+                                            onChange={handlePasswordChange}
+                                            className="rounded-2xl border-slate-200 bg-white"
+                                            placeholder="••••••••"
+                                        />
+                                    </div>
+                                )}
+                                <div className="space-y-2">
+                                    <Label htmlFor="new_password">New Password</Label>
+                                    <Input
+                                        id="new_password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        value={passwords.new_password}
+                                        onChange={handlePasswordChange}
+                                        className="rounded-2xl border-slate-200 bg-white"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="confirm_password">Confirm New Password</Label>
+                                    <Input
+                                        id="confirm_password"
+                                        type="password"
+                                        autoComplete="new-password"
+                                        value={passwords.confirm_password}
+                                        onChange={handlePasswordChange}
+                                        className="rounded-2xl border-slate-200 bg-white"
+                                        placeholder="••••••••"
+                                    />
+                                </div>
                                 <Button
-                                    variant="outline"
-                                    className="h-12 w-full justify-between rounded-2xl border-slate-200 px-4"
+                                    type="submit"
+                                    disabled={savingPassword}
+                                    className="w-full h-12 rounded-2xl bg-blue-600 text-white hover:bg-blue-700 mt-2 shadow-sm"
                                 >
-                                    Two-factor authentication
-                                    <ArrowUpRight className="size-4" />
+                                    {savingPassword ? "Updating..." : (hasPassword ? "Update Password" : "Set Password")}
                                 </Button>
-                                <Button
-                                    variant="outline"
-                                    className="h-12 w-full justify-between rounded-2xl border-slate-200 px-4"
-                                >
-                                    Active sessions
-                                    <BellRing className="size-4" />
-                                </Button>
-                            </div>
+                            </form>
                         </CardContent>
                     </Card>
                 </section>
