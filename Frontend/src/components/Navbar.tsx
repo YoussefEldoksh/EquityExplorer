@@ -2,7 +2,7 @@ import { useIsMobile } from '../hooks/use-mobile'
 import { Button } from './ui/button'
 import { Field } from './ui/field'
 import { Input } from './ui/input'
-import { useState, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import { useEffect } from 'react';
@@ -34,14 +34,14 @@ function Navbar({ isOtherPage }: Props) {
 
   const handleLogout = async () => {
     try {
-        await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
-            method: 'POST',
-            credentials: 'include',
-        });
+      await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
+        method: 'POST',
+        credentials: 'include',
+      });
     } finally {
-        window.dispatchEvent(new Event('auth'));
-        setDrawerOpen(false);
-        navigate('/signin');
+      window.dispatchEvent(new Event('auth'));
+      setDrawerOpen(false);
+      navigate('/signin');
     }
   };
 
@@ -49,25 +49,70 @@ function Navbar({ isOtherPage }: Props) {
   const [searchWord, setSearchWord] = useState("");
   const [isAuthed, setIsAuthed] = useState<boolean>(false);
   const [user, setUser] = useState<{ username?: string } | null>(null);
-
-  // const handleSearch = async () => {
-  //   if (!searchWord.trim()) return;
-  //   console.log(searchWord);
-
-  //   try {
-  //     const response = await fetch(`http://127.0.0.1:8000/api/stock/${searchWord.toUpperCase()}`);
-  //     const data = await response.json();
-  //     console.log(data);
-
-  //   } catch (error) {
-  //        console.error('Error fetching stock data:', error);
-  //   }
-
-  // };
+  const [suggestions, setSuggestions] = useState<{ symbol: string; name: string }[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchWord(e.target.value);
+    setShowSuggestions(true);
   };
+
+  const selectTicker = (symbol: string) => {
+    setSearchWord("");
+    setSuggestions([]);
+    setShowSuggestions(false);
+    navigate(`/${symbol.toUpperCase()}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === 'Enter') {
+      if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+        e.preventDefault();
+        selectTicker(suggestions[selectedIndex].symbol);
+      } else if (searchWord.trim()) {
+        selectTicker(searchWord);
+      }
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (searchWord.trim().length > 1) {
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/api/search/suggestions?q=${searchWord}`);
+          const data = await response.json();
+          setSuggestions(data);
+          setSelectedIndex(-1);
+        } catch (error) {
+          console.error("Search error:", error);
+        }
+      } else {
+        setSuggestions([]);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchWord]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -101,24 +146,52 @@ function Navbar({ isOtherPage }: Props) {
           <nav className={` ${isOtherPage ? "bg-white " : "fixed top-0 right-0 left-0 z-50 bg-white/10 backdrop-blur-md border border-white/20"}  flex px-10 py-2  justify-between`}>
             <div className=''>
               <a href="/">
-                <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white" }`} >EquityExplorer</p>
+                <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
               </a>
 
             </div>
 
-            <div className='flex '>
+            <div className='flex relative'>
 
               <Field orientation="horizontal" className="w-120" >
-                <Input type="search" placeholder="Search..."
+                <Input type="search" placeholder="Search Symbol or Company..."
                   value={searchWord}
                   onChange={handleSearchChange}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setShowSuggestions(true)}
                   className={`bg-white`}
                 />
 
-                <Link to={`/${searchWord}`}>
-                  <Button className="hover:text-black hover:bg-white">Search</Button>
-                </Link>
+                <Button
+                  onClick={() => selectTicker(searchWord)}
+                  className="hover:text-black hover:bg-white"
+                >
+                  Search
+                </Button>
               </Field>
+
+              {showSuggestions && suggestions.length > 0 && (
+                <div
+                  ref={dropdownRef}
+                  className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-b-md shadow-lg z-[100] mt-1 overflow-hidden"
+                >
+                  {suggestions.map((item, index) => (
+                    <div
+                      key={item.symbol}
+                      onClick={() => selectTicker(item.symbol)}
+                      onMouseEnter={() => setSelectedIndex(index)}
+                      className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
+                        }`}
+                    >
+                      <div className="flex flex-col">
+                        <span className="font-bold text-sm">{item.symbol}</span>
+                        <span className="text-xs text-gray-500 truncate max-w-[200px]">{item.name}</span>
+                      </div>
+                      <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-medium">STOCK</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
             </div>
 
@@ -166,54 +239,92 @@ function Navbar({ isOtherPage }: Props) {
 
             <div className="flex items-center gap-2">
               {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}
-              <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"}>
+              <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
                 <DrawerTrigger asChild>
                   <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">Menu</Button>
                 </DrawerTrigger>
                 <DrawerContent>
+                  <DrawerHeader className="sr-only">
+                    <DrawerTitle>Navigation Menu</DrawerTitle>
+                    <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
+                  </DrawerHeader>
 
-                <div className='flex px-5 pt-10 '>
+                  <div className='flex px-5 pt-10 relative'>
 
-                  <Field orientation="horizontal" className="w-120" >
-                    <Input type="search" placeholder="Search..."
-                      value={searchWord}
-                      onChange={handleSearchChange}
-                      className={`bg-white`}
-                    />
+                    <Field orientation="horizontal" className="w-120" >
+                      <Input type="search" placeholder="Search..."
+                        value={searchWord}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleKeyDown}
+                        onFocus={() => setShowSuggestions(true)}
+                        className={`bg-white`}
+                      />
 
-                    <Link to={`/${searchWord}`}>
-                      <Button className="hover:text-black hover:bg-white">Search</Button>
-                    </Link>
-                  </Field>
+                      <Button
+                        onClick={() => {
+                          selectTicker(searchWord);
+                          setDrawerOpen(false);
+                        }}
+                        className="hover:text-black hover:bg-white"
+                      >
+                        Search
+                      </Button>
+                    </Field>
 
-                </div>
-                {/* ... search ... */}
-
-                <div className="flex flex-col gap-2 px-4 py-2 pt-5">
-                  {(() => {
-                    const list = [...menuItems];
-                    if (!isAuthed) {
-                      list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
-                      list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
-                    } else {
-                      list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
-                    }
-                    return (
-                      <>
-                        {list.map((item) => (
-                          <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
-                            <p className="w-full font-excon uppercase font-bold text-5xl ">{item.label}</p>
-                          </Link>
+                    {showSuggestions && suggestions.length > 0 && (
+                      <div
+                        ref={dropdownRef}
+                        className="absolute top-[calc(100%-10px)] left-5 right-5 bg-white border border-gray-200 rounded-md shadow-lg z-[100] overflow-hidden"
+                      >
+                        {suggestions.map((item, index) => (
+                          <div
+                            key={item.symbol}
+                            onClick={() => {
+                              selectTicker(item.symbol);
+                              setDrawerOpen(false);
+                            }}
+                            onMouseEnter={() => setSelectedIndex(index)}
+                            className={`px-4 py-3 cursor-pointer flex justify-between items-center ${selectedIndex === index ? "bg-gray-100" : ""
+                              }`}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-bold text-sm text-black">{item.symbol}</span>
+                              <span className="text-xs text-gray-500">{item.name}</span>
+                            </div>
+                          </div>
                         ))}
-                        {isAuthed && (
-                          <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-5xl text-red-600 hover:text-red-700">
-                            LOGOUT
-                          </button>
-                        )}
-                      </>
-                    );
-                  })()}
-                </div>
+                      </div>
+                    )}
+
+                  </div>
+
+                  <div className="flex flex-col gap-2 px-4 py-2 pt-5">
+                    {(() => {
+                      const list = [...menuItems];
+                      if (!isAuthed) {
+                        list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
+                        list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
+                      } else {
+                        list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
+                        list.push({ label: 'Alerts', ariaLabel: 'Alerts', link: '/alerts' });
+                        list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
+                      }
+                      return (
+                        <>
+                          {list.map((item) => (
+                            <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
+                              <p className="w-full font-excon uppercase font-bold text-5xl ">{item.label}</p>
+                            </Link>
+                          ))}
+                          {isAuthed && (
+                            <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-5xl text-red-600 hover:text-red-700">
+                              LOGOUT
+                            </button>
+                          )}
+                        </>
+                      );
+                    })()}
+                  </div>
 
 
                 </DrawerContent>
