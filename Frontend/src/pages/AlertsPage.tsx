@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
-import Navbar from '../components/Navbar'
 import { useIsMobile } from '../hooks/use-mobile';
 import { Button } from '../components/ui/button';
-import { Trash2, Bell, ArrowUpRight, ArrowDownRight, Pause, Play, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
+import { Trash2, Bell, ArrowUpRight, Pause, Play, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
@@ -115,7 +114,6 @@ function AlertsPage() {
 
     return (
         <div className="min-h-screen bg-white text-slate-900 selection:bg-black selection:text-white">
-            <Navbar isOtherPage={true}></Navbar>
 
             <main className='px-6 pt-32 pb-20 max-w-6xl mx-auto'>
                 <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
