@@ -37,7 +37,7 @@ function WatchlistPage() {
     useEffect(() => {
         const fetchWatchlist = async () => {
             try {
-                const response = await fetch(`/api/watchlist/details`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/watchlist/details`, {
                     credentials: 'include'
                 });
                 if (response.status === 401) {
