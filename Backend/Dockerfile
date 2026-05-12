@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Force PHP-FPM to listen on port 9000 (Aggressive match)
-RUN sed -i 's/^listen =.*/listen = 127.0.0.1:9000/' /etc/php/8.2/fpm/pool.d/www.conf
+# Force PHP-FPM to listen on port 9000 and preserve environment variables
+RUN sed -i 's/^listen =.*/listen = 127.0.0.1:9000/' /etc/php/8.2/fpm/pool.d/www.conf \
+    && sed -i 's/^;clear_env = no/clear_env = no/' /etc/php/8.2/fpm/pool.d/www.conf
 
 # Set up Python Environment
 WORKDIR /app/python
