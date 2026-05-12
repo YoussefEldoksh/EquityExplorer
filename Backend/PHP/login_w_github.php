@@ -26,9 +26,9 @@ if (!$code) {
 
 // 2. Load GitHub Credentials from .env
 $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-$clientId = $env['GITHUB_CLIENT_ID'] ?? '';
-$clientSecret = $env['GITHUB_CLIENT_SECRET'] ?? '';
-$jwtSecret = $env['JWT_SECRET'] ?? '';
+$clientId = $env['GITHUB_CLIENT_ID'] ?? getenv('GITHUB_CLIENT_ID') ?: '';
+$clientSecret = $env['GITHUB_CLIENT_SECRET'] ?? getenv('GITHUB_CLIENT_SECRET') ?: '';
+$jwtSecret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
 
 // 3. Exchange code for Access Token
 $redirectUri = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
