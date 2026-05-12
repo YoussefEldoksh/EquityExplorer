@@ -41,7 +41,7 @@ export function RegisterForm({
 
     try {
       const response = await fetch(
-        `http://${window.location.hostname}/EquityExplorer/Backend/PHP/registration.php`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/registration.php`,
         {
           method: 'POST',
           credentials: 'include',
@@ -99,7 +99,7 @@ export function RegisterForm({
 
       const exchangeCode = async () => {
         try {
-          const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -133,7 +133,7 @@ export function RegisterForm({
 
       // 2. Send to your backend
       try {
-        const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/register_w_google.php`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register_w_google.php`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },

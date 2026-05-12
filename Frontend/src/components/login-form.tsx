@@ -36,7 +36,7 @@ export function LoginForm({
 
     try {
       const response = await fetch(
-        `http://${window.location.hostname}/EquityExplorer/Backend/PHP/login.php`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login.php`,
         {
           method: 'POST',
           credentials: 'include',
@@ -95,7 +95,7 @@ export function LoginForm({
       // Send code to backend
       const exchangeCode = async () => {
         try {
-          const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
             method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
@@ -129,7 +129,7 @@ export function LoginForm({
 
       // 2. Send to your backend
       try {
-        const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_google.php`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_google.php`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
