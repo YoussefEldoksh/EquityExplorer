@@ -1,10 +1,14 @@
 #!/bin/bash
 
-# Ensure PHP runtime directory exists for the socket
-mkdir -p /var/run/php
+# Debug: Print the PHP listen configuration to logs
+echo "PHP-FPM Configuration:"
+grep "listen =" /etc/php/8.2/fpm/pool.d/www.conf
 
-# Start PHP-FPM
-service php8.2-fpm start
+# Ensure PHP runtime directory exists
+mkdir -p /run/php
+
+# Start PHP-FPM in the background
+/usr/sbin/php-fpm8.2 -D
 
 # Start Python FastAPI (Uvicorn)
 cd /app/python
