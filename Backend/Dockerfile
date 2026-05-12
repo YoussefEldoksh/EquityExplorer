@@ -25,6 +25,7 @@ COPY Python/ .
 # Set up PHP Environment
 WORKDIR /var/www/php
 COPY PHP/ .
+RUN chmod -R 755 /var/www/php
 
 # Copy Nginx Config
 COPY nginx.conf /etc/nginx/nginx.conf
