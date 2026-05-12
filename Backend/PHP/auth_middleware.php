@@ -55,7 +55,7 @@ function jwt_decode(string $jwt, string $secret, array $allowed_algs = ['HS256']
 
 function require_auth() {
     $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-    $secret = $env['JWT_SECRET'] ?? '';
+    $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
     if (!$secret) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Server misconfigured (missing JWT secret)']);

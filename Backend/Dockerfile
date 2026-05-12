@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Force PHP-FPM to listen on port 9000 instead of a socket
+RUN sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 127.0.0.1:9000|' /etc/php/8.2/fpm/pool.d/www.conf
+
 # Set up Python Environment
 WORKDIR /app/python
 COPY Python/requirements.txt .
