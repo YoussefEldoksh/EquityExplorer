@@ -1,22 +1,16 @@
 <?php
+// Try to load from .env file first, then fallback to getenv()
 $envPath = __DIR__ . '/.env';
-if (!is_readable($envPath)) {
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => false,
-        'message' => 'Backend Error: .env file is missing. Please copy .env.example to .env and fill in your credentials.'
-    ]);
-    exit;
+$env = [];
+if (is_readable($envPath)) {
+    $env = parse_ini_file($envPath);
 }
 
-$env = parse_ini_file($envPath);
-$env = $env === false ? [] : $env;
-
-$host = trim($env['DB_HOST'] ?? 'localhost');
-$port = trim($env['DB_PORT'] ?? '5432');
-$dbname = trim($env['DB_NAME'] ?? '');
-$username = $env['DB_USER'] ?? '';
-$password = $env['DB_PASS'] ?? '';
+$host = $env['DB_HOST'] ?? getenv('DB_HOST') ?: 'localhost';
+$port = $env['DB_PORT'] ?? getenv('DB_PORT') ?: '5432';
+$dbname = $env['DB_NAME'] ?? getenv('DB_NAME') ?: '';
+$username = $env['DB_USER'] ?? getenv('DB_USER') ?: '';
+$password = $env['DB_PASS'] ?? getenv('DB_PASS') ?: '';
 
 // Check if PDO pgsql driver is installed
 if (!in_array('pgsql', PDO::getAvailableDrivers())) {

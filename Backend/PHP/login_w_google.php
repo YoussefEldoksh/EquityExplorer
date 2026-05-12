@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($google_id_database === $google_id) {
 
             $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-            $secret = $env['JWT_SECRET'] ?? '';
+            $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
             $now = time();
             $payload = [
                 'sub' => (string)$user_id,
