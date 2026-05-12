@@ -130,10 +130,11 @@ const AlertModal: React.FC<AlertModalProps> = ({ symbol, currentPrice, onAlertSe
                                 </div>
                             </div>
 
-                            {condition === 'below' && parseFloat(targetPrice) >= currentPrice && (
-                                <div className="flex items-center gap-2 text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100">
+                            {((condition === 'above' && parseFloat(targetPrice) <= currentPrice) || 
+                              (condition === 'below' && parseFloat(targetPrice) >= currentPrice)) && (
+                                <div className="flex items-center gap-2 text-amber-600 bg-amber-50 p-3 rounded-xl border border-amber-100 animate-in fade-in slide-in-from-top-1">
                                     <AlertTriangle size={14} className="shrink-0" />
-                                    <p className="text-[10px] font-medium leading-tight">Target is above market price. Alert will trigger immediately.</p>
+                                    <p className="text-[10px] font-bold leading-tight">Conditions already met. This alert will trigger immediately.</p>
                                 </div>
                             )}
                         </div>
