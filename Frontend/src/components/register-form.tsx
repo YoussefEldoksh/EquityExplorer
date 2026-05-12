@@ -14,6 +14,7 @@ import dollarImg from '../assets/Dollar.jpg';
 import { FieldSeparator } from './ui/field';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router-dom';
+import { toast } from "sonner"
 
 export function RegisterForm({
   className,
@@ -39,36 +40,39 @@ export function RegisterForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch(
-        `http://${window.location.hostname}/EquityExplorer/Backend/PHP/registration.php`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(form),
+    const fetchPromise = fetch(
+      `http://${window.location.hostname}/EquityExplorer/Backend/PHP/registration.php`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      );
-
+        body: new URLSearchParams(form),
+      },
+    ).then(async (response: Response) => {
       const data = await response.json();
-      console.log(data);
+      if (!data.success) throw new Error(data.message);
+      return data;
+    });
 
-      if (data.success) {
-        // Server sets HttpOnly cookie. Notify app of auth change.
-        window.dispatchEvent(new Event('auth'));
-        alert('Registered successfully!');
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      alert('Something went wrong' + error.message);
+    toast.promise(fetchPromise, {
+
+      loading: 'Signing Up...',
+      success: 'Welcome you equity finder...',
+      error: 'Something went wrong',
     }
+    )
+
+
+    await fetchPromise;
+    window.dispatchEvent(new Event('auth'));
+    navigate("/");
+
+
   };
 
-  const clientId = import.meta.env.VITE_CLIENT_ID;
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const githubClientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
 
   // 1. Handle GitHub Redirect Login
@@ -98,27 +102,32 @@ export function RegisterForm({
       window.history.replaceState({}, document.title, window.location.pathname);
 
       const exchangeCode = async () => {
-        try {
-          const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              code,
-              redirect_uri: window.location.origin + '/register'
-            }),
-          });
-
+        const fetchPromise = fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            code,
+            redirect_uri: window.location.origin + '/register'
+          }),
+        }).then(async (response: Response) => {
           const data = await response.json();
-          if (data.success) {
-            window.dispatchEvent(new Event('auth'));
-            navigate('/');
-          } else {
-            alert(data.message);
-          }
-        } catch (error) {
-          console.error('GitHub exchange failed:', error);
+          if (!data.success) throw new Error(data.message);
+          return data;
+        });
+
+        toast.promise(fetchPromise, {
+
+          loading: 'Signing up with github...',
+          success: 'Welcome you Equity Explorer!',
+          error: 'Something went wrong',
         }
+        )
+
+
+        await fetchPromise;
+        window.dispatchEvent(new Event('auth'));
+        navigate("/");
       };
       exchangeCode();
     }
@@ -132,30 +141,36 @@ export function RegisterForm({
       }).then(res => res.json())
 
       // 2. Send to your backend
-      try {
-        const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/register_w_google.php`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: userInfo.name,
-            email: userInfo.email,
-            googleId: userInfo.sub
-          }),
-        })
 
+      const fetchPromise = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/register_w_google.php`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: userInfo.name,
+          email: userInfo.email,
+          googleId: userInfo.sub
+        }),
+      }).then(async (response: Response) => {
         const data = await response.json();
-        if (data.success) {
-          window.dispatchEvent(new Event('auth'));
-          navigate('/')
-        } else {
-          alert(data.message)
-        }
-      } catch (error) {
-        console.error(error)
+        if (!data.success) throw new Error(data.message);
+        return data;
+      });
+
+      toast.promise(fetchPromise, {
+
+        loading: 'Signing up with google...',
+        success: 'Welcome you Equity Explorer!',
+        error: 'Something went wrong',
       }
+      )
+
+
+      await fetchPromise;
+      window.dispatchEvent(new Event('auth'));
+      navigate("/");
     },
-    onError: () => console.log('Google Register Failed'),
+    // onError: () => console.log('Google Register Failed'),
   });
 
   return (

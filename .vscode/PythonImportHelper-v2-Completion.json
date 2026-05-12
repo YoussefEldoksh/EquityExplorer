@@ -1,0 +1,413 @@
+[
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "StringIO",
+        "importPath": "io",
+        "description": "io",
+        "isExtraImport": true,
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "StringIO",
+        "importPath": "io",
+        "description": "io",
+        "isExtraImport": true,
+        "detail": "io",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "FastAPI",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "HTTPException",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Cookie",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
+        "documentation": {}
+    },
+    {
+        "label": "CORSMiddleware",
+        "importPath": "fastapi.middleware.cors",
+        "description": "fastapi.middleware.cors",
+        "isExtraImport": true,
+        "detail": "fastapi.middleware.cors",
+        "documentation": {}
+    },
+    {
+        "label": "yfinance",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "yfinance",
+        "description": "yfinance",
+        "detail": "yfinance",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "jwt",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "jwt",
+        "description": "jwt",
+        "detail": "jwt",
+        "documentation": {}
+    },
+    {
+        "label": "psycopg2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "ThreadPoolExecutor",
+        "importPath": "concurrent.futures",
+        "description": "concurrent.futures",
+        "isExtraImport": true,
+        "detail": "concurrent.futures",
+        "documentation": {}
+    },
+    {
+        "label": "lru_cache",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "url",
+        "kind": 5,
+        "importPath": "Backend.Python.script",
+        "description": "Backend.Python.script",
+        "peekOfCode": "url = \"https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv\"\nresponse = requests.get(url)\nif response.status_code == 200:\n    df = pd.read_csv(StringIO(response.text))\n    print(np.array(df.Symbol))\nelse:\n    print(f\"Error: {response.status_code}\")",
+        "detail": "Backend.Python.script",
+        "documentation": {}
+    },
+    {
+        "label": "response",
+        "kind": 5,
+        "importPath": "Backend.Python.script",
+        "description": "Backend.Python.script",
+        "peekOfCode": "response = requests.get(url)\nif response.status_code == 200:\n    df = pd.read_csv(StringIO(response.text))\n    print(np.array(df.Symbol))\nelse:\n    print(f\"Error: {response.status_code}\")",
+        "detail": "Backend.Python.script",
+        "documentation": {}
+    },
+    {
+        "label": "AlertRequest",
+        "kind": 6,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "class AlertRequest(BaseModel):\n    symbol: str\n    target_price: float\n    condition: str # 'above' or 'below'\n# PRICE ALERT ENDPOINTS\n@app.post(\"/api/alerts/add\")\nasync def add_alert(alert: AlertRequest, user_id: int = Depends(get_current_user)):\n    try:\n        conn = get_db_conn()\n        cur = conn.cursor()",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_db_conn",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_db_conn():\n    return psycopg2.connect(\n        host=os.getenv(\"DB_HOST\"),\n        port=os.getenv(\"DB_PORT\"),\n        dbname=os.getenv(\"DB_NAME\"),\n        user=os.getenv(\"DB_USER\"),\n        password=os.getenv(\"DB_PASS\")\n    )\n# Auth Helper\nasync def get_current_user(token: Optional[str] = Cookie(None)):",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "read_root",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def read_root():\n    return {\"Hello\": \"World\"}\n# FOR STOCK DETAIL PAGE\n@app.get(\"/api/stock/{symbol}\")\ndef get_stock_data(symbol: str):\n        ticker = yf.Ticker(symbol)\n        return ticker.info\n@app.get(\"/api/timeseries/{symbol}\")\ndef get_stock_timeseries(symbol: str, period: str = \"1mo\", interval: str = \"1d\"):\n    try:",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_stock_data",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_stock_data(symbol: str):\n        ticker = yf.Ticker(symbol)\n        return ticker.info\n@app.get(\"/api/timeseries/{symbol}\")\ndef get_stock_timeseries(symbol: str, period: str = \"1mo\", interval: str = \"1d\"):\n    try:\n        ticker = yf.Ticker(symbol.upper())\n        hist = ticker.history(period=period, interval=interval)\n        if hist.empty:\n            return {}",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_stock_timeseries",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_stock_timeseries(symbol: str, period: str = \"1mo\", interval: str = \"1d\"):\n    try:\n        ticker = yf.Ticker(symbol.upper())\n        hist = ticker.history(period=period, interval=interval)\n        if hist.empty:\n            return {}\n        hist.index = hist.index.strftime(\"%Y-%m-%d %H:%M:%S\")\n        return hist[[\"Open\", \"High\", \"Low\", \"Close\", \"Volume\"]].to_dict(orient=\"index\")\n    except Exception as e:\n        print(f\"Error: {e}\")",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_index_data",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_index_data(symbols: str):\n    try:\n        ticker_list = [s.strip() for s in symbols.split(\",\")]\n        result = {}\n        for symbol in ticker_list:\n            ticker = yf.Ticker(symbol)\n            result[symbol] = ticker.info\n        return result\n    except Exception as e:\n        print(f\"Error: {e}\")",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "fetch_ticker",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def fetch_ticker(symbol):\n    try:\n        ticker = yf.Ticker(symbol)\n        info = ticker.info\n        return {\n            \"symbol\": info.get(\"symbol\"),\n            \"name\": info.get(\"longName\"),\n            \"vol\": info.get(\"volume\"),\n            \"pe\": info.get(\"trailingPE\"),\n            \"eps\": info.get(\"trailingEps\"),",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_sp500_data",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_sp500_data():\n    url = \"https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv\"\n    response = requests.get(url)\n    df = pd.read_csv(StringIO(response.text))\n    # Replace . with - for yfinance compatibility (e.g. BRK.B -> BRK-B)\n    df[\"Symbol\"] = df[\"Symbol\"].str.replace(\".\", \"-\", regex=False)\n    return df.rename(columns={\"Security\": \"Name\"})[[\"Symbol\", \"Name\"]].to_dict(\"records\")\n# Cache for search suggestions\nstock_list_cache = []\ndef get_stock_list():",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_stock_list",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_stock_list():\n    global stock_list_cache\n    if not stock_list_cache:\n        try:\n            stock_list_cache = get_sp500_data()\n        except Exception as e:\n            print(f\"Error loading stock list: {e}\")\n            return []\n    return stock_list_cache\n@app.get(\"/api/search/suggestions\")",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_suggestions",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_suggestions(q: str):\n    if not q:\n        return []\n    q = q.strip().upper()\n    stocks = get_stock_list()\n    # Priority 1: Exact symbol match\n    # Priority 2: Symbol prefix match\n    # Priority 3: Name match\n    exact_symbol = []\n    symbol_prefix = []",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_sp500_tickers",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_sp500_tickers():\n    data = get_stock_list()\n    return [s[\"Symbol\"] for s in data]\ndef build_screener():\n    tickers = get_sp500_tickers()\n    with ThreadPoolExecutor(max_workers=10) as executor:\n        results = list(executor.map(fetch_ticker, tickers[:100]))\n    return [r for r in results if r is not None]\ndef get_cached_screener():\n    now = time.time()",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "build_screener",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def build_screener():\n    tickers = get_sp500_tickers()\n    with ThreadPoolExecutor(max_workers=10) as executor:\n        results = list(executor.map(fetch_ticker, tickers[:100]))\n    return [r for r in results if r is not None]\ndef get_cached_screener():\n    now = time.time()\n    if cache[\"data\"] and now - cache[\"timestamp\"] < CACHE_TTL:\n        return cache[\"data\"]\n    data = build_screener()",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "get_cached_screener",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def get_cached_screener():\n    now = time.time()\n    if cache[\"data\"] and now - cache[\"timestamp\"] < CACHE_TTL:\n        return cache[\"data\"]\n    data = build_screener()\n    cache[\"data\"] = data\n    cache[\"timestamp\"] = now\n    return data\n# WATCHLIST ENDPOINTS\n@app.post(\"/api/watchlist/add\")",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "screener",
+        "kind": 2,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "def screener(type: str = \"all\"):\n    data = get_cached_screener()\n    if type == \"gainers\":\n        return sorted(data, key=lambda x: x[\"changePct\"] or 0, reverse=True)[:25]\n    if type == \"losers\":\n        return sorted(data, key=lambda x: x[\"changePct\"] or 0)[:25]\n    if type == \"active\":\n        return sorted(data, key=lambda x: x[\"vol\"] or 0, reverse=True)[:25]\n    return data",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "JWT_SECRET",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "JWT_SECRET = os.getenv(\"JWT_SECRET\")\nALGORITHM = os.getenv(\"ALGORITHM\", \"HS256\")\n# DB Connection Helper\ndef get_db_conn():\n    return psycopg2.connect(\n        host=os.getenv(\"DB_HOST\"),\n        port=os.getenv(\"DB_PORT\"),\n        dbname=os.getenv(\"DB_NAME\"),\n        user=os.getenv(\"DB_USER\"),\n        password=os.getenv(\"DB_PASS\")",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "ALGORITHM",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "ALGORITHM = os.getenv(\"ALGORITHM\", \"HS256\")\n# DB Connection Helper\ndef get_db_conn():\n    return psycopg2.connect(\n        host=os.getenv(\"DB_HOST\"),\n        port=os.getenv(\"DB_PORT\"),\n        dbname=os.getenv(\"DB_NAME\"),\n        user=os.getenv(\"DB_USER\"),\n        password=os.getenv(\"DB_PASS\")\n    )",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "app",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "app = FastAPI()\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\n        \"http://localhost:5173\",\n        \"http://127.0.0.1:5173\",\n        \"http://192.168.92.1:5173\"\n    ],\n    allow_methods=[\"*\"],\n    allow_headers=[\"*\"],",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "cache",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "cache = {\"data\": None, \"timestamp\": 0}\nCACHE_TTL = 300  # 5 minutes\ndef fetch_ticker(symbol):\n    try:\n        ticker = yf.Ticker(symbol)\n        info = ticker.info\n        return {\n            \"symbol\": info.get(\"symbol\"),\n            \"name\": info.get(\"longName\"),\n            \"vol\": info.get(\"volume\"),",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "CACHE_TTL",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "CACHE_TTL = 300  # 5 minutes\ndef fetch_ticker(symbol):\n    try:\n        ticker = yf.Ticker(symbol)\n        info = ticker.info\n        return {\n            \"symbol\": info.get(\"symbol\"),\n            \"name\": info.get(\"longName\"),\n            \"vol\": info.get(\"volume\"),\n            \"pe\": info.get(\"trailingPE\"),",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "stock_list_cache",
+        "kind": 5,
+        "importPath": "Backend.Python.server",
+        "description": "Backend.Python.server",
+        "peekOfCode": "stock_list_cache = []\ndef get_stock_list():\n    global stock_list_cache\n    if not stock_list_cache:\n        try:\n            stock_list_cache = get_sp500_data()\n        except Exception as e:\n            print(f\"Error loading stock list: {e}\")\n            return []\n    return stock_list_cache",
+        "detail": "Backend.Python.server",
+        "documentation": {}
+    },
+    {
+        "label": "_Known",
+        "kind": 6,
+        "importPath": "Frontend.node_modules.flatted.python.flatted",
+        "description": "Frontend.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _Known:\n    def __init__(self):\n        self.key = []\n        self.value = []\nclass _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    for i in range(len(value)):\n        yield i",
+        "detail": "Frontend.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "_String",
+        "kind": 6,
+        "importPath": "Frontend.node_modules.flatted.python.flatted",
+        "description": "Frontend.node_modules.flatted.python.flatted",
+        "peekOfCode": "class _String:\n    def __init__(self, value):\n        self.value = value\ndef _array_keys(value):\n    for i in range(len(value)):\n        yield i\ndef _object_keys(value):\n    for key in value:\n        yield key\ndef _is_array(value):",
+        "detail": "Frontend.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "parse",
+        "kind": 2,
+        "importPath": "Frontend.node_modules.flatted.python.flatted",
+        "description": "Frontend.node_modules.flatted.python.flatted",
+        "peekOfCode": "def parse(value, *args, **kwargs):\n    json = _json.loads(value, *args, **kwargs)\n    wrapped = []\n    for value in json:\n        wrapped.append(_wrap(value))\n    input = []\n    for value in wrapped:\n        if isinstance(value, _String):\n            input.append(value.value)\n        else:",
+        "detail": "Frontend.node_modules.flatted.python.flatted",
+        "documentation": {}
+    },
+    {
+        "label": "stringify",
+        "kind": 2,
+        "importPath": "Frontend.node_modules.flatted.python.flatted",
+        "description": "Frontend.node_modules.flatted.python.flatted",
+        "peekOfCode": "def stringify(value, *args, **kwargs):\n    known = _Known()\n    input = []\n    output = []\n    i = int(_index(known, input, value))\n    while i < len(input):\n        output.append(_transform(known, input, input[i]))\n        i += 1\n    return _json.dumps(output, *args, **kwargs)",
+        "detail": "Frontend.node_modules.flatted.python.flatted",
+        "documentation": {}
+    }
+]

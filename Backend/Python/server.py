@@ -38,6 +38,7 @@ async def get_current_user(token: Optional[str] = Cookie(None)):
         # We use verify_sub=False because PHP sends the ID as an int, but PyJWT expects a string.
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_sub": False})
         user_id = payload.get("sub")
+        print(payload)
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
         return int(user_id)
@@ -56,6 +57,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
+    expose_headers=["*"], 
 )
 
 @app.get("/")
