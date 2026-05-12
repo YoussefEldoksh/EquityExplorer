@@ -11,10 +11,13 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+<<<<<<< HEAD
 # Force PHP-FPM to listen on port 9000 and preserve environment variables
 RUN sed -i 's/^listen =.*/listen = 127.0.0.1:9000/' /etc/php/8.2/fpm/pool.d/www.conf \
     && sed -i 's/^;clear_env = no/clear_env = no/' /etc/php/8.2/fpm/pool.d/www.conf
 
+=======
+>>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
 # Set up Python Environment
 WORKDIR /app/python
 COPY Python/requirements.txt .
@@ -26,7 +29,10 @@ COPY Python/ .
 # Set up PHP Environment
 WORKDIR /var/www/php
 COPY PHP/ .
+<<<<<<< HEAD
 RUN chmod -R 755 /var/www/php
+=======
+>>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
 
 # Copy Nginx Config
 COPY nginx.conf /etc/nginx/nginx.conf

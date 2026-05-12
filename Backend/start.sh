@@ -1,5 +1,6 @@
 #!/bin/bash
 
+<<<<<<< HEAD
 # Ensure PHP runtime directory exists
 mkdir -p /run/php
 
@@ -13,6 +14,13 @@ grep "^listen =" /etc/php/8.2/fpm/pool.d/www.conf
 
 # Start PHP-FPM in the background
 $FPM_BIN -D
+=======
+# Ensure PHP runtime directory exists for the socket
+mkdir -p /var/run/php
+
+# Start PHP-FPM
+service php8.2-fpm start
+>>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
 
 # Start Python FastAPI (Uvicorn)
 cd /app/python
