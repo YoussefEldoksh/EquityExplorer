@@ -1,14 +1,18 @@
 #!/bin/bash
 
-# Debug: Print the PHP listen configuration to logs
-echo "PHP-FPM Configuration:"
-grep "listen =" /etc/php/8.2/fpm/pool.d/www.conf
-
 # Ensure PHP runtime directory exists
 mkdir -p /run/php
 
+# Find the PHP-FPM binary
+FPM_BIN=$(which php-fpm8.2 || which php-fpm)
+echo "Found PHP-FPM at: $FPM_BIN"
+
+# Debug: Print the PHP listen configuration
+echo "PHP-FPM Listen Config:"
+grep "^listen =" /etc/php/8.2/fpm/pool.d/www.conf
+
 # Start PHP-FPM in the background
-/usr/sbin/php-fpm8.2 -D
+$FPM_BIN -D
 
 # Start Python FastAPI (Uvicorn)
 cd /app/python
