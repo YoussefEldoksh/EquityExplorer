@@ -39,34 +39,12 @@ export function LoginForm({
     e.preventDefault();
 
     const fetchPromise = fetch(
-      `http://${window.location.hostname}/EquityExplorer/Backend/PHP/login.php`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/auth/login.php`,
       {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(form),
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login.php`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(form),
-        },
-      );
-
-      const data = await response.json();
-      console.log(data);
-
-      if (data.success) {
-        // Server issues an HttpOnly cookie; notify app of auth change
-        window.dispatchEvent(new Event('auth'));
-        navigate('/');
-      } else {
-        alert(data.message);
       }
     ).then(async (response) => {
       const data = await response.json();
@@ -76,8 +54,7 @@ export function LoginForm({
 
     toast.promise(fetchPromise, {
       loading: 'Signing in...',
-      success: 'Welcome back Equity Explorer!',
-      error: () => "Something Went Wrong !",
+      success: 'Welcome back, Equity Explorer!',
     });
 
     try {
@@ -85,9 +62,10 @@ export function LoginForm({
       window.dispatchEvent(new Event('auth'));
       navigate('/');
     } catch (error) {
-      // toast.promise already shows the error; nothing extra needed here
+      toast.error('Something went wrong');
     }
   };
+
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const githubClientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
 
@@ -119,7 +97,7 @@ export function LoginForm({
 
       // Send code to backend
       const exchangeCode = async () => {
-        const fetchPromise = fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
+        const fetchPromise = fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
@@ -128,33 +106,21 @@ export function LoginForm({
             redirect_uri: window.location.origin + '/signin'
           }),
         }).then(async (response: Response) => {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              code,
-              redirect_uri: window.location.origin + '/signin'
-            }),
-          });
-
           const data = await response.json();
           if (!data.success) throw new Error(data.message);
           return data;
         });
 
         toast.promise(fetchPromise, {
-          loading: 'Signing in with github...',
-          success: 'Welcome back Equity Explorer!',
+          loading: 'Signing in with GitHub...',
+          success: 'Welcome back, Equity Explorer!',
+          error: 'Something went wrong',
         });
-
 
         try {
           await fetchPromise;
           window.dispatchEvent(new Event('auth'));
           navigate('/');
-
         } catch (error) {
           toast.error('GitHub login failed');
         }
@@ -168,10 +134,10 @@ export function LoginForm({
       // 1. Get user info from Google
       const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { Authorization: `Bearer ${response.access_token}` },
-      }).then(res => res.json())
+      }).then(res => res.json());
 
       // 2. Send to your backend
-      const fetchresponse = fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_google.php`, {
+      const fetchPromise = fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_google.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -181,35 +147,22 @@ export function LoginForm({
           googleId: userInfo.sub
         }),
       }).then(async (response) => {
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_google.php`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: userInfo.name,
-            email: userInfo.email,
-            googleId: userInfo.sub
-          }),
-        })
-
         const data = await response.json();
         if (!data.success) throw new Error(data.message);
         return data;
       });
 
-      toast.promise(fetchresponse, {
-        loading: 'Signing in with google...',
-        success: 'Welcome back Equity Explorer!',
+      toast.promise(fetchPromise, {
+        loading: 'Signing in with Google...',
+        success: 'Welcome back, Equity Explorer!',
+        error: 'Something went wrong',
       });
 
       try {
-
-        await fetchresponse;
-        window.dispatchEvent(new Event('auth'))
-        navigate('/')
-      }
-      catch (error) {
+        await fetchPromise;
+        window.dispatchEvent(new Event('auth'));
+        navigate('/');
+      } catch (error) {
         toast.error('Google login failed');
       }
     },

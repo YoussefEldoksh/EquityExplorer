@@ -41,25 +41,15 @@ export function RegisterForm({
     e.preventDefault();
 
     const fetchPromise = fetch(
-      `http://${window.location.hostname}/EquityExplorer/Backend/PHP/registration.php`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/auth/registration.php`,
       {
         method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/registration.php`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(form),
         },
         body: new URLSearchParams(form),
-      },
+      }
     ).then(async (response: Response) => {
       const data = await response.json();
       if (!data.success) throw new Error(data.message);
@@ -67,19 +57,18 @@ export function RegisterForm({
     });
 
     toast.promise(fetchPromise, {
-
       loading: 'Signing Up...',
-      success: 'Welcome you equity finder...',
+      success: 'Welcome, equity finder!',
       error: 'Something went wrong',
+    });
+
+    try {
+      await fetchPromise;
+      window.dispatchEvent(new Event('auth'));
+      navigate("/");
+    } catch (error) {
+      console.error(error);
     }
-    )
-
-
-    await fetchPromise;
-    window.dispatchEvent(new Event('auth'));
-    navigate("/");
-
-
   };
 
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -112,43 +101,33 @@ export function RegisterForm({
       window.history.replaceState({}, document.title, window.location.pathname);
 
       const exchangeCode = async () => {
-        const fetchPromise = fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/login_w_github.php`, {
+        const fetchPromise = fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
           method: 'POST',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
+          body: JSON.stringify({ 
             code,
             redirect_uri: window.location.origin + '/register'
           }),
         }).then(async (response: Response) => {
-        try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              code,
-              redirect_uri: window.location.origin + '/register'
-            }),
-          });
-
           const data = await response.json();
           if (!data.success) throw new Error(data.message);
           return data;
         });
 
         toast.promise(fetchPromise, {
-
-          loading: 'Signing up with github...',
-          success: 'Welcome you Equity Explorer!',
+          loading: 'Signing up with GitHub...',
+          success: 'Welcome, Equity Explorer!',
           error: 'Something went wrong',
+        });
+
+        try {
+          await fetchPromise;
+          window.dispatchEvent(new Event('auth'));
+          navigate("/");
+        } catch (error) {
+          console.error('GitHub exchange failed:', error);
         }
-        )
-
-
-        await fetchPromise;
-        window.dispatchEvent(new Event('auth'));
-        navigate("/");
       };
       exchangeCode();
     }
@@ -159,22 +138,10 @@ export function RegisterForm({
       // 1. Get user info from Google
       const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { Authorization: `Bearer ${response.access_token}` },
-      }).then(res => res.json())
+      }).then(res => res.json());
 
       // 2. Send to your backend
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register_w_google.php`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: userInfo.name,
-            email: userInfo.email,
-            googleId: userInfo.sub
-          }),
-        })
-
-      const fetchPromise = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/register_w_google.php`, {
+      const fetchPromise = fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register_w_google.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -190,17 +157,18 @@ export function RegisterForm({
       });
 
       toast.promise(fetchPromise, {
-
-        loading: 'Signing up with google...',
-        success: 'Welcome you Equity Explorer!',
+        loading: 'Signing up with Google...',
+        success: 'Welcome, Equity Explorer!',
         error: 'Something went wrong',
+      });
+
+      try {
+        await fetchPromise;
+        window.dispatchEvent(new Event('auth'));
+        navigate("/");
+      } catch (error) {
+        console.error(error);
       }
-      )
-
-
-      await fetchPromise;
-      window.dispatchEvent(new Event('auth'));
-      navigate("/");
     },
     // onError: () => console.log('Google Register Failed'),
   });

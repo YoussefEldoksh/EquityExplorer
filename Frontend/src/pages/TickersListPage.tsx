@@ -45,8 +45,8 @@ function TickersListPage() {
         const getIndexInfo = async () => {
             try {
                 const [indexResp, tickersResp] = await Promise.all([
-                    fetch(`/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
-                    fetch(`/api/snp500`)
+                    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
+                    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/snp500`)
                 ]);
                 const [data, tickersData] = await Promise.all([
                     indexResp.json(),
@@ -56,29 +56,13 @@ function TickersListPage() {
                 setTickersList(tickersData);
             } catch (error) {
                 console.error('Error fetching index data:', error);
-            }
-            finally {
+            } finally {
                 setLoading(false);
             }
-useEffect(() => {
-    const getIndexInfo = async () => {
-        try {
-            const [indexResp, tickersResp] = await Promise.all([
-                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
-                fetch(`${import.meta.env.VITE_API_BASE_URL}/api/snp500`)
-            ]);
-            const [data, tickersData] = await Promise.all([
-                indexResp.json(),
-                tickersResp.json()
-            ]);
-            setIndexInfo(data);
-            setTickersList(tickersData);
-        } catch (error) {
-            console.error('Error fetching index data:', error);
-        }
+        };
 
         getIndexInfo();
-    }, [])
+    }, []);
 
 
 
