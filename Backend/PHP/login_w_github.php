@@ -130,9 +130,9 @@ try {
         'expires' => time() + (3600 * 24 * 7),
         'path' => '/',
         'domain' => '', 
-        'secure' => false, // Set to true if using HTTPS
+        'secure' => true,
         'httponly' => true,
-        'samesite' => 'Lax',
+        'samesite' => 'None',
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Logged in via GitHub']);
