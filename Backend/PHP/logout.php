@@ -27,9 +27,9 @@ $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
 setcookie('token', '', [
     'expires' => time() - 3600,
     'path' => '/',
-    'secure' => $secure,
+    'secure' => true,
     'httponly' => true,
-    'samesite' => 'Lax'
+    'samesite' => 'None'
 ]);
 
 //Send Response

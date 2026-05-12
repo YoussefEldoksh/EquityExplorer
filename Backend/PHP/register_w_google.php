@@ -88,9 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setcookie('token', $jwt, [
             'expires'  => $payload['exp'],
             'path'     => '/',
-            'secure'   => $secure,
+            'secure'   => true,
             'httponly' => true,
-            'samesite' => 'Lax'
+            'samesite' => 'None'
         ]);
 
         $_SESSION["user_id"] = $new_id;
