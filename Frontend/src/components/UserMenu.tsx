@@ -8,7 +8,7 @@ function UserMenu({ className, username }: { className?: string, username?: stri
 
     const handleLogout = async () => {
         try {
-            await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/logout.php`, {
+            await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout.php`, {
                 method: 'POST',
                 credentials: 'include',
             });

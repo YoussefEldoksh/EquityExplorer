@@ -47,6 +47,16 @@ export function RegisterForm({
         credentials: 'include',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/registration.php`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(form),
         },
         body: new URLSearchParams(form),
       },
@@ -111,6 +121,17 @@ export function RegisterForm({
             redirect_uri: window.location.origin + '/register'
           }),
         }).then(async (response: Response) => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              code,
+              redirect_uri: window.location.origin + '/register'
+            }),
+          });
+
           const data = await response.json();
           if (!data.success) throw new Error(data.message);
           return data;
@@ -141,6 +162,17 @@ export function RegisterForm({
       }).then(res => res.json())
 
       // 2. Send to your backend
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register_w_google.php`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: userInfo.name,
+            email: userInfo.email,
+            googleId: userInfo.sub
+          }),
+        })
 
       const fetchPromise = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/register_w_google.php`, {
         method: 'POST',

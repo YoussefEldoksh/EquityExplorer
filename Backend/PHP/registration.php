@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ─── SHARED: Issue JWT & Session ──────────────────────────
     if (isset($new_id)) {
         $env    = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-        $secret = $env['JWT_SECRET'] ?? '';
+        $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
         $now    = time();
         $payload = [
             'sub'      => (string)$new_id,
@@ -84,9 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setcookie('token', $jwt, [
             'expires'  => $payload['exp'],
             'path'     => '/',
-            'secure'   => $secure,
+            'secure'   => true,
             'httponly' => true,
-            'samesite' => 'Lax'
+            'samesite' => 'None'
         ]);
 
         $_SESSION["user_id"] = $new_id;

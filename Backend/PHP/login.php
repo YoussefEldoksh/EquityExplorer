@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (password_verify($password, $user["password_hash"])) {
             // Create JWT
             $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-            $secret = $env['JWT_SECRET'] ?? '';
+            $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
             $now = time();
             $payload = [
                 'sub' => (string)$user["id"],
@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setcookie('token', $jwt, [
                 'expires' => $payload['exp'],
                 'path' => '/',
-                'secure' => $secure,
+                'secure' => true,
                 'httponly' => true,
-                'samesite' => 'Lax'
+                'samesite' => 'None'
             ]);
 
             $_SESSION["user_id"] = $user["id"];

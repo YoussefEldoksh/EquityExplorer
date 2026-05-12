@@ -45,6 +45,28 @@ export function LoginForm({
         credentials: 'include',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(form),
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login.php`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams(form),
+        },
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (data.success) {
+        // Server issues an HttpOnly cookie; notify app of auth change
+        window.dispatchEvent(new Event('auth'));
+        navigate('/');
+      } else {
+        alert(data.message);
       }
     ).then(async (response) => {
       const data = await response.json();
@@ -106,6 +128,17 @@ export function LoginForm({
             redirect_uri: window.location.origin + '/signin'
           }),
         }).then(async (response: Response) => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              code,
+              redirect_uri: window.location.origin + '/signin'
+            }),
+          });
+
           const data = await response.json();
           if (!data.success) throw new Error(data.message);
           return data;
@@ -148,6 +181,18 @@ export function LoginForm({
           googleId: userInfo.sub
         }),
       }).then(async (response) => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_google.php`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: userInfo.name,
+            email: userInfo.email,
+            googleId: userInfo.sub
+          }),
+        })
+
         const data = await response.json();
         if (!data.success) throw new Error(data.message);
         return data;

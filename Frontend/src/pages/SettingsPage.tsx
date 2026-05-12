@@ -37,7 +37,7 @@ function SettingsPage() {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/me.php`, {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me.php`, {
                     method: 'GET',
                     credentials: 'include',
                 });
@@ -61,7 +61,7 @@ function SettingsPage() {
 
         const fetchWatchlistCount = async () => {
             try {
-                const res = await fetch('/api/watchlist', { credentials: 'include' });
+                const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/watchlist`, { credentials: 'include' });
                 const data = await res.json();
                 if (Array.isArray(data)) setWatchlistCount(data.length);
             } catch (e) {
@@ -71,7 +71,7 @@ function SettingsPage() {
 
         const fetchAlertCount = async () => {
             try {
-                const res = await fetch('/api/alerts', { credentials: 'include' });
+                const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts`, { credentials: 'include' });
                 const data = await res.json();
                 if (Array.isArray(data)) setAlertCount(data.length);
             } catch (e) {
@@ -94,7 +94,7 @@ function SettingsPage() {
     const handleSave = async () => {
         setSaving(true);
         try {
-            const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/update_profile.php`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/update_profile.php`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -137,7 +137,7 @@ function SettingsPage() {
 
         setSavingPassword(true);
         try {
-            const response = await fetch(`http://${window.location.hostname}/EquityExplorer/Backend/PHP/update_password.php`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/update_password.php`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

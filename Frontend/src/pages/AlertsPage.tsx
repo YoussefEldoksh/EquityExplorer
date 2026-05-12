@@ -25,7 +25,7 @@ function AlertsPage() {
 
     const fetchAlerts = async () => {
         try {
-            const response = await fetch(`/api/alerts`, {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts`, {
                 credentials: 'include'
             });
             if (response.status === 401) {
@@ -64,7 +64,7 @@ function AlertsPage() {
 
     const handleToggle = async (id: number) => {
         try {
-            const res = await fetch(`/api/alerts/toggle/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts/toggle/${id}`, {
                 method: 'PATCH',
                 credentials: 'include'
             });
@@ -88,7 +88,7 @@ function AlertsPage() {
                 duration: 0.3,
                 onComplete: async () => {
                     try {
-                        const res = await fetch(`/api/alerts/remove/${id}`, {
+                        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts/remove/${id}`, {
                             method: 'DELETE',
                             credentials: 'include'
                         });
