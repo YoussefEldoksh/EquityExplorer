@@ -1,0 +1,43 @@
+# Dependency directories
+node_modules/
+Frontend/node_modules/
+Backend/PHP/vendor/
+Backend/Python/venv/
+.venv/
+env/
+venv/
+
+# Build artifacts
+dist/
+Frontend/dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+Frontend/.env
+Backend/PHP/.env
+Backend/Python/.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# XAMPP/Local dev artifacts
+php_error_log
