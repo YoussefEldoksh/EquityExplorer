@@ -16,7 +16,7 @@ export default defineConfig({
     host: true,  // exposes on 0.0.0.0 so mobile can reach it
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://equityexplorer.onrender.com',
         changeOrigin: true,
       }
     }
