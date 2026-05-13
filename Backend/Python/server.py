@@ -47,21 +47,6 @@ async def get_current_user(token: Optional[str] = Cookie(None)):
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://192.168.92.1:5173",
-        "https://equityexplorer.vercel.app", # Placeholder - update with your actual Vercel URL
-    ],
-    allow_origin_regex="https://equity-explorer-.*\.vercel\.app", # Matches Vercel preview URLs
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-    expose_headers=["*"], 
-)
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -122,7 +107,18 @@ def fetch_ticker(symbol):
             "marketCap": info.get("marketCap"),
         }
     except:
-        return None
+        return {
+            "symbol": symbol,
+            "name": "N/A",
+            "vol": 0,
+            "pe": 0,
+            "eps": 0,
+            "price": 0,
+            "div": 0,
+            "changePct": 0,
+            "sector": "N/A",
+            "marketCap": 0,
+        }
 
 def get_sp500_data():
     url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"

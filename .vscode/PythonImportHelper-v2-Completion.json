@@ -343,7 +343,7 @@
         "kind": 5,
         "importPath": "Backend.Python.server",
         "description": "Backend.Python.server",
-        "peekOfCode": "app = FastAPI()\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=[\n        \"http://localhost:5173\",\n        \"http://127.0.0.1:5173\",\n        \"http://192.168.92.1:5173\",\n        \"https://equityexplorer.vercel.app\", # Placeholder - update with your actual Vercel URL\n    ],\n    allow_origin_regex=\"https://equity-explorer-.*\\.vercel\\.app\", # Matches Vercel preview URLs",
+        "peekOfCode": "app = FastAPI()\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}\n# FOR STOCK DETAIL PAGE\n@app.get(\"/api/stock/{symbol}\")\ndef get_stock_data(symbol: str):\n        ticker = yf.Ticker(symbol)\n        return ticker.info\n@app.get(\"/api/timeseries/{symbol}\")",
         "detail": "Backend.Python.server",
         "documentation": {}
     },
