@@ -370,6 +370,222 @@ function TickerPage() {
       </>
   );
 
+  const PageSkeletonMobile = () => (
+    <><div className="px-10 mt-25 space-y-4 mb-5">
+      {/* Header */}
+      <Skeleton className="h-4 mx-5 w-48 bg-zinc-300 rounded-lg" />
+      <div className="flex px-5 items-center gap-1 ">
+        <Skeleton className="h-9 w-72 bg-zinc-300 rounded-lg" />
+        <Skeleton className="h-9 w-9 rounded-lg bg-zinc-300" />
+        <Skeleton className="h-9 w-9 rounded-lg bg-zinc-300" />
+      </div>
+      <div className="flex gap-2 px-5 ">
+        <Skeleton className="h-6 w-20 bg-zinc-300 rounded-lg" />
+        <Skeleton className="h-6 w-16 bg-zinc-300 rounded-lg" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-5 ">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+            <div className="bg-white rounded-lg p-3 space-y-2">
+              <Skeleton className="h-4 w-24 bg-zinc-300 rounded-lg" />
+              <Skeleton className="h-5 w-16 bg-zinc-300 rounded-lg" />
+            </div>
+
+          </div>
+        ))}
+      </div>
+
+      {/* Chart + stats panel */}
+      <div className="grid grid-cols-1  gap-2 ">
+        <Skeleton className="col-span-2 bg-zinc-200 px-2 pt-2 pb-9 rounded-lg bg-zinc-300 rounded-lg">
+          <div className='flex flex-col'>
+
+            <div className="bg-white rounded-lg p-3">
+              <Skeleton className="h-64 w-full bg-zinc-300 rounded-lg" />
+            </div>
+            <div className='flex justify-end w-full'>
+
+              <div className='flex gap-2 mt-3  '>
+
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+                <Skeleton className="h-5 w-full bg-zinc-100 rounded-lg p-3" />
+
+              </div>
+            </div>
+
+
+          </div>
+
+        </Skeleton>
+
+        <Skeleton className=" bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
+          <div className=" bg-white rounded-lg p-3">
+            <div className="grid grid-cols-3 gap-3">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="bg-zinc-200 rounded-lg p-2 space-y-1">
+                  <Skeleton className="h-5 w-14 bg-zinc-300 rounded-lg" />
+                  <Skeleton className="h-5 w-10 bg-zinc-300 rounded-lg" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Skeleton>
+      </div>
+
+    </div>
+
+      <div className="flex w-full justify-center my-5 px-5 ">
+        <Tabs
+          defaultValue="overview"
+          className="w-full flex justify-center  "
+        >
+          <div className="flex w-full justify-center ">
+            <TabsList className=" bg-zinc-300 text-sm w-full">
+              <TabsTrigger value="overview" className="">
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
+              <TabsTrigger value="reports">Reports</TabsTrigger>
+            </TabsList>
+          </div>
+          <TabsContent value="overview">
+            <Card>
+              <CardHeader className=" gap-2">
+                <Skeleton className="h-5 w-40 bg-zinc-300 rounded-lg" />
+                <Skeleton className="h-5 bg-zinc-300 rounded-lg" />
+                <Skeleton className="h-5  w-3/4  bg-zinc-300 rounded-lg" />
+                <Skeleton className="h-5  bg-zinc-300 rounded-lg" />
+                <Skeleton className="h-5  w-2/3  bg-zinc-300 rounded-lg" />
+              </CardHeader>
+            </Card>
+          </TabsContent>
+          <TabsContent value="analytics">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-5 w-40 bg-zinc-300 rounded-lg" />
+                <CardDescription>
+                  <div className="mb-2">
+                    <p className="font-bold  uppercase text-zinc-500 mb-2">
+                      <Skeleton className="h-5 w-24 bg-zinc-300 rounded-lg" />
+
+                    </p>
+                    <div className=" grid grid-cols-3 gap-2">
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="h-18 bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                    </div>
+                  </div>
+                  <div className="mb-2">
+                    <p className="font-bold  uppercase text-zinc-500 mb-2">
+                      <Skeleton className="h-5 w-24 bg-zinc-300 rounded-lg" />
+
+                    </p>
+                    <div className=" grid grid-cols-3 gap-2">
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="h-18 bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                    </div>
+                  </div>
+                  <div className="mb-2">
+                    <p className="font-bold  uppercase text-zinc-500 mb-2">
+                      <Skeleton className="h-5 w-24 bg-zinc-300 rounded-lg" />
+
+                    </p>
+                    <div className=" grid grid-cols-3 gap-2">
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                      <Skeleton className="h-18 bg-zinc-300 rounded p-2">
+                        <div className="flex justify-between">
+                          <p className="text-zinc-500"></p>
+                          <div className="justify-self-end">
+                          </div>
+                        </div>
+                        <p className="font-semibold">
+                        </p>
+                      </Skeleton>
+                    </div>
+                  </div>
+                  
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+      <Footer></Footer>
+      </>
+  );
+
   return (
     <>
       {!isMobile && (
@@ -908,7 +1124,7 @@ function TickerPage() {
           </>
         ))}
 
-      {isMobile && (loading ? <PageSkeleton /> : (
+      {isMobile && (loading ? <PageSkeletonMobile /> : (
         <>
           <div className=" px-12 mt-15">
             <p className="font-excon text-md">
