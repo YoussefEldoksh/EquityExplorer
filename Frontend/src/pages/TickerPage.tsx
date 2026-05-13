@@ -16,14 +16,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import Footer from '../components/Footer';
 import { Button } from '../components/ui/button';
 import ToolTip from '../components/ToolTip';
 import { useIsMobile } from '../hooks/use-mobile';
 import { toast } from 'sonner';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '../components/ui/skeleton';
 
 
 function TickerPage() {

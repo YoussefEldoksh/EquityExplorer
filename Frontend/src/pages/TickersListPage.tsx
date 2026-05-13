@@ -7,7 +7,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "../components/ui/table"
 import {
     Pagination,
     PaginationContent,
@@ -16,10 +16,10 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "../components/ui/pagination"
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "../components/ui/skeleton"
 
 
 function TickersListPage() {

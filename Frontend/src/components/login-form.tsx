@@ -1,14 +1,14 @@
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '../lib/utils';
+import { Button } from './ui/button';
+import { Card, CardContent } from './ui/card';
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from './ui/field';
+import { Input } from './ui/input';
 import dollarImg from '../assets/Dollar.jpg';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -29,7 +29,7 @@ export function LoginForm({
     userpass: '',
   });
 
-  const handleChange = (e: ChangeEvent) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,

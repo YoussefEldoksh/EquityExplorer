@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '../lib/utils';
+import { Button } from './ui/button';
+import { Card, CardContent } from './ui/card';
 import { useState, useEffect, useRef, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -8,10 +8,10 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from '../components/ui/field';
+import { Input } from '../components/ui/input';
 import dollarImg from '../assets/Dollar.jpg';
-import { FieldSeparator } from './ui/field';
+import { FieldSeparator } from '../components/ui/field';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Link } from 'react-router-dom';
 import { toast } from "sonner"

@@ -174,7 +174,7 @@ function AlertsPage() {
                             return (
                                 <div 
                                     key={alert.id} 
-                                    ref={el => cardsRef.current[index] = el}
+                                    ref={el => { cardsRef.current[index] = el }}
                                     className={`relative flex flex-col bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 group ${!alert.is_active ? 'opacity-60 grayscale-[0.5]' : ''}`}
                                 >
                                     <div className="flex justify-between items-start mb-6">
