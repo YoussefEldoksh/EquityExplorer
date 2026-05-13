@@ -18,62 +18,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Check if user already exists
-    $stmt = $conn->prepare("SELECT id, username, google_id FROM users WHERE email = ? AND google_id = ?");
-    $stmt->execute([$email, $google_id]);
-    $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Check if user already exists by google_id OR email
+    $stmt = $conn->prepare("SELECT id, username, google_id FROM users WHERE google_id = ? OR email = ?");
+    $stmt->execute([$google_id, $email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    if ($user) {
+        $userId = $user['id'];
+        $username = $user['username'];
+        // Link google_id if not linked yet
+        $updateStmt = $conn->prepare("UPDATE users SET google_id = ? WHERE id = ? AND google_id IS NULL");
+        $updateStmt->execute([$google_id, $userId]);
+    } else {
+        // Register new user
+        $username = strtolower(str_replace(' ', '_', $name)) . '_' . rand(100, 999);
+        $nameParts = explode(' ', $name, 2);
+        $firstname = $nameParts[0];
+        $lastname  = $nameParts[1] ?? '';
 
-    if ($existing) {
-        // Already exists — link google_id if not linked yet, then log in
-        $user_id  = $existing['id'];
-        $username = $existing['username'];
-        $google_id_database = $existing['google_id'];
+        $stmt = $conn->prepare(
+            "INSERT INTO users (username, firstname, lastname, email, google_id, password_hash)
+             VALUES (?, ?, ?, ?, ?, NULL)"
+        );
 
-        if ($google_id_database === $google_id) {
-
-            $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-            $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
-            $now = time();
-            $payload = [
-                'sub' => (string)$user_id,
-                'email' => $email,
-                'username' => $username,
-                'iat' => $now,
-                'exp' => $now + 60 * 60 * 24 * 7 // 7 days
-            ];
-            $jwt = jwt_encode($payload, $secret);
-
-            // Set HttpOnly cookie
-            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-            setcookie('token', $jwt, [
-                'expires' => $payload['exp'],
-                'path' => '/',
-                'secure' => true,
-                'httponly' => true,
-                'samesite' => 'None'
-            ]);
-
-            $_SESSION["user_id"] = $user_id;
-
-            echo json_encode([
-                "success" => true,
-                "message" => "Login successful!",
-                "user" => [
-                    "id" => $user_id,
-                    "username" => $username,
-                    "email" => $email
-                ]
-            ]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Account not found."]);
+        if (!$stmt->execute([$username, $firstname, $lastname, $email, $google_id])) {
+            echo json_encode(["success" => false, "message" => "Registration failed."]);
+            exit;
         }
 
-        // $stmt = $conn->prepare("UPDATE users SET google_id = ? WHERE id = ? AND google_id IS NULL");
-        // $stmt->execute([$google_id, $user_id]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Account not found."]);
+        $userId = $conn->lastInsertId();
     }
 
-}
+    // Issue JWT
+    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+    $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
+    $now = time();
+    $payload = [
+        'sub' => (string)$userId,
+        'email' => $email,
+        'username' => $username,
+        'iat' => $now,
+        'exp' => $now + 60 * 60 * 24 * 7 // 7 days
+    ];
+    $jwt = jwt_encode($payload, $secret);
 
+    // Set HttpOnly cookie
+    setcookie('token', $jwt, [
+        'expires' => $payload['exp'],
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'None'
+    ]);
+
+    $_SESSION["user_id"] = $userId;
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Logged in via Google",
+        "username" => $username
+    ]);
+}
+?>
