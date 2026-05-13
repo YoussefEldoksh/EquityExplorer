@@ -12,6 +12,9 @@ import AlertsPage from './pages/AlertsPage'
 import Navbar from './components/Navbar'
 import { Toaster } from 'sonner';
 
+import PrivacyPage from './pages/PrivacyPage'
+import DataDeletionPage from './pages/DataDeletionPage'
+
 function App() {
 
   return (
@@ -30,6 +33,8 @@ function App() {
           <Route path="/watchlist" element={<WatchlistPage />} />
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/data-deletion" element={<DataDeletionPage />} />
         </Routes>
       </BrowserRouter>
 
