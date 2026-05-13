@@ -53,9 +53,9 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://192.168.92.1:5173",
-        "https://equity-explorer.vercel.app", # Placeholder - update with your actual Vercel URL
+        "https://equityexplorer.vercel.app",
     ],
-    allow_origin_regex="https://equity-explorer-.*\.vercel\.app", # Matches Vercel preview URLs
+    allow_origin_regex="https://equityexplorer-.*\.vercel\.app", # Matches Vercel preview URLs
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
