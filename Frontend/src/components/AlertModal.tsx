@@ -50,7 +50,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ symbol, currentPrice, onAlertSe
                     <Bell size={20} />
                 </button>
             </DrawerTrigger>
-            <DrawerContent className="max-w-md mx-auto border-none bg-white rounded-t-3xl p-0">
+            <DrawerContent className="max-w-md mx-auto border-none bg-white rounded-t-3xl p-0 flex flex-col max-h-[96vh]">
                 <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-slate-200 mt-4 mb-2" />
                 
                 {isSuccess ? (
@@ -79,17 +79,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ symbol, currentPrice, onAlertSe
                             </DrawerDescription>
                         </DrawerHeader>
 
-                        <div className="px-6 py-6 space-y-6">
-                            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                <div>
-                                    <p className="text-slate-400 text-[10px] font-bold uppercase mb-0.5">Current Price</p>
-                                    <p className="text-xl font-bold font-excon text-black">${currentPrice}</p>
-                                </div>
-                                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
-                                    <TrendingUp size={18} className="text-emerald-500" />
-                                </div>
-                            </div>
-
+                        <div className="px-6 py-6 space-y-6 flex-1 overflow-y-auto">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="target-price" className="text-[10px] font-bold uppercase tracking-wider text-slate-400 ml-1">Target Price ($)</Label>
@@ -127,6 +117,16 @@ const AlertModal: React.FC<AlertModalProps> = ({ symbol, currentPrice, onAlertSe
                                         <TrendingDown size={16} />
                                         <span className="font-bold text-xs">Below</span>
                                     </button>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                <div>
+                                    <p className="text-slate-400 text-[10px] font-bold uppercase mb-0.5">Current Price</p>
+                                    <p className="text-xl font-bold font-excon text-black">${currentPrice}</p>
+                                </div>
+                                <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                                    <TrendingUp size={18} className="text-emerald-500" />
                                 </div>
                             </div>
 
