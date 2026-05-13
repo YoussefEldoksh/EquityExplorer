@@ -1,4 +1,26 @@
 <?php
+// Dynamic CORS handling
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOrigins = [
+    'https://equityexplorer.vercel.app',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
+];
+
+// Allow Vercel, localhost, and any local network IP (192.168.x.x or 10.x.x.x or 172.x.x.x)
+if (in_array($origin, $allowedOrigins) || preg_match('/^http:\/\/(192\.168\.|10\.|172\.)\d+\.\d+:\d+$/', $origin)) {
+    header("Access-Control-Allow-Origin: $origin");
+    header("Access-Control-Allow-Credentials: true");
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+}
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 // Try to load from .env file first, then fallback to getenv()
 $envPath = __DIR__ . '/.env';
 $env = [];
