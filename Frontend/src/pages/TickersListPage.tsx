@@ -45,8 +45,8 @@ function TickersListPage() {
         const getIndexInfo = async () => {
             try {
                 const [indexResp, tickersResp] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/snp500`)
+                    fetch(`/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
+                    fetch(`/api/snp500`)
                 ]);
                 const [data, tickersData] = await Promise.all([
                     indexResp.json(),

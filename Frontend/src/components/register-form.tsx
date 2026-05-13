@@ -39,7 +39,7 @@ export function RegisterForm({
     e.preventDefault();
 
     const fetchPromise = fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/api/auth/registration.php`,
+      `/api/auth/registration.php`,
       {
         method: 'POST',
         credentials: 'include',

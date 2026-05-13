@@ -39,7 +39,7 @@ export function LoginForm({
     e.preventDefault();
 
     const fetchPromise = fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/api/auth/login.php`,
+      `/api/auth/login.php`,
       {
         method: 'POST',
         credentials: 'include',
@@ -130,8 +130,8 @@ export function LoginForm({
 
       const exchangeCode = async () => {
         const endpoint = isDiscord 
-          ? `${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_discord.php`
-          : `${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_github.php`;
+          ? `/api/auth/login_w_discord.php`
+          : `/api/auth/login_w_github.php`;
 
         const providerName = isDiscord ? 'Discord' : 'GitHub';
 
@@ -176,7 +176,7 @@ export function LoginForm({
       }).then(res => res.json());
 
       // 2. Send to your backend
-      const fetchPromise = fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login_w_google.php`, {
+      const fetchPromise = fetch(`/api/auth/login_w_google.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

@@ -31,7 +31,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/logout.php`, {
+      await fetch(`/api/auth/logout.php`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -86,7 +86,7 @@ function Navbar() {
     const timer = setTimeout(async () => {
       if (searchWord.trim().length > 1) {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/search/suggestions?q=${searchWord}`);
+          const response = await fetch(`/api/search/suggestions?q=${searchWord}`);
           const data = await response.json();
           setSuggestions(data);
           setSelectedIndex(-1);
@@ -114,7 +114,7 @@ function Navbar() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me.php`, {
+        const response = await fetch(`/api/auth/me.php`, {
           method: 'GET',
           credentials: 'include',
         });

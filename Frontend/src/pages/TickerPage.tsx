@@ -49,7 +49,7 @@ function TickerPage() {
   const fetchStockTimeSeries = async (period: string, interval: string) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/timeseries/${stockTicker?.toUpperCase()}?period=${period}&interval=${interval}`,
+        `/api/timeseries/${stockTicker?.toUpperCase()}?period=${period}&interval=${interval}`,
         { credentials: 'include' }
       );
       const data = await response.json();
@@ -69,8 +69,8 @@ function TickerPage() {
     }
     const method = isInWatchlist ? 'DELETE' : 'POST';
     const url = isInWatchlist
-      ? `${import.meta.env.VITE_API_BASE_URL}/api/watchlist/remove/${stockTicker}`
-      : `${import.meta.env.VITE_API_BASE_URL}/api/watchlist/add?symbol=${stockTicker}`;
+      ? `/api/watchlist/remove/${stockTicker}`
+      : `/api/watchlist/add?symbol=${stockTicker}`;
 
     try {
       const res = await fetch(url, {
@@ -94,7 +94,7 @@ function TickerPage() {
       return;
     }
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts/add`, {
+      const response = await fetch(`/api/alerts/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ function TickerPage() {
   useEffect(() => {
     const fetchStockData = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/stock/${stockTicker?.toUpperCase()}`, { credentials: 'include' });
+        const response = await fetch(`/api/stock/${stockTicker?.toUpperCase()}`, { credentials: 'include' });
         const data = await response.json();
         setStockData(data);
         await fetchStockTimeSeries('1mo', '1d');
@@ -129,14 +129,14 @@ function TickerPage() {
 
     const checkStatus = async () => {
       try {
-        const authRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me.php`, {
+        const authRes = await fetch(`/api/auth/me.php`, {
             credentials: 'include'
         });
         const authData = await authRes.json();
         setIsLogged(authData.success);
 
         if (authData.success) {
-          const watchRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/watchlist`, {
+          const watchRes = await fetch(`/api/watchlist`, {
             credentials: 'include'
           });
           const watchlist = await watchRes.json();
