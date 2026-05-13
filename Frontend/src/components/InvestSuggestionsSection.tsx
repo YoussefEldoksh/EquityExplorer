@@ -129,9 +129,9 @@ function InvestSuggestions() {
       logo: barrick_logo,
     },
   ];
-  const renderGrid = (data) => (
+  const renderGrid = (data: any[]) => (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-      {data.map((item, i) => (
+      {data.map((item: any, i: number) => (
         <div key={i} className="bg-zinc-200 p-3 flex items-center gap-3">
           <img
             src={item.logo}

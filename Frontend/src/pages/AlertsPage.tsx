@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from 'react'
-import { useIsMobile } from '../hooks/use-mobile';
 import { Button } from '../components/ui/button';
 import { Trash2, Bell, ArrowUpRight, Pause, Play, ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
 import Footer from '../components/Footer';
@@ -19,7 +18,6 @@ interface Alert {
 function AlertsPage() {
     const [alerts, setAlerts] = useState<Alert[]>([]);
     const [loading, setLoading] = useState(true);
-    const isMobile = useIsMobile();
     const navigate = useNavigate();
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 

@@ -42,7 +42,7 @@ export default function Chart({ timeseries }: Props) {
                     tickFormatter={(v) => `$${v.toFixed(0)}`}
                 />
                 <Tooltip
-                    formatter={(value: number) => [`$${value.toFixed(2)}`, "Close"]}
+                    formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Close"]}
                     labelFormatter={(label) => new Date(label).toLocaleString("en-US", {
                         month: "long",
                         day: "numeric",

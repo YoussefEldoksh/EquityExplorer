@@ -1,3 +1,4 @@
+// @ts-ignore
 import BorderGlow from './BorderGlow';
 import { TrendingUp, DollarSign, Scale } from 'lucide-react';
 function FeaturesSection() {

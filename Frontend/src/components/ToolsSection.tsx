@@ -1,3 +1,4 @@
+// @ts-ignore
 import CardSwap, { Card } from './CardSwap';
 
 function ToolsSection() {

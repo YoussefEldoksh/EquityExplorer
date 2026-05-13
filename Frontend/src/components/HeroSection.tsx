@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useIsMobile } from '../hooks/use-mobile'
 import Aurora from './Aurora';
 
 function HeroSection() {
-  const isMobile = useIsMobile();
   return (
     <>
 
