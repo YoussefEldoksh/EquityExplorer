@@ -47,21 +47,6 @@ async def get_current_user(token: Optional[str] = Cookie(None)):
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://192.168.92.1:5173",
-        "https://equityexplorer.vercel.app",
-    ],
-    allow_origin_regex="https://equityexplorer-.*\.vercel\.app", # Matches Vercel preview URLs
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-    expose_headers=["*"], 
-)
-
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
