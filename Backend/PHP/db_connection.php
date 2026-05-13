@@ -1,15 +1,15 @@
 <?php
 // Dynamic CORS handling
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-$allowedOrigins = [
-    'https://equityexplorer.vercel.app',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173'
-];
 
-// Allow Vercel, localhost, and any local network IP (192.168.x.x or 10.x.x.x or 172.x.x.x)
-if (in_array($origin, $allowedOrigins) || preg_match('/^http:\/\/(192\.168\.|10\.|172\.)\d+\.\d+:\d+$/', $origin)) {
-    header("Access-Control-Allow-Origin: $origin");
+// Check if origin is allowed
+$isVercel = preg_match('/\.vercel\.app$/', parse_url($origin, PHP_URL_HOST) ?? '');
+$isLocal = preg_match('/^http:\/\/(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.)/', $origin);
+
+if ($isVercel || $isLocal || empty($origin)) {
+    // If empty origin, we still allow it for same-origin/proxied requests
+    $headerOrigin = $origin ?: 'https://equityexplorer.vercel.app';
+    header("Access-Control-Allow-Origin: $headerOrigin");
     header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
