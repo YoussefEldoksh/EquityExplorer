@@ -107,7 +107,18 @@ def fetch_ticker(symbol):
             "marketCap": info.get("marketCap"),
         }
     except:
-        return None
+        return {
+            "symbol": symbol,
+            "name": "N/A",
+            "vol": 0,
+            "pe": 0,
+            "eps": 0,
+            "price": 0,
+            "div": 0,
+            "changePct": 0,
+            "sector": "N/A",
+            "marketCap": 0,
+        }
 
 def get_sp500_data():
     url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
