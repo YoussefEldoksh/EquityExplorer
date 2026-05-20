@@ -29,6 +29,13 @@ yarn-error.log*
 logs/
 *.log
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+Backend/Python/__pycache__/
+
 # IDE files
 .vscode/
 .idea/
