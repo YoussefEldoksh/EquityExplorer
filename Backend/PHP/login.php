@@ -21,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if (password_verify($password, $user["password_hash"])) {
             // Create JWT
-            $secret = get_jwt_secret();
+            $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+            $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
             $now = time();
             $payload = [
                 'sub' => (string)$user["id"],
@@ -37,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setcookie('token', $jwt, [
                 'expires' => $payload['exp'],
                 'path' => '/',
-                'secure' => true,
+                'secure' => $secure,
                 'httponly' => true,
-                'samesite' => 'None'
+                'samesite' => $secure ? 'None' : 'Lax'
             ]);
 
             $_SESSION["user_id"] = $user["id"];

@@ -17,7 +17,7 @@ if (!$code) {
 $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
 $clientId = $env['DISCORD_CLIENT_ID'] ?? getenv('DISCORD_CLIENT_ID') ?: '';
 $clientSecret = $env['DISCORD_CLIENT_SECRET'] ?? getenv('DISCORD_CLIENT_SECRET') ?: '';
-$jwtSecret = get_jwt_secret();
+$jwtSecret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
 
 // 3. Exchange code for Access Token
 $frontendRedirectUri = $input['redirect_uri'] ?? ''; 
@@ -111,10 +111,11 @@ try {
     ];
     $token = jwt_encode($payload, $jwtSecret);
 
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
     setcookie('token', $token, [
         'expires' => time() + (3600 * 24 * 7),
         'path' => '/',
-        'secure' => true,
+        'secure' => $secure,
         'httponly' => true,
         'samesite' => 'None',
     ]);

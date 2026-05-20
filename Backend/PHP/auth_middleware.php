@@ -53,19 +53,16 @@ function jwt_decode(string $jwt, string $secret, array $allowed_algs = ['HS256']
     return $payload;
 }
 
-function is_valid_uuid(string $value): bool {
-    return (bool)preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $value);
-}
-
 function get_jwt_secret(): string {
     // Prefer runtime environment (Render) over local .env fallback
-    $fromEnv = getenv('JWT_SECRET');
+    $fromEnv = getenv('JWT_SECRET') ?: $_SERVER['JWT_SECRET'] ?? $_ENV['JWT_SECRET'] ?? '';
     if (!empty($fromEnv)) {
         return trim($fromEnv, "\"'");
     }
     $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
     return trim((string)($env['JWT_SECRET'] ?? ''), "\"'");
 }
+
 function require_auth() {
     global $conn;
     $secret = get_jwt_secret();
@@ -82,12 +79,24 @@ function require_auth() {
     }
     try {
         $payload = jwt_decode($token, $secret);
+        $sub = isset($payload['sub']) ? (string)$payload['sub'] : '';
+        if (!preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $sub)) {
+            throw new Exception('Session expired, please sign in again');
+        }
         // Set RLS context for defense-in-depth
         if ($conn && isset($payload['sub'])) {
             setUserContext($conn, $payload['sub']); // payload['sub'] is now UUID string
         }
         return $payload;
     } catch (Throwable $e) {
+        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        setcookie('token', '', [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'secure' => $secure,
+            'httponly' => true,
+            'samesite' => 'None'
+        ]);
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
         exit;

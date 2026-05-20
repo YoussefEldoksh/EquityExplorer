@@ -50,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Issue JWT
-    $secret = get_jwt_secret();
+    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+    $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
     $now = time();
     $payload = [
         'sub' => (string)$userId,
@@ -62,10 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jwt = jwt_encode($payload, $secret);
 
     // Set HttpOnly cookie
+    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
     setcookie('token', $jwt, [
         'expires' => $payload['exp'],
         'path' => '/',
-        'secure' => true,
+        'secure' => $secure,
         'httponly' => true,
         'samesite' => 'None'
     ]);
