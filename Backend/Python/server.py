@@ -73,7 +73,7 @@ def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d")
         if hist.empty:
             return {}
         
-        hist.index = hist.index.strftime("%Y-%m-%d %H:%M:%S")
+        hist.index = pd.DatetimeIndex(hist.index).strftime("%Y-%m-%d %H:%M:%S")
         return hist[["Open", "High", "Low", "Close", "Volume"]].to_dict(orient="index")
     except Exception as e:
         print(f"Error: {e}")
