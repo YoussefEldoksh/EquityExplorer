@@ -57,10 +57,19 @@ function is_valid_uuid(string $value): bool {
     return (bool)preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $value);
 }
 
+function get_jwt_secret(): string {
+    // Prefer runtime environment (Render) over local .env fallback
+    $fromEnv = getenv('JWT_SECRET');
+    if (!empty($fromEnv)) {
+        return trim($fromEnv, "\"'");
+    }
+    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+    return trim((string)($env['JWT_SECRET'] ?? ''), "\"'");
+}
+
 function require_auth() {
     global $conn;
-    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-    $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
+    $secret = get_jwt_secret();
     if (!$secret) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Server misconfigured (missing JWT secret)']);

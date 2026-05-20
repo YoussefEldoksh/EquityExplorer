@@ -17,7 +17,7 @@ if (!$code) {
 $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
 $clientId = $env['DISCORD_CLIENT_ID'] ?? getenv('DISCORD_CLIENT_ID') ?: '';
 $clientSecret = $env['DISCORD_CLIENT_SECRET'] ?? getenv('DISCORD_CLIENT_SECRET') ?: '';
-$jwtSecret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
+$jwtSecret = get_jwt_secret();
 
 // 3. Exchange code for Access Token
 $frontendRedirectUri = $input['redirect_uri'] ?? ''; 

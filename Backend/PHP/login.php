@@ -21,8 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user = $stmt->fetch(PDO::FETCH_ASSOC)) {
         if (password_verify($password, $user["password_hash"])) {
             // Create JWT
-            $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-            $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
+            $secret = get_jwt_secret();
             $now = time();
             $payload = [
                 'sub' => (string)$user["id"],
