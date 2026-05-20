@@ -53,6 +53,10 @@ function jwt_decode(string $jwt, string $secret, array $allowed_algs = ['HS256']
     return $payload;
 }
 
+function is_valid_uuid(string $value): bool {
+    return (bool)preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/', $value);
+}
+
 function require_auth() {
     global $conn;
     $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
@@ -72,7 +76,7 @@ function require_auth() {
         $payload = jwt_decode($token, $secret);
         // Reject legacy/invalid subject values early (users.id is UUID now)
         $sub = isset($payload['sub']) ? (string)$payload['sub'] : '';
-        if (!preg_match('/^[0-9a-fA-F-]{36}$/', $sub)) {
+        if (!is_valid_uuid($sub)) {
             throw new Exception('Session expired, please sign in again');
         }
         // Set RLS context for defense-in-depth
@@ -81,6 +85,14 @@ function require_auth() {
         }
         return $payload;
     } catch (Throwable $e) {
+        // Clear invalid/stale token so the client can re-authenticate cleanly
+        setcookie('token', '', [
+            'expires' => time() - 3600,
+            'path' => '/',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'None'
+        ]);
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
         exit;
