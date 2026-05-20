@@ -66,7 +66,6 @@ function get_jwt_secret(): string {
     $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
     return trim((string)($env['JWT_SECRET'] ?? ''), "\"'");
 }
-
 function require_auth() {
     global $conn;
     $secret = get_jwt_secret();
@@ -83,25 +82,12 @@ function require_auth() {
     }
     try {
         $payload = jwt_decode($token, $secret);
-        // Reject legacy/invalid subject values early (users.id is UUID now)
-        $sub = isset($payload['sub']) ? (string)$payload['sub'] : '';
-        if (!is_valid_uuid($sub)) {
-            throw new Exception('Session expired, please sign in again');
-        }
         // Set RLS context for defense-in-depth
         if ($conn && isset($payload['sub'])) {
             setUserContext($conn, $payload['sub']); // payload['sub'] is now UUID string
         }
         return $payload;
     } catch (Throwable $e) {
-        // Clear invalid/stale token so the client can re-authenticate cleanly
-        setcookie('token', '', [
-            'expires' => time() - 3600,
-            'path' => '/',
-            'secure' => true,
-            'httponly' => true,
-            'samesite' => 'None'
-        ]);
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
         exit;
