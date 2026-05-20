@@ -54,6 +54,7 @@ function jwt_decode(string $jwt, string $secret, array $allowed_algs = ['HS256']
 }
 
 function require_auth() {
+    global $conn;
     $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
     $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
     if (!$secret) {
@@ -69,11 +70,26 @@ function require_auth() {
     }
     try {
         $payload = jwt_decode($token, $secret);
+        // Set RLS context for defense-in-depth
+        if ($conn && isset($payload['sub'])) {
+            setUserContext($conn, $payload['sub']); // payload['sub'] is now UUID string
+        }
         return $payload;
     } catch (Throwable $e) {
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);
         exit;
+    }
+}
+
+// Helper function to set PostgreSQL session variable for RLS context
+function setUserContext($conn, $userId) {
+    try {
+        $stmt = $conn->prepare("SELECT set_config('app.current_user_id', ?, false)");
+        $stmt->execute([$userId]); // userId is a UUID string from JWT
+    } catch (Throwable $e) {
+        // Log but don't fail if context setting fails
+        error_log('RLS context setting failed: ' . $e->getMessage());
     }
 }
 

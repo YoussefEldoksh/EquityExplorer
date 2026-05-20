@@ -1,17 +1,14 @@
 from fastapi import FastAPI, HTTPException, Cookie, Depends
 from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware 
 import yfinance as yf
 import pandas as pd
 import requests
 from io import StringIO
-import numpy as np
 import time
 import os
 import jwt
 import psycopg2
 from concurrent.futures import ThreadPoolExecutor
-from functools import lru_cache
 from dotenv import load_dotenv
 from typing import Optional
 
@@ -30,18 +27,28 @@ def get_db_conn():
         password=os.getenv("DB_PASS")
     )
 
+# Helper to set RLS context for current user
+def set_user_context(conn, user_id):
+    """Set PostgreSQL session variable for RLS policies"""
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT set_config('app.current_user_id', %s, false)", (user_id,))
+        cur.close()
+    except Exception as e:
+        print(f"Warning: Failed to set user context: {e}")
+
 # Auth Helper
 async def get_current_user(token: Optional[str] = Cookie(None)):
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     try:
-        # We use verify_sub=False because PHP sends the ID as an int, but PyJWT expects a string.
+        # user_id is now a UUID string from JWT payload 'sub'
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_sub": False})
         user_id = payload.get("sub")
         print(payload)
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return int(user_id)
+        return user_id  # UUID string
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
@@ -204,9 +211,10 @@ def get_cached_screener():
 
 # WATCHLIST ENDPOINTS
 @app.post("/api/watchlist/add")
-async def add_to_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
+async def add_to_watchlist(symbol: str, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO watchlist (user_id, symbol) VALUES (%s, %s) ON CONFLICT DO NOTHING",
@@ -219,9 +227,10 @@ async def add_to_watchlist(symbol: str, user_id: int = Depends(get_current_user)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 @app.get("/api/watchlist")
-async def get_watchlist(user_id: int = Depends(get_current_user)):
+async def get_watchlist(user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
         rows = cur.fetchall()
@@ -232,9 +241,10 @@ async def get_watchlist(user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/watchlist/details")
-async def get_watchlist_details(user_id: int = Depends(get_current_user)):
+async def get_watchlist_details(user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
         rows = cur.fetchall()
@@ -253,9 +263,10 @@ async def get_watchlist_details(user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.delete("/api/watchlist/remove/{symbol}")
-async def remove_from_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
+async def remove_from_watchlist(symbol: str, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute(
             "DELETE FROM watchlist WHERE user_id = %s AND symbol = %s",
@@ -275,9 +286,10 @@ class AlertRequest(BaseModel):
 
 # PRICE ALERT ENDPOINTS
 @app.post("/api/alerts/add")
-async def add_alert(alert: AlertRequest, user_id: int = Depends(get_current_user)):
+async def add_alert(alert: AlertRequest, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO price_alerts (user_id, symbol, target_price, condition) VALUES (%s, %s, %s, %s)",
@@ -291,9 +303,10 @@ async def add_alert(alert: AlertRequest, user_id: int = Depends(get_current_user
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/alerts")
-async def get_alerts(user_id: int = Depends(get_current_user)):
+async def get_alerts(user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute("SELECT id, symbol, target_price, condition, is_active FROM price_alerts WHERE user_id = %s", (user_id,))
         rows = cur.fetchall()
@@ -324,9 +337,10 @@ async def get_alerts(user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.delete("/api/alerts/remove/{alert_id}")
-async def remove_alert(alert_id: int, user_id: int = Depends(get_current_user)):
+async def remove_alert(alert_id: int, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute("DELETE FROM price_alerts WHERE id = %s AND user_id = %s", (alert_id, user_id))
         conn.commit()
@@ -337,9 +351,10 @@ async def remove_alert(alert_id: int, user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.patch("/api/alerts/toggle/{alert_id}")
-async def toggle_alert(alert_id: int, user_id: int = Depends(get_current_user)):
+async def toggle_alert(alert_id: int, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
+        set_user_context(conn, user_id)  # Set RLS context
         cur = conn.cursor()
         cur.execute("UPDATE price_alerts SET is_active = NOT is_active WHERE id = %s AND user_id = %s", (alert_id, user_id))
         conn.commit()

@@ -60,3 +60,14 @@ try {
     ]);
     exit;
 }
+
+// Helper function to set PostgreSQL session variable for RLS context
+function setUserContext($conn, $userId) {
+    try {
+        $stmt = $conn->prepare("SELECT set_config('app.current_user_id', ?, false)");
+        $stmt->execute([$userId]);
+    } catch (Throwable $e) {
+        // Log but don't fail if context setting fails
+        error_log('RLS context setting failed: ' . $e->getMessage());
+    }
+}
