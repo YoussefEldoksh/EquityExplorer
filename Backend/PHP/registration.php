@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $sql  = "INSERT INTO users (username, firstname, lastname, email, password_hash) VALUES (?, ?, ?, ?, ?)";
+    $sql  = "INSERT INTO users (username, firstname, lastname, email, password_hash) VALUES (?, ?, ?, ?, ?) RETURNING id";
     $stmt = $conn->prepare($sql);
 
     if (!$stmt->execute([$_username, $_firstname, $_lastname, $_usermail, $_passwordhash])) {
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $new_id       = $conn->lastInsertId();
+    $new_id       = $stmt->fetchColumn();
     $jwt_email    = $_usermail;
     $jwt_username = $_username;
 

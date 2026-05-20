@@ -38,15 +38,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt = $conn->prepare(
             "INSERT INTO users (username, firstname, lastname, email, google_id, password_hash)
-             VALUES (?, ?, ?, ?, ?, NULL)"
+             VALUES (?, ?, ?, ?, ?, NULL)
+             RETURNING id"
         );
 
         if (!$stmt->execute([$username, $firstname, $lastname, $email, $google_id])) {
             echo json_encode(["success" => false, "message" => "Registration failed."]);
             exit;
         }
-
-        $userId = $conn->lastInsertId();
+        $userId = $stmt->fetchColumn();
     }
 
     // Issue JWT

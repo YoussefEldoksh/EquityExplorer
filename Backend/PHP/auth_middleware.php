@@ -70,6 +70,11 @@ function require_auth() {
     }
     try {
         $payload = jwt_decode($token, $secret);
+        // Reject legacy/invalid subject values early (users.id is UUID now)
+        $sub = isset($payload['sub']) ? (string)$payload['sub'] : '';
+        if (!preg_match('/^[0-9a-fA-F-]{36}$/', $sub)) {
+            throw new Exception('Session expired, please sign in again');
+        }
         // Set RLS context for defense-in-depth
         if ($conn && isset($payload['sub'])) {
             setUserContext($conn, $payload['sub']); // payload['sub'] is now UUID string

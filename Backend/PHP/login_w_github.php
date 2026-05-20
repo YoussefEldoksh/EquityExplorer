@@ -101,9 +101,9 @@ try {
         $firstname = $names[0];
         $lastname = $names[1] ?? '';
 
-        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, github_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, github_id) VALUES (?, ?, ?, ?, ?) RETURNING id");
         $stmt->execute([$username, $firstname, $lastname, $email, (string)$githubUser['id']]);
-        $userId = $conn->lastInsertId();
+        $userId = $stmt->fetchColumn();
     }
 
     // 6. Issue JWT

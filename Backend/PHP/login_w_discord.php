@@ -98,9 +98,9 @@ try {
         $firstname = $discordUser['global_name'] ?? $username;
         $lastname = '';
 
-        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, discord_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (username, firstname, lastname, email, discord_id) VALUES (?, ?, ?, ?, ?) RETURNING id");
         $stmt->execute([$username, $firstname, $lastname, $email, (string)$discordId]);
-        $userId = $conn->lastInsertId();
+        $userId = $stmt->fetchColumn();
     }
 
     // 6. Issue JWT
