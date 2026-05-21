@@ -11,6 +11,7 @@ import WatchlistPage from './pages/WatchlistPage'
 import AlertsPage from './pages/AlertsPage'
 import Navbar from './components/Navbar'
 import { Toaster } from 'sonner';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import PrivacyPage from './pages/PrivacyPage'
 import DataDeletionPage from './pages/DataDeletionPage'
@@ -37,7 +38,7 @@ function App() {
           <Route path="/data-deletion" element={<DataDeletionPage />} />
         </Routes>
       </BrowserRouter>
-
+      <SpeedInsights />
     </>
   )
 }
