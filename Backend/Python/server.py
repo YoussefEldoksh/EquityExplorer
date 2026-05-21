@@ -61,8 +61,14 @@ def read_root():
 # FOR STOCK DETAIL PAGE
 @app.get("/api/stock/{symbol}")
 def get_stock_data(symbol: str):
+    try:
         ticker = yf.Ticker(symbol)
-        return ticker.info
+        info = ticker.info
+        if not info:
+            raise HTTPException(status_code=404, detail="Stock not found")
+        return info
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/timeseries/{symbol}")
 def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d"):
