@@ -158,19 +158,15 @@ export function RegisterForm({
   }, [navigate]);
 
   const login = useGoogleLogin({
-    onSuccess: async (response) => {
-      const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: { Authorization: `Bearer ${response.access_token}` },
-      }).then(res => res.json());
-
+    flow: 'auth-code',
+    onSuccess: async (codeResponse) => {
       const fetchPromise = fetch(`/api/auth/login_w_google.php`, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: userInfo.name,
-          email: userInfo.email,
-          googleId: userInfo.sub
+          code: codeResponse.code,
+          redirect_uri: 'postmessage'
         }),
       }).then(async (response) => {
         const data = await response.json();

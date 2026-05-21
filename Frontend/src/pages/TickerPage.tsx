@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TrendingUp, TrendingDown, EyeClosed, Eye } from 'lucide-react';
 import AlertModal from '../components/AlertModal';
 
@@ -34,7 +34,6 @@ function TickerPage() {
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [isLogged, setIsLogged] = useState(false);
   const [loading, setLoading] = useState(true);
-
   const startPrice =
     timeseriesEntries.length > 0 ? timeseriesEntries[0][1].Close : null;
   const isMobile = useIsMobile();
@@ -46,7 +45,7 @@ function TickerPage() {
       : null;
   const isPositive = priceChange ? priceChange >= 0 : true;
 
-  const fetchStockTimeSeries = async (period: string, interval: string) => {
+  const fetchStockTimeSeries = useCallback(async (period: string, interval: string) => {
     try {
       const response = await fetch(
         `/api/timeseries/${stockTicker?.toUpperCase()}?period=${period}&interval=${interval}`,
@@ -59,7 +58,7 @@ function TickerPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [stockTicker]);
 
 
   const handleClick = async () => {
@@ -110,7 +109,7 @@ function TickerPage() {
       if (data.success) {
         toast.success(`Alert set for ${symbol} at $${targetPrice}`);
       }
-    } catch (e) {
+    } catch {
       toast.error("Failed to set alert:");
     }
   };
@@ -151,10 +150,10 @@ function TickerPage() {
 
     fetchStockData();
     checkStatus();
-  }, [stockTicker]);
+  }, [stockTicker, fetchStockTimeSeries]);
 
 
-  const PageSkeleton = () => (
+  const pageSkeleton = (
     <><div className="px-10 mt-25 space-y-6 mb-5">
       {/* Header */}
       <Skeleton className="h-4 mx-5 w-48 bg-zinc-300 rounded-lg" />
@@ -370,7 +369,7 @@ function TickerPage() {
       </>
   );
 
-  const PageSkeletonMobile = () => (
+  const pageSkeletonMobile = (
     <><div className="px-10 mt-25 space-y-4 mb-5">
       {/* Header */}
       <Skeleton className="h-4 mx-5 w-48 bg-zinc-300 rounded-lg" />
@@ -589,7 +588,7 @@ function TickerPage() {
   return (
     <>
       {!isMobile && (
-        loading ? <PageSkeleton /> : (
+        loading ? pageSkeleton : (
           <>
             <div className=" px-15 mt-25">
               <p className="font-excon text-md">
@@ -810,7 +809,6 @@ function TickerPage() {
                           <ToolTip explain="Volume — the number of shares traded today. High volume usually means strong investor interest or a major news event."></ToolTip>
                         </div>
                       </div>
-
                       <p className="font-semibold">
                         {stockData.volume?.toLocaleString()
                           ? stockData.volume?.toLocaleString()
@@ -1124,7 +1122,7 @@ function TickerPage() {
           </>
         ))}
 
-      {isMobile && (loading ? <PageSkeletonMobile /> : (
+      {isMobile && (loading ? pageSkeletonMobile : (
         <>
           <div className=" px-12 mt-15">
             <p className="font-excon text-md">

@@ -9,12 +9,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rawInput = file_get_contents("php://input");
     $jsonData = json_decode($rawInput, true);
 
-    $email     = trim($jsonData['email']    ?? '');
-    $name      = trim($jsonData['name']     ?? '');
-    $google_id = trim($jsonData['googleId'] ?? '');
+    $code = trim($jsonData['code'] ?? '');
+    $redirectUri = trim($jsonData['redirect_uri'] ?? 'postmessage');
+
+    if (empty($code)) {
+        echo json_encode(["success" => false, "message" => "No code provided."]);
+        exit;
+    }
+
+    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
+    $clientId = $env['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '';
+    $clientSecret = $env['GOOGLE_CLIENT_SECRET'] ?? getenv('GOOGLE_CLIENT_SECRET') ?: '';
+
+    if (empty($clientId) || empty($clientSecret)) {
+        echo json_encode(["success" => false, "message" => "Google Client ID or Secret missing on server."]);
+        exit;
+    }
+
+    // Exchange code for token
+    $ch = curl_init('https://oauth2.googleapis.com/token');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        'client_id' => $clientId,
+        'client_secret' => $clientSecret,
+        'code' => $code,
+        'grant_type' => 'authorization_code',
+        'redirect_uri' => $redirectUri
+    ]));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+    $rawResponse = curl_exec($ch);
+    $response = json_decode($rawResponse, true);
+    curl_close($ch);
+
+    $accessToken = $response['access_token'] ?? null;
+
+    if (!$accessToken) {
+        $error = $response['error'] ?? 'Unknown error';
+        $errorDesc = $response['error_description'] ?? 'No description';
+        echo json_encode(["success" => false, "message" => "Google Error: $error - $errorDesc"]);
+        exit;
+    }
+
+    // Get user info
+    $ch = curl_init('https://www.googleapis.com/oauth2/v3/userinfo');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $accessToken
+    ]);
+    $userRes = curl_exec($ch);
+    $userInfo = json_decode($userRes, true);
+    curl_close($ch);
+
+    $email = $userInfo['email'] ?? '';
+    $name = $userInfo['name'] ?? '';
+    $google_id = $userInfo['sub'] ?? '';
 
     if (empty($email) || empty($google_id)) {
-        echo json_encode(["success" => false, "message" => "Invalid Google data."]);
+        echo json_encode(["success" => false, "message" => "Failed to get user info from Google."]);
         exit;
     }
 
@@ -50,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Issue JWT
-    $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
     $secret = $env['JWT_SECRET'] ?? getenv('JWT_SECRET') ?: '';
     $now = time();
     $payload = [
