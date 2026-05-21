@@ -87,6 +87,7 @@ export function LoginForm({
   };
 
   const handleGithubLogin = () => {
+    localStorage.setItem('oauth_provider', 'github');
     const rootUrl = 'https://github.com/login/oauth/authorize';
     const options = {
       client_id: githubClientId,
