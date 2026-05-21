@@ -1,8 +1,4 @@
 import { useEffect, useState } from 'react'
-<<<<<<< HEAD
-=======
-import Navbar from '../components/Navbar'
->>>>>>> 344097e (feat(frontend): implement watchlist page and routing)
 import { useIsMobile } from '../hooks/use-mobile';
 import {
     Table,
@@ -12,10 +8,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-<<<<<<< HEAD
-=======
-
->>>>>>> 344097e (feat(frontend): implement watchlist page and routing)
 import {
     Pagination,
     PaginationContent,
@@ -28,10 +20,6 @@ import {
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 344097e (feat(frontend): implement watchlist page and routing)
 function WatchlistPage() {
     const [watchlist, setWatchlist] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -70,10 +58,6 @@ function WatchlistPage() {
 
     return (
         <div className="min-h-screen bg-slate-50">
-<<<<<<< HEAD
-=======
-            <Navbar isOtherPage={true}></Navbar>
->>>>>>> 344097e (feat(frontend): implement watchlist page and routing)
 
             <div className='px-5 pt-24 pb-10'>
                 <div className="mb-8">
@@ -89,7 +73,7 @@ function WatchlistPage() {
                     <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-sm">
                         <p className="text-xl text-slate-500">Your watchlist is empty.</p>
                         <p className="mt-2 text-slate-400">Start adding stocks to see them here!</p>
-                        <button 
+                        <button
                             onClick={() => navigate('/tickerslist')}
                             className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors"
                         >
@@ -117,8 +101,8 @@ function WatchlistPage() {
                             </TableHeader>
                             <TableBody>
                                 {paginatedTickers.map((ticker: any) => (
-                                    <TableRow 
-                                        key={ticker?.symbol} 
+                                    <TableRow
+                                        key={ticker?.symbol}
                                         className="cursor-pointer hover:bg-slate-50 transition-colors"
                                         onClick={() => navigate(`/${ticker?.symbol}`)}
                                     >

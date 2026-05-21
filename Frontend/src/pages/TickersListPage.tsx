@@ -19,10 +19,7 @@ import {
 } from "../components/ui/pagination"
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import { Skeleton } from "../components/ui/skeleton"
-=======
->>>>>>> 5459568 (feat(frontend): add navigation to TickersListPage rows)
 
 
 function TickersListPage() {
@@ -136,7 +133,6 @@ function TickersListPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-<<<<<<< HEAD
                         {loading
                             ? Array.from({ length: 20 }).map((_, i) => (
                                 <TableRow key={i}>
@@ -156,59 +152,33 @@ function TickersListPage() {
 
 
                                 paginatedTickers.map((ticker: any) => (
-                                        <TableRow
-                                            key={ticker?.symbol}
-                                            className="cursor-pointer hover:bg-zinc-50 "
-                                            onClick={() => navigate(`/${ticker?.symbol}`)}
-                                        >
-                                            <TableCell className="   ">
-                                                <div className='font-medium bg-zinc-300  rounded-lg text-center py-2 hover:bg-black hover:text-white'>
-        
-                                                    {ticker?.symbol}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="font-medium">{ticker?.name}</TableCell>
-                                            <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
-                                                ${ticker?.price}
-                                            </TableCell>
-                                            <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
-                                                {ticker?.changePct.toFixed(2)}%
-                                            </TableCell>
-                                            <TableCell className="text-right">{(ticker?.vol / 10e3).toFixed(2)}T</TableCell>
-                                            <TableCell className="text-right">{(ticker?.marketCap / 10e9).toFixed(2)}B</TableCell>
-                                            <TableCell className="text-right">x{ticker?.pe ? ticker?.pe.toFixed(2) : 0}</TableCell>
-                                            <TableCell className="text-right">x{ticker?.eps}</TableCell>
-                                            <TableCell className="text-right">{ticker?.div ? ticker?.div : 0}%</TableCell>
-                                            <TableCell className="text-center">{ticker?.sector}</TableCell>
-                                        </TableRow>
-                                    ))
+                                    <TableRow
+                                        key={ticker?.symbol}
+                                        className="cursor-pointer hover:bg-zinc-50 "
+                                        onClick={() => navigate(`/${ticker?.symbol}`)}
+                                    >
+                                        <TableCell className="   ">
+                                            <div className='font-medium bg-zinc-300  rounded-lg text-center py-2 hover:bg-black hover:text-white'>
+
+                                                {ticker?.symbol}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="font-medium">{ticker?.name}</TableCell>
+                                        <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
+                                            ${ticker?.price}
+                                        </TableCell>
+                                        <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
+                                            {ticker?.changePct.toFixed(2)}%
+                                        </TableCell>
+                                        <TableCell className="text-right">{(ticker?.vol / 10e3).toFixed(2)}T</TableCell>
+                                        <TableCell className="text-right">{(ticker?.marketCap / 10e9).toFixed(2)}B</TableCell>
+                                        <TableCell className="text-right">x{ticker?.pe ? ticker?.pe.toFixed(2) : 0}</TableCell>
+                                        <TableCell className="text-right">x{ticker?.eps}</TableCell>
+                                        <TableCell className="text-right">{ticker?.div ? ticker?.div : 0}%</TableCell>
+                                        <TableCell className="text-center">{ticker?.sector}</TableCell>
+                                    </TableRow>
+                                ))
                             )}
-=======
-                        {paginatedTickers.map((ticker: any) => (
-                            <TableRow 
-                                key={ticker?.symbol}
-                                className="cursor-pointer hover:bg-zinc-50"
-                                onClick={() => navigate(`/${ticker?.symbol}`)}
-                            >
-                                <TableCell className="font-medium bg-zinc-300 w-[50px] rounded-lg text-center">
-                                    {ticker?.symbol}
-                                </TableCell>
-                                <TableCell className="font-medium">{ticker?.name}</TableCell>
-                                <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
-                                    ${ticker?.price}
-                                </TableCell>
-                                <TableCell className={`${ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}`}>
-                                    {ticker?.changePct.toFixed(2)}%
-                                </TableCell>
-                                <TableCell className="text-right">{(ticker?.vol / 10e3).toFixed(2)}T</TableCell>
-                                <TableCell className="text-right">{(ticker?.marketCap / 10e9).toFixed(2)}B</TableCell>
-                                <TableCell className="text-right">x{ticker?.pe ? ticker?.pe.toFixed(2) : 0}</TableCell>
-                                <TableCell className="text-right">x{ticker?.eps}</TableCell>
-                                <TableCell className="text-right">{ticker?.div ? ticker?.div : 0}%</TableCell>
-                                <TableCell className="text-center">{ticker?.sector}</TableCell>
-                            </TableRow>
-                        ))}
->>>>>>> 5459568 (feat(frontend): add navigation to TickersListPage rows)
 
                     </TableBody>
                 </Table>

@@ -109,10 +109,10 @@ export function LoginForm({
     // If we have a code, we need to know if it's for GitHub or Meta.
     // Usually we can check the 'state' or just try one then the other, 
     // but better to check if we are on signin/register and if we have other indicators.
-    
+
     // For now, let's assume if it's 'code', we check if it came from Meta or Github.
     // Meta usually doesn't have other URL params besides code and state.
-    
+
     const code = githubCode;
 
     if (code && !hasExchanged.current) {
@@ -125,11 +125,11 @@ export function LoginForm({
       // Or I can just try both (not ideal).
       // Let's use a simple heuristic: if it has 'code' but no other GitHub-specific stuff.
       // Actually, Meta's redirect usually includes 'code' and 'state'.
-      
+
       const isDiscord = localStorage.getItem('oauth_provider') === 'discord';
 
       const exchangeCode = async () => {
-        const endpoint = isDiscord 
+        const endpoint = isDiscord
           ? `/api/auth/login_w_discord.php`
           : `/api/auth/login_w_github.php`;
 

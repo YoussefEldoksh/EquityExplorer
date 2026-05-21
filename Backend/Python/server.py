@@ -1,9 +1,5 @@
 from fastapi import FastAPI, HTTPException, Cookie, Depends
-<<<<<<< HEAD
 from pydantic import BaseModel
-=======
-from fastapi.middleware.cors import CORSMiddleware 
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
 import yfinance as yf
 import pandas as pd
 import requests
@@ -13,10 +9,6 @@ import os
 import jwt
 import psycopg2
 from concurrent.futures import ThreadPoolExecutor
-<<<<<<< HEAD
-=======
-from functools import lru_cache
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
 from dotenv import load_dotenv
 from typing import Optional
 
@@ -35,7 +27,6 @@ def get_db_conn():
         password=os.getenv("DB_PASS")
     )
 
-<<<<<<< HEAD
 # Helper to set RLS context for current user
 def set_user_context(conn, user_id):
     """Set PostgreSQL session variable for RLS policies"""
@@ -46,14 +37,11 @@ def set_user_context(conn, user_id):
     except Exception as e:
         print(f"Warning: Failed to set user context: {e}")
 
-=======
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
 # Auth Helper
 async def get_current_user(token: Optional[str] = Cookie(None)):
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     try:
-<<<<<<< HEAD
         # user_id is now a UUID string from JWT payload 'sub'
         payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_sub": False})
         user_id = payload.get("sub")
@@ -61,38 +49,11 @@ async def get_current_user(token: Optional[str] = Cookie(None)):
         if user_id is None:
             raise HTTPException(status_code=401, detail="Invalid token")
         return user_id  # UUID string
-=======
-        # We use verify_sub=False because PHP sends the ID as an int, but PyJWT expects a string.
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[ALGORITHM], options={"verify_sub": False})
-        user_id = payload.get("sub")
-        print(payload)
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        return int(user_id)
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
 app = FastAPI()
 
-<<<<<<< HEAD
-=======
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://192.168.92.1:5173",
-        "https://equityexplorer.vercel.app", # Placeholder - update with your actual Vercel URL
-    ],
-    allow_origin_regex="https://equity-explorer-.*\.vercel\.app", # Matches Vercel preview URLs
-    allow_methods=["*"],
-    allow_headers=["*"],
-    allow_credentials=True,
-    expose_headers=["*"], 
-)
-
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
@@ -250,16 +211,10 @@ def get_cached_screener():
 
 # WATCHLIST ENDPOINTS
 @app.post("/api/watchlist/add")
-<<<<<<< HEAD
 async def add_to_watchlist(symbol: str, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
         set_user_context(conn, user_id)  # Set RLS context
-=======
-async def add_to_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
-    try:
-        conn = get_db_conn()
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO watchlist (user_id, symbol) VALUES (%s, %s) ON CONFLICT DO NOTHING",
@@ -272,16 +227,10 @@ async def add_to_watchlist(symbol: str, user_id: int = Depends(get_current_user)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 @app.get("/api/watchlist")
-<<<<<<< HEAD
 async def get_watchlist(user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
         set_user_context(conn, user_id)  # Set RLS context
-=======
-async def get_watchlist(user_id: int = Depends(get_current_user)):
-    try:
-        conn = get_db_conn()
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
         cur = conn.cursor()
         cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
         rows = cur.fetchall()
@@ -292,16 +241,10 @@ async def get_watchlist(user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/watchlist/details")
-<<<<<<< HEAD
 async def get_watchlist_details(user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
         set_user_context(conn, user_id)  # Set RLS context
-=======
-async def get_watchlist_details(user_id: int = Depends(get_current_user)):
-    try:
-        conn = get_db_conn()
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
         cur = conn.cursor()
         cur.execute("SELECT symbol FROM watchlist WHERE user_id = %s", (user_id,))
         rows = cur.fetchall()
@@ -320,16 +263,10 @@ async def get_watchlist_details(user_id: int = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.delete("/api/watchlist/remove/{symbol}")
-<<<<<<< HEAD
 async def remove_from_watchlist(symbol: str, user_id: str = Depends(get_current_user)):
     try:
         conn = get_db_conn()
         set_user_context(conn, user_id)  # Set RLS context
-=======
-async def remove_from_watchlist(symbol: str, user_id: int = Depends(get_current_user)):
-    try:
-        conn = get_db_conn()
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
         cur = conn.cursor()
         cur.execute(
             "DELETE FROM watchlist WHERE user_id = %s AND symbol = %s",
@@ -342,7 +279,6 @@ async def remove_from_watchlist(symbol: str, user_id: int = Depends(get_current_
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-<<<<<<< HEAD
 class AlertRequest(BaseModel):
     symbol: str
     target_price: float
@@ -428,8 +364,6 @@ async def toggle_alert(alert_id: int, user_id: str = Depends(get_current_user)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-=======
->>>>>>> dccc2e6 (feat(backend): implement authentication and watchlist API endpoints)
 @app.get("/api/snp500")
 def screener(type: str = "all"):
     data = get_cached_screener()

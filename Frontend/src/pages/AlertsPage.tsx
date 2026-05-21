@@ -23,7 +23,7 @@ function AlertsPage() {
 
     const fetchAlerts = async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts`, {
+            const response = await fetch(`/api/alerts`, {
                 credentials: 'include'
             });
             if (response.status === 401) {
@@ -45,14 +45,14 @@ function AlertsPage() {
 
     useEffect(() => {
         if (!loading && alerts.length > 0) {
-            gsap.fromTo(cardsRef.current, 
+            gsap.fromTo(cardsRef.current,
                 { opacity: 0, y: 20, scale: 0.95 },
-                { 
-                    opacity: 1, 
-                    y: 0, 
-                    scale: 1, 
-                    duration: 0.5, 
-                    stagger: 0.1, 
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.5,
+                    stagger: 0.1,
                     ease: "power2.out",
                     overwrite: true
                 }
@@ -62,7 +62,7 @@ function AlertsPage() {
 
     const handleToggle = async (id: number) => {
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts/toggle/${id}`, {
+            const res = await fetch(`/api/alerts/toggle/${id}`, {
                 method: 'PATCH',
                 credentials: 'include'
             });
@@ -76,7 +76,7 @@ function AlertsPage() {
 
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this alert?")) return;
-        
+
         // Optimistic UI update with GSAP animation
         const index = alerts.findIndex(a => a.id === id);
         if (index !== -1 && cardsRef.current[index]) {
@@ -86,7 +86,7 @@ function AlertsPage() {
                 duration: 0.3,
                 onComplete: async () => {
                     try {
-                        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/alerts/remove/${id}`, {
+                        const res = await fetch(`/api/alerts/remove/${id}`, {
                             method: 'DELETE',
                             credentials: 'include'
                         });
@@ -101,11 +101,11 @@ function AlertsPage() {
 
     const getPriceProgress = (alert: Alert) => {
         if (!alert.current_price) return 0;
-        
+
         const start = alert.condition === 'above' ? alert.current_price * 0.8 : alert.current_price * 1.2;
         const target = alert.target_price;
         const current = alert.current_price;
-        
+
         let progress = ((current - start) / (target - start)) * 100;
         return Math.min(Math.max(progress, 0), 100);
     };
@@ -152,7 +152,7 @@ function AlertsPage() {
                             <p className="text-slate-600 max-w-md mx-auto text-lg mb-10 leading-relaxed">
                                 You haven't set any price alerts yet. Monitor your favorite assets and get notified the moment they hit your targets.
                             </p>
-                            <Button 
+                            <Button
                                 onClick={() => navigate('/tickerslist')}
                                 className="group h-14 px-8 bg-black text-white rounded-2xl font-bold hover:scale-105 transition-all duration-300 shadow-xl shadow-black/20"
                             >
@@ -165,18 +165,18 @@ function AlertsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {alerts.map((alert, index) => {
                             const progress = getPriceProgress(alert);
-                            const isAtTarget = alert.condition === 'above' 
-                                ? (alert.current_price || 0) >= alert.target_price 
+                            const isAtTarget = alert.condition === 'above'
+                                ? (alert.current_price || 0) >= alert.target_price
                                 : (alert.current_price || 0) <= alert.target_price;
 
                             return (
-                                <div 
-                                    key={alert.id} 
+                                <div
+                                    key={alert.id}
                                     ref={el => { cardsRef.current[index] = el }}
                                     className={`relative flex flex-col bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 group ${!alert.is_active ? 'opacity-60 grayscale-[0.5]' : ''}`}
                                 >
                                     <div className="flex justify-between items-start mb-6">
-                                        <div 
+                                        <div
                                             className="cursor-pointer group/symbol"
                                             onClick={() => navigate(`/${alert.symbol}`)}
                                         >
@@ -189,14 +189,14 @@ function AlertsPage() {
                                             </div>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button 
+                                            <button
                                                 onClick={() => handleToggle(alert.id)}
                                                 className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 ${alert.is_active ? 'bg-slate-100 text-black hover:bg-black hover:text-white' : 'bg-black text-white hover:bg-slate-800'}`}
                                                 title={alert.is_active ? "Pause" : "Resume"}
                                             >
                                                 {alert.is_active ? <Pause size={18} fill="currentColor" /> : <Play size={18} fill="currentColor" />}
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => handleDelete(alert.id)}
                                                 className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center hover:bg-rose-600 hover:text-white transition-all duration-300"
                                                 title="Delete"
@@ -227,7 +227,7 @@ function AlertsPage() {
                                                     </span>
                                                 </div>
                                                 <div className="h-3 bg-slate-100 rounded-full overflow-hidden p-0.5">
-                                                    <div 
+                                                    <div
                                                         className={`h-full rounded-full transition-all duration-1000 ease-out ${isAtTarget ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-black'}`}
                                                         style={{ width: `${progress}%` }}
                                                     ></div>

@@ -75,11 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'path'     => '/',
             'secure'   => true,
             'httponly' => true,
-<<<<<<< HEAD
             'samesite' => $secure ? 'None' : 'Lax'
-=======
-            'samesite' => 'None'
->>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
         ]);
 
         $_SESSION["user_id"] = $new_id;

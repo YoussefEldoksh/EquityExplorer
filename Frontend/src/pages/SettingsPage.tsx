@@ -25,7 +25,6 @@ function SettingsPage() {
         bio: ""
     });
     const [watchlistCount, setWatchlistCount] = useState(0);
-<<<<<<< HEAD
     const [alertCount, setAlertCount] = useState(0);
     const [hasPassword, setHasPassword] = useState(false);
     const [passwords, setPasswords] = useState({
@@ -34,8 +33,6 @@ function SettingsPage() {
         confirm_password: ""
     });
     const [savingPassword, setSavingPassword] = useState(false);
-=======
->>>>>>> b67c896 (feat(frontend): integrate watchlist into navbar and settings page)
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -64,11 +61,7 @@ function SettingsPage() {
 
         const fetchWatchlistCount = async () => {
             try {
-<<<<<<< HEAD
                 const res = await fetch(`/api/watchlist`, { credentials: 'include' });
-=======
-                const res = await fetch('/api/watchlist', { credentials: 'include' });
->>>>>>> b67c896 (feat(frontend): integrate watchlist into navbar and settings page)
                 const data = await res.json();
                 if (Array.isArray(data)) setWatchlistCount(data.length);
             } catch (e) {
@@ -76,7 +69,6 @@ function SettingsPage() {
             }
         };
 
-<<<<<<< HEAD
         const fetchAlertCount = async () => {
             try {
                 const res = await fetch(`/api/alerts`, { credentials: 'include' });
@@ -90,10 +82,6 @@ function SettingsPage() {
         fetchUserData();
         fetchWatchlistCount();
         fetchAlertCount();
-=======
-        fetchUserData();
-        fetchWatchlistCount();
->>>>>>> b67c896 (feat(frontend): integrate watchlist into navbar and settings page)
     }, []);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -320,7 +308,7 @@ function SettingsPage() {
                                 <Separator />
 
                                 <div className="flex flex-wrap gap-3">
-                                    <Button 
+                                    <Button
                                         disabled={saving}
                                         onClick={handleSave}
                                         className="rounded-2xl bg-slate-950 px-5 text-white hover:bg-slate-800"

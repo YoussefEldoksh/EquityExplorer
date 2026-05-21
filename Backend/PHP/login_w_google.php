@@ -21,62 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $clientId = $env['GOOGLE_CLIENT_ID'] ?? getenv('GOOGLE_CLIENT_ID') ?: '';
     $clientSecret = $env['GOOGLE_CLIENT_SECRET'] ?? getenv('GOOGLE_CLIENT_SECRET') ?: '';
 
-<<<<<<< HEAD
     if (empty($clientId) || empty($clientSecret)) {
         echo json_encode(["success" => false, "message" => "Google Client ID or Secret missing on server."]);
         exit;
-=======
-
-    if ($existing) {
-        // Already exists — link google_id if not linked yet, then log in
-        $user_id  = $existing['id'];
-        $username = $existing['username'];
-        $google_id_database = $existing['google_id'];
-
-        if ($google_id_database === $google_id) {
-
-            $env = is_readable(__DIR__ . '/.env') ? parse_ini_file(__DIR__ . '/.env') : [];
-            $secret = $env['JWT_SECRET'] ?? '';
-            $now = time();
-            $payload = [
-                'sub' => (string)$user_id,
-                'email' => $email,
-                'username' => $username,
-                'iat' => $now,
-                'exp' => $now + 60 * 60 * 24 * 7 // 7 days
-            ];
-            $jwt = jwt_encode($payload, $secret);
-
-            // Set HttpOnly cookie
-            $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-            setcookie('token', $jwt, [
-                'expires' => $payload['exp'],
-                'path' => '/',
-                'secure' => true,
-                'httponly' => true,
-                'samesite' => 'None'
-            ]);
-
-            $_SESSION["user_id"] = $user_id;
-
-            echo json_encode([
-                "success" => true,
-                "message" => "Login successful!",
-                "user" => [
-                    "id" => $user_id,
-                    "username" => $username,
-                    "email" => $email
-                ]
-            ]);
-        } else {
-            echo json_encode(["success" => false, "message" => "Account not found."]);
-        }
-
-        // $stmt = $conn->prepare("UPDATE users SET google_id = ? WHERE id = ? AND google_id IS NULL");
-        // $stmt->execute([$google_id, $user_id]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Account not found."]);
->>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
     }
 
     // Exchange code for token

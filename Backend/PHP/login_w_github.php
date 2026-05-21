@@ -120,11 +120,7 @@ try {
         'expires' => time() + (3600 * 24 * 7),
         'path' => '/',
         'domain' => '', 
-<<<<<<< HEAD
         'secure' => $secure,
-=======
-        'secure' => true,
->>>>>>> 241b2bd (Final production audit complete: Cross-domain auth & Docker ready)
         'httponly' => true,
         'samesite' => 'None',
     ]);
