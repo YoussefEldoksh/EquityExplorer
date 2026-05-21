@@ -115,14 +115,13 @@ try {
     $token = jwt_encode($payload, $jwtSecret);
 
     // Set HttpOnly cookie
-    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+    $secure = is_https();
     setcookie('token', $token, [
         'expires' => time() + (3600 * 24 * 7),
         'path' => '/',
-        'domain' => '', 
         'secure' => $secure,
         'httponly' => true,
-        'samesite' => 'None',
+        'samesite' => $secure ? 'None' : 'Lax',
     ]);
 
     echo json_encode(['success' => true, 'message' => 'Logged in via GitHub']);

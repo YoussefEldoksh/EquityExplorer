@@ -113,13 +113,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jwt = jwt_encode($payload, $secret);
 
     // Set HttpOnly cookie
-    $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+    $secure = is_https();
     setcookie('token', $jwt, [
         'expires' => $payload['exp'],
         'path' => '/',
         'secure' => $secure,
         'httponly' => true,
-        'samesite' => 'None'
+        'samesite' => $secure ? 'None' : 'Lax'
     ]);
 
     $_SESSION["user_id"] = $userId;

@@ -1,5 +1,20 @@
 <?php
 // Simple JWT helpers and middleware for cookie-based auth (HS256)
+
+/**
+ * Detect HTTPS even behind a reverse proxy (Render, Nginx, etc.)
+ * Render terminates TLS at the proxy, so PHP never sees HTTPS=on.
+ * The proxy sets X-Forwarded-Proto: https instead.
+ */
+function is_https(): bool {
+    // Direct HTTPS
+    if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') return true;
+    // Behind reverse proxy (Render / Nginx / Cloudflare)
+    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') return true;
+    // Render also sometimes sets this
+    if (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on') return true;
+    return false;
+}
 function base64url_encode($data) {
     return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
 }
@@ -89,13 +104,13 @@ function require_auth() {
         }
         return $payload;
     } catch (Throwable $e) {
-        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        $secure = is_https();
         setcookie('token', '', [
             'expires' => time() - 3600,
             'path' => '/',
             'secure' => $secure,
             'httponly' => true,
-            'samesite' => 'None'
+            'samesite' => $secure ? 'None' : 'Lax'
         ]);
         http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Invalid token: ' . $e->getMessage()]);

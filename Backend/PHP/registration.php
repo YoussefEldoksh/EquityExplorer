@@ -69,11 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'exp'      => $now + 60 * 60 * 24 * 7
         ];
         $jwt    = jwt_encode($payload, $secret);
-        $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        $secure = is_https();
         setcookie('token', $jwt, [
             'expires'  => $payload['exp'],
             'path'     => '/',
-            'secure'   => true,
+            'secure'   => $secure,
             'httponly' => true,
             'samesite' => $secure ? 'None' : 'Lax'
         ]);
