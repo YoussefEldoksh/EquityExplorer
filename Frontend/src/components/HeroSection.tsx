@@ -7,9 +7,9 @@ function HeroSection() {
 
       <div className='relative h-screen bg-black'>
         <Aurora
-          colorStops={["#7943d7", "#000000", "#fefefe"]}
+          colorStops={["#4335d6", "#4335d6","#4335d6"]}
           blend={0.35}
-          amplitude={1}
+          amplitude={0.5}
           speed={2}
         />
 

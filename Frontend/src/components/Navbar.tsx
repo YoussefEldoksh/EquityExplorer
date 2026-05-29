@@ -140,194 +140,201 @@ function Navbar() {
       {
         !isMobile &&
         <>
-          <nav className={`fixed top-0 right-0 left-0 z-50 flex px-10 py-2 justify-between border-b ${isOtherPage ? "bg-white/80 backdrop-blur-md border-slate-200" : "bg-white/10 backdrop-blur-md border-white/20"}`}>
-            <div className=''>
-              <Link to="/">
-                <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
-              </Link>
+          <div className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between p-5 `}>
 
-            </div>
 
-            <div className='flex relative'>
+            <nav className={` w-full flex px-10 py-5 rounded-xl shadow  justify-between border ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200" : "bg-black/40 backdrop-blur-md border-white/20"}`}>
+              <div className=''>
+                <Link to="/">
+                  <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
+                </Link>
 
-              <Field orientation="horizontal" className="w-120" >
-                <Input type="search" placeholder="Search Symbol or Company..."
-                  value={searchWord}
-                  onChange={handleSearchChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => setShowSuggestions(true)}
-                  className={`bg-white`}
-                />
+              </div>
 
-                <Button
-                  onClick={() => selectTicker(searchWord)}
-                  className="hover:text-black hover:bg-white"
-                >
-                  Search
-                </Button>
-              </Field>
 
-              {showSuggestions && suggestions.length > 0 && (
-                <div
-                  ref={dropdownRef}
-                  className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-b-md shadow-lg z-[100] mt-1 overflow-hidden"
-                >
-                  {suggestions.map((item, index) => (
-                    <div
-                      key={item.symbol}
-                      onClick={() => selectTicker(item.symbol)}
-                      onMouseEnter={() => setSelectedIndex(index)}
-                      className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
-                        }`}
-                    >
-                      <div className="flex flex-col">
-                        <span className="font-bold text-sm">{item.symbol}</span>
-                        <span className="text-xs text-gray-500 truncate max-w-[200px]">{item.name}</span>
+
+              <div className='flex items-center gap-3 px-5 font-bold text-white '>
+                <Link to="/contact">
+                  <Button className={`font-excon rounded-xl   text-lg  bg-transparent border-none text-white  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white  hover:text-black hover:bg-white"}` }>Contact</Button>
+                </Link>
+                <Link to="/tickerslist">
+                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Screener</Button>
+                </Link>
+                {isAuthed ? (
+                  <UserMenu username={user?.username} />
+                ) : (
+                  <>
+                    <Link to="/signin">
+                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                        Sign-in
+                      </Button>
+                    </Link>
+                    <Link to="/register">
+                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+              <div className='flex relative'>
+
+                <Field orientation="horizontal" className="w-120 flex  gap-0" >
+                  <Input type="search" placeholder="Search Symbol or Company..."
+                    value={searchWord}
+                    onChange={handleSearchChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setShowSuggestions(true)}
+                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-white bg-black/5" : "text-white bg-black/70" }`}
+                  />
+
+                  <Button
+                    onClick={() => selectTicker(searchWord)}
+                    className="hover:text-black hover:bg-white py-4 font-excon rounded-r-lg"
+                  >
+                    Search
+                  </Button>
+                </Field>
+
+                {showSuggestions && suggestions.length > 0 && (
+                  <div
+                    ref={dropdownRef}
+                    className="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-b-md shadow-lg z-[100] mt-1 overflow-hidden"
+                  >
+                    {suggestions.map((item, index) => (
+                      <div
+                        key={item.symbol}
+                        onClick={() => selectTicker(item.symbol)}
+                        onMouseEnter={() => setSelectedIndex(index)}
+                        className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
+                          }`}
+                      >
+                        <div className="flex flex-col">
+                          <span className="font-bold text-sm">{item.symbol}</span>
+                          <span className="text-xs text-gray-500 truncate max-w-[200px]">{item.name}</span>
+                        </div>
+                        <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-medium">STOCK</span>
                       </div>
-                      <span className="text-[10px] bg-gray-200 px-1.5 py-0.5 rounded text-gray-600 font-medium">STOCK</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+                    ))}
+                  </div>
+                )}
 
-            </div>
-
-            <div className='flex items-center gap-3 px-5 font-bold'>
-              <Link to="/contact">
-                <Button className='text-sm rounded-xl hover:text-white hover:bg-black ' variant="outline">Contact</Button>
-              </Link>
-              <Link to="/tickerslist">
-                <Button className='text-sm rounded-xl text-white bg-black  hover:text-black hover:bg-white' variant="outline">Screener</Button>
-              </Link>
-              {isAuthed ? (
-                <UserMenu username={user?.username} />
-              ) : (
-                <>
-                  <Link to="/signin">
-                    <Button variant="outline" className="rounded-xl text-sm hover:text-white hover:bg-black">
-                      Sign-in
-                    </Button>
-                  </Link>
-                  <Link to="/register">
-                    <Button variant="outline" className="rounded-xl text-sm bg-black text-white  hover:text-black hover:bg-white">
-                      register
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          </nav>
+              </div>
+            </nav>
+          </div>
         </>
       }
       {isMobile && (
         <>
+          <div className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between  p-3  `}>
 
-          <nav className={`
-      ${isOtherPage ? "bg-white" : "bg-white/10 backdrop-blur-md border border-white/20"}
-      fixed top-0 left-0 right-0 z-50
-      flex px-4 py-2 items-center justify-between
+            <nav className={`
+${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black/40 backdrop-blur-md border-white/20"}
+      flex px-5 py-4 items-center justify-between rounded-lg shadow
     `}>
-            {/* Logo */}
-            <Link to="/">
-              <p className={`font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`}>
-                EquityExplorer
-              </p>
-            </Link>
+              {/* Logo */}
+              <Link to="/">
+                <p className={`font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`}>
+                  EquityExplorer
+                </p>
+              </Link>
 
-            <div className="flex items-center gap-2">
-              {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}
-              <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
-                <DrawerTrigger asChild>
-                  <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">Menu</Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader className="sr-only">
-                    <DrawerTitle>Navigation Menu</DrawerTitle>
-                    <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
-                  </DrawerHeader>
+              <div className="flex items-center gap-2">
+                {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}
+                <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
+                  <DrawerTrigger asChild>
+                    <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">Menu</Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader className="sr-only">
+                      <DrawerTitle>Navigation Menu</DrawerTitle>
+                      <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
+                    </DrawerHeader>
 
-                  <div className='flex px-5 pt-10 relative'>
+                    <div className='flex px-5 pt-10 relative gap-0 font-excon '>
 
-                    <Field orientation="horizontal" className="w-120" >
-                      <Input type="search" placeholder="Search..."
-                        value={searchWord}
-                        onChange={handleSearchChange}
-                        onKeyDown={handleKeyDown}
-                        onFocus={() => setShowSuggestions(true)}
-                        className={`bg-white`}
-                      />
+                      <Field orientation="horizontal" className="w-120 " >
+                        <Input type="search" placeholder="Search..."
+                          value={searchWord}
+                          onChange={handleSearchChange}
+                          onKeyDown={handleKeyDown}
+                          onFocus={() => setShowSuggestions(true)}
+                          className={`bg-black/5 rounded-l-lg`}
+                        />
 
-                      <Button
-                        onClick={() => {
-                          selectTicker(searchWord);
-                          setDrawerOpen(false);
-                        }}
-                        className="hover:text-black hover:bg-white"
-                      >
-                        Search
-                      </Button>
-                    </Field>
+                        <Button
+                          onClick={() => {
+                            selectTicker(searchWord);
+                            setDrawerOpen(false);
+                          }}
+                          className="hover:text-black hover:bg-white rounded-r-lg"
+                        >
+                          Search
+                        </Button>
+                      </Field>
 
-                    {showSuggestions && suggestions.length > 0 && (
-                      <div
-                        ref={dropdownRef}
-                        className="absolute top-[calc(100%-10px)] left-5 right-5 bg-white border border-gray-200 rounded-md shadow-lg z-[100] overflow-hidden"
-                      >
-                        {suggestions.map((item, index) => (
-                          <div
-                            key={item.symbol}
-                            onClick={() => {
-                              selectTicker(item.symbol);
-                              setDrawerOpen(false);
-                            }}
-                            onMouseEnter={() => setSelectedIndex(index)}
-                            className={`px-4 py-3 cursor-pointer flex justify-between items-center ${selectedIndex === index ? "bg-gray-100" : ""
-                              }`}
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-bold text-sm text-black">{item.symbol}</span>
-                              <span className="text-xs text-gray-500">{item.name}</span>
+                      {showSuggestions && suggestions.length > 0 && (
+                        <div
+                          ref={dropdownRef}
+                          className="absolute top-[calc(100%-10px)] left-5 right-5 bg-white border border-gray-200 rounded-md shadow-lg z-[100] overflow-hidden"
+                        >
+                          {suggestions.map((item, index) => (
+                            <div
+                              key={item.symbol}
+                              onClick={() => {
+                                selectTicker(item.symbol);
+                                setDrawerOpen(false);
+                              }}
+                              onMouseEnter={() => setSelectedIndex(index)}
+                              className={`px-4 py-3 cursor-pointer flex justify-between items-center ${selectedIndex === index ? "bg-gray-100" : ""
+                                }`}
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-bold text-sm text-black">{item.symbol}</span>
+                                <span className="text-xs text-gray-500">{item.name}</span>
+                              </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-
-                  </div>
-
-                  <div className="flex flex-col gap-2 px-4 py-2 pt-5">
-                    {(() => {
-                      const list = [...menuItems];
-                      if (!isAuthed) {
-                        list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
-                        list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
-                      } else {
-                        list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
-                        list.push({ label: 'Alerts', ariaLabel: 'Alerts', link: '/alerts' });
-                        list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
-                      }
-                      return (
-                        <>
-                          {list.map((item) => (
-                            <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
-                              <p className="w-full font-excon uppercase font-bold text-5xl ">{item.label}</p>
-                            </Link>
                           ))}
-                          {isAuthed && (
-                            <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-5xl text-red-600 hover:text-red-700">
-                              LOGOUT
-                            </button>
-                          )}
-                        </>
-                      );
-                    })()}
-                  </div>
+                        </div>
+                      )}
+
+                    </div>
+
+                    <div className="flex flex-col gap-2 px-4 py-2 pt-5">
+                      {(() => {
+                        const list = [...menuItems];
+                        if (!isAuthed) {
+                          list.splice(1, 0, { label: 'Sign In', ariaLabel: 'Sign in', link: '/signin' });
+                          list.splice(2, 0, { label: 'Register', ariaLabel: 'Register', link: '/register' });
+                        } else {
+                          list.push({ label: 'Watchlist', ariaLabel: 'Watchlist', link: '/watchlist' });
+                          list.push({ label: 'Alerts', ariaLabel: 'Alerts', link: '/alerts' });
+                          list.push({ label: 'Settings', ariaLabel: 'Settings', link: '/settings' });
+                        }
+                        return (
+                          <>
+                            {list.map((item) => (
+                              <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
+                                <p className="w-full font-excon uppercase font-bold text-4xl active:text-[#4335d6] hover:text-[#4335d6] active:underline  underline ">{item.label}</p>
+                              </Link>
+                            ))}
+                            {isAuthed && (
+                              <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-5xl text-red-600 hover:text-red-700">
+                                LOGOUT
+                              </button>
+                            )}
+                          </>
+                        );
+                      })()}
+                    </div>
 
 
-                </DrawerContent>
-              </Drawer>
-            </div>
-          </nav>
+                  </DrawerContent>
+                </Drawer>
+              </div>
+            </nav>
+
+          </div>
         </>
       )}
     </>

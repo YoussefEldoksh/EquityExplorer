@@ -69,7 +69,7 @@ function TickersListPage() {
     return (
         <>
 
-            <div className='pt-18'>
+            <div className='pt-30'>
                 <p className='text-3xl font-excon font-bold px-7 ' >Popular Indices</p>
             </div>
             <div className={`grid ${isMobile ? "grid-cols-2  px-5 px-5 mt-5" : "grid-cols-3 px-5 mt-5 "}  gap-5`}>
