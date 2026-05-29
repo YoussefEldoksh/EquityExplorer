@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useIsMobile } from '../hooks/use-mobile';
+// import { useIsMobile } from '../hooks/use-mobile';
 import {
     Table,
     TableBody,
@@ -25,7 +25,7 @@ function WatchlistPage() {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 20;
-    const isMobile = useIsMobile();
+    // const isMobile = useIsMobile();
     const navigate = useNavigate();
 
     const totalPages = Math.ceil(watchlist.length / ITEMS_PER_PAGE);
