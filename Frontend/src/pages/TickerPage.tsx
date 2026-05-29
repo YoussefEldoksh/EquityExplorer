@@ -154,7 +154,7 @@ function TickerPage() {
 
 
   const pageSkeleton = (
-    <><div className="px-10 mt-25 space-y-6 mb-5">
+    <><div className="px-10 mt-30 space-y-6 mb-5">
       {/* Header */}
       <Skeleton className="h-4 mx-5 w-48 bg-zinc-300 rounded-lg" />
       <div className="flex px-5 items-center gap-2 ">
@@ -590,7 +590,7 @@ function TickerPage() {
       {!isMobile && (
         loading ? pageSkeleton : (
           <>
-            <div className=" px-15 mt-25">
+            <div className=" px-15 mt-30">
               <p className="font-excon text-md">
                 {stockData.fullExchangeName} . {stockData.exchange} . {' '}
                 {stockData.currency}
@@ -1124,7 +1124,7 @@ function TickerPage() {
 
       {isMobile && (loading ? pageSkeletonMobile : (
         <>
-          <div className=" px-12 mt-15">
+          <div className=" px-12 mt-25">
             <p className="font-excon text-md">
               {stockData.fullExchangeName} - {stockData.exchange} -{' '}
               {stockData.currency}

@@ -185,7 +185,7 @@ function Navbar() {
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setShowSuggestions(true)}
-                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-white bg-black/5" : "text-white bg-black/70" }`}
+                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-black bg-black/5" : "text-white bg-black/70" }`}
                   />
 
                   <Button
