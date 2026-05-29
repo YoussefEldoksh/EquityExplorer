@@ -251,15 +251,15 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                       <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
                     </DrawerHeader>
 
-                    <div className='flex px-5 pt-10 relative gap-0 font-excon '>
+                    <div className='flex flex-col sm:flex-row px-3 sm:px-5 pt-3 sm:pt-10 relative gap-2 font-excon w-full'>
 
-                      <Field orientation="horizontal" className="w-120 " >
+                      <Field orientation="horizontal" className="w-full flex  gap-0" >
                         <Input type="search" placeholder="Search..."
                           value={searchWord}
                           onChange={handleSearchChange}
                           onKeyDown={handleKeyDown}
                           onFocus={() => setShowSuggestions(true)}
-                          className={`bg-black/5 rounded-l-lg`}
+                          className={`bg-black/5 rounded-l-lg text-xs`}
                         />
 
                         <Button
@@ -267,7 +267,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                             selectTicker(searchWord);
                             setDrawerOpen(false);
                           }}
-                          className="hover:text-black hover:bg-white rounded-r-lg"
+                          className="hover:text-black hover:bg-white rounded-r-lg text-xs"
                         >
                           Search
                         </Button>
@@ -276,7 +276,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                       {showSuggestions && suggestions.length > 0 && (
                         <div
                           ref={dropdownRef}
-                          className="absolute top-[calc(100%-10px)] left-5 right-5 bg-white border border-gray-200 rounded-md shadow-lg z-[100] overflow-hidden"
+                          className="absolute top-[calc(100%-10px)] left-3 sm:left-5 right-3 sm:right-5 bg-white border border-gray-200 rounded-md shadow-lg z-[100] overflow-hidden max-h-48 overflow-y-auto"
                         >
                           {suggestions.map((item, index) => (
                             <div
@@ -286,12 +286,12 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                                 setDrawerOpen(false);
                               }}
                               onMouseEnter={() => setSelectedIndex(index)}
-                              className={`px-4 py-3 cursor-pointer flex justify-between items-center ${selectedIndex === index ? "bg-gray-100" : ""
+                              className={`px-3 sm:px-4 py-2 sm:py-3 cursor-pointer flex justify-between items-center text-xs ${selectedIndex === index ? "bg-gray-100" : ""
                                 }`}
                             >
-                              <div className="flex flex-col">
-                                <span className="font-bold text-sm text-black">{item.symbol}</span>
-                                <span className="text-xs text-gray-500">{item.name}</span>
+                              <div className="flex flex-col min-w-0">
+                                <span className="font-bold text-xs text-black truncate">{item.symbol}</span>
+                                <span className="text-xs text-gray-500 truncate">{item.name}</span>
                               </div>
                             </div>
                           ))}
@@ -300,7 +300,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
 
                     </div>
 
-                    <div className="flex flex-col gap-2 px-4 py-2 pt-5">
+                    <div className="flex flex-col gap-2 px-3 sm:px-4 py-2 sm:py-2 pt-3 sm:pt-5">
                       {(() => {
                         const list = [...menuItems];
                         if (!isAuthed) {
@@ -315,11 +315,11 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                           <>
                             {list.map((item) => (
                               <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
-                                <p className="w-full font-excon uppercase font-bold text-4xl active:text-[#4335d6] hover:text-[#4335d6] active:underline  underline ">{item.label}</p>
+                                <p className="w-full font-excon uppercase font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl active:text-[#4335d6] hover:text-[#4335d6] active:underline  underline ">{item.label}</p>
                               </Link>
                             ))}
                             {isAuthed && (
-                              <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-5xl text-red-600 hover:text-red-700">
+                              <button onClick={handleLogout} className="text-left w-full font-excon uppercase font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl text-red-600 hover:text-red-700">
                                 LOGOUT
                               </button>
                             )}

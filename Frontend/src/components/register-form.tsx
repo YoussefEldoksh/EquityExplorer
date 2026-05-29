@@ -193,14 +193,14 @@ export function RegisterForm({
 
 
   return (
-    <div className={cn('w-5/6 flex flex-col gap-6', className)} {...props}>
+    <div className={cn('w-11/12 sm:w-5/6 max-w-2xl flex flex-col gap-4 sm:gap-6', className)} {...props}>
       <Card className="rounded-lg overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+          <form className="p-4 sm:p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Create Account</h1>
-                <p className="text-muted-foreground">Join Equity Explorer</p>
+                <h1 className="text-xl sm:text-2xl font-bold">Create Account</h1>
+                <p className="text-muted-foreground text-xs sm:text-sm">Join Equity Explorer</p>
               </div>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>

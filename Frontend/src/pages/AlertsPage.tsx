@@ -113,19 +113,19 @@ function AlertsPage() {
     return (
         <div className="min-h-screen bg-white text-slate-900 selection:bg-black selection:text-white">
 
-            <main className='px-6 pt-32 pb-20 max-w-6xl mx-auto'>
-                <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <main className='px-3 sm:px-4 md:px-6 pt-20 sm:pt-24 md:pt-32 pb-12 sm:pb-16 md:pb-20 max-w-6xl mx-auto'>
+                <header className="mb-8 sm:mb-10 md:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6">
                     <div>
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-4">
+                        <div className="inline-flex items-center gap-2 px-2 sm:px-3 py-1 rounded-full bg-slate-100 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 sm:mb-4">
                             <Bell size={14} />
                             <span>Notifications</span>
                         </div>
-                        <h1 className='text-5xl md:text-6xl font-excon font-bold tracking-tight text-black'>
+                        <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-excon font-bold tracking-tight text-black'>
                             Price Alerts
                         </h1>
                     </div>
                     {alerts.length > 0 && (
-                        <p className="text-slate-500 font-medium">
+                        <p className="text-slate-500 font-medium text-xs sm:text-sm md:text-base">
                             Managing <span className="text-black font-bold">{alerts.length}</span> active trackers
                         </p>
                     )}

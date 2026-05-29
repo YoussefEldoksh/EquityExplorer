@@ -590,15 +590,15 @@ function TickerPage() {
       {!isMobile && (
         loading ? pageSkeleton : (
           <>
-            <div className=" px-15 mt-30">
-              <p className="font-excon text-md">
+            <div className=" px-3 sm:px-5 md:px-8 lg:px-15 mt-20 sm:mt-25 md:mt-30">
+              <p className="font-excon text-xs sm:text-sm md:text-base">
                 {stockData.fullExchangeName} . {stockData.exchange} . {' '}
                 {stockData.currency}
               </p>
             </div>
-            <div className=" px-15   gap-5 mb-5">
-              <div className="flex items-center gap-2">
-                <p className="font-excon font-bold text-3xl">
+            <div className=" px-3 sm:px-5 md:px-8 lg:px-15   gap-5 mb-5">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-excon font-bold text-xl sm:text-2xl md:text-3xl">
                   {stockData.longName} ({stockData.symbol}){' '}
                 </p>
                 <>
@@ -636,22 +636,22 @@ function TickerPage() {
                 </p>
 
               </div>
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-3 items-center flex-wrap">
                 <p
-                  className={`font-bold text-xl ${isPositive ? 'text-green-700' : 'text-red-700'}  `}
+                  className={`font-bold text-lg sm:text-xl ${isPositive ? 'text-green-700' : 'text-red-700'}  `}
                 >
                   {' '}
                   ${stockData.currentPrice}
                 </p>
                 <p
-                  className={`${isPositive ? 'text-green-700' : 'text-red-700'} `}
+                  className={`text-sm sm:text-base ${isPositive ? 'text-green-700' : 'text-red-700'} `}
                 >
                   {priceChangePct}%
                 </p>
               </div>
             </div>
 
-            <div className=" px-10 gap-5 grid  grid-cols-4">
+            <div className=" px-3 sm:px-5 md:px-8 lg:px-10 gap-3 sm:gap-5 grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
                 <div className="bg-white rounded-lg p-3 flex ">
                   <div className="w-full">
@@ -730,7 +730,7 @@ function TickerPage() {
                 </div>
               </div>
             </div>
-            <div className="grid grid-cols-3 mx-9 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 mx-2 sm:mx-4 md:mx-6 lg:mx-9 gap-2 sm:gap-3 md:gap-2">
               <div className="bg-zinc-200 col-span-2  px-2 pt-2 pb-9 rounded-lg mt-5  ">
                 <div className="bg-white rounded-lg p-3 flex">
                   <Chart timeseries={timeseries}></Chart>

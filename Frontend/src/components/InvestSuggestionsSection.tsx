@@ -130,16 +130,16 @@ function InvestSuggestions() {
     },
   ];
   const renderGrid = (data: any[]) => (
-    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 mt-3 sm:mt-4">
       {data.map((item: any, i: number) => (
-        <div key={i} className="bg-zinc-200 p-3 flex items-center gap-3">
+        <div key={i} className="bg-zinc-200 p-2 sm:p-3 flex items-center gap-2 sm:gap-3">
           <img
             src={item.logo}
             alt={item.name}
-            className="w-10 h-10 rounded-full bg-white p-1"
+            className="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-white p-1 flex-shrink-0"
           />
-          <div>
-            <p className="font-semibold text-sm">{item.name}</p>
+          <div className="min-w-0">
+            <p className="font-semibold text-xs sm:text-sm truncate">{item.name}</p>
             <p className="text-xs text-zinc-500">{item.symbol}</p>
           </div>
         </div>
@@ -148,28 +148,28 @@ function InvestSuggestions() {
   );
 
   return (
-    <div className="w-full my-5 px-5">
-      <div className="w-full py-8 px-8 mb-6">
-        <h2 className="text-4xl font-bold">
+    <div className="w-full my-3 sm:my-5 px-3 sm:px-5">
+      <div className="w-full py-4 sm:py-8 px-4 sm:px-8 mb-4 sm:mb-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
           What tools do financial markets provide ? 
         </h2>
       </div>
-      <div className="flex w-full justify-center my-5 px-5">
+      <div className="flex w-full justify-center my-3 sm:my-5 px-2 sm:px-5">
         <Tabs defaultValue="company" className="w-full">
-          <TabsList className="w-full bg-zinc-300 p-1 rounded-none flex">
-            <TabsTrigger value="company" className="flex-1 rounded-none">
+          <TabsList className="w-full bg-zinc-300 p-1 rounded-none flex flex-wrap sm:flex-nowrap">
+            <TabsTrigger value="company" className="flex-1 rounded-none text-xs sm:text-sm">
               Company Stocks
             </TabsTrigger>
 
-            <TabsTrigger value="equity" className="flex-1 rounded-none">
+            <TabsTrigger value="equity" className="flex-1 rounded-none text-xs sm:text-sm">
               Equity Funds
             </TabsTrigger>
 
-            <TabsTrigger value="mutual" className="flex-1 rounded-none">
+            <TabsTrigger value="mutual" className="flex-1 rounded-none text-xs sm:text-sm">
               Mutual Funds
             </TabsTrigger>
 
-            <TabsTrigger value="gold" className="flex-1 rounded-none">
+            <TabsTrigger value="gold" className="flex-1 rounded-none text-xs sm:text-sm">
               Gold
             </TabsTrigger>
           </TabsList>
