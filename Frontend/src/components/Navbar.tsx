@@ -160,21 +160,13 @@ function Navbar() {
                 <Link to="/tickerslist">
                   <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Screener</Button>
                 </Link>
-                {!isAuthed && (
-                 
-                  <>
-                    <Link to="/signin">
-                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                        Sign-in
-                      </Button>
-                    </Link>
-                    <Link to="/register">
-                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                        Register
-                      </Button>
-                    </Link>
-                  </>
-                )}
+                <Link to="/tickerslist">
+                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >About</Button>
+                </Link>
+                <Link to="/tickerslist">
+                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Methodology</Button>
+                </Link>
+
               </div>
               <div className='flex relative'>
 
@@ -217,7 +209,22 @@ function Navbar() {
                     ))}
                   </div>
                 )}
-                {isAuthed &&  <UserMenu username={user?.username} className='ml-5'/>
+                {isAuthed ?
+                (<UserMenu username={user?.username} className='ml-5'/>)
+                :
+                  (                 
+                  <>
+                    <Link to="/signin">
+                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                        Sign-in
+                      </Button>
+                    </Link>
+                    <Link to="/register">
+                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                        Register
+                      </Button>
+                    </Link>
+                  </>)
                 }
               </div>
             </nav>
