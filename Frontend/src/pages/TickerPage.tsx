@@ -592,7 +592,7 @@ function TickerPage() {
           <>
             <div className=" px-3 sm:px-5 md:px-8 lg:px-15 mt-20 sm:mt-25 md:mt-30">
               <p className="font-excon text-xs sm:text-sm md:text-base">
-                {stockData.fullExchangeName} . {stockData.exchange} . {' '}
+                {stockData.fullExchangeName} • {stockData.exchange} • {' '}
                 {stockData.currency}
               </p>
             </div>
@@ -1126,14 +1126,18 @@ function TickerPage() {
         <>
           <div className=" px-12 mt-25">
             <p className="font-excon text-md">
-              {stockData.fullExchangeName} - {stockData.exchange} -{' '}
+              {stockData.fullExchangeName} • {stockData.exchange} • {' '}
               {stockData.currency}
             </p>
           </div>
           <div className=" px-12   gap-5 mb-5">
+            <p className="font-excon bold text-sm">
+              {stockData.symbol}
+            </p>
             <div className="flex items-end gap-1">
+
               <p className="font-excon font-bold text-3xl">
-                {stockData.longName} ({stockData.symbol}){' '}
+                {stockData.longName} ({stockData.symbol}) {' '}
               </p>
               <>
                 {isInWatchlist &&

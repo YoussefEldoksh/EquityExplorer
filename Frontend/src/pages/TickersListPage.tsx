@@ -138,7 +138,7 @@ function TickersListPage() {
                 </div>
 
                 {/* Table in its own scroll container */}
-                <div className="overflow-x-auto">
+                <div className="overflow-hidden">
                     <Table className="text-xs sm:text-sm">
                         <TableHeader>
                             <TableRow>
