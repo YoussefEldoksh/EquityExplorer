@@ -160,9 +160,8 @@ function Navbar() {
                 <Link to="/tickerslist">
                   <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Screener</Button>
                 </Link>
-                {isAuthed ? (
-                  <UserMenu username={user?.username} />
-                ) : (
+                {!isAuthed && (
+                 
                   <>
                     <Link to="/signin">
                       <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
@@ -218,7 +217,8 @@ function Navbar() {
                     ))}
                   </div>
                 )}
-
+                {isAuthed &&  <UserMenu username={user?.username} />
+                }
               </div>
             </nav>
           </div>
