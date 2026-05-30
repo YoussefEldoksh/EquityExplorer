@@ -217,7 +217,7 @@ function Navbar() {
                     ))}
                   </div>
                 )}
-                {isAuthed &&  <UserMenu username={user?.username} />
+                {isAuthed &&  <UserMenu username={user?.username} className='ml-5'/>
                 }
               </div>
             </nav>
