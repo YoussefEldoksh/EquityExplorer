@@ -158,7 +158,7 @@ def get_sp500_data():
     df = pd.read_csv(StringIO(response.text))
     # Replace . with - for yfinance compatibility (e.g. BRK.B -> BRK-B)
     df["Symbol"] = df["Symbol"].str.replace(".", "-", regex=False)
-    return df.rename(columns={"Security": "Name"})[["Symbol", "Name"]].to_dict("records")
+    return df.rename(columns={"Security": "Name", "GICS Sector": "Sector"})[["Symbol", "Name", "Sector"]].to_dict("records")
 
 # Cache for search suggestions
 stock_list_cache = []
@@ -238,7 +238,7 @@ def build_screener():
                 results.append({
                     "symbol": symbol, "name": stock["Name"], "vol": vol,
                     "pe": 0, "eps": 0, "price": price, "div": 0,
-                    "changePct": changePct, "sector": "N/A", "marketCap": 0,
+                    "changePct": changePct, "sector": stock.get("Sector", "N/A"), "marketCap": 0,
                 })
             except Exception: pass
         return results
