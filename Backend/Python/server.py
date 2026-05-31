@@ -14,6 +14,7 @@ from typing import Optional
 import asyncio
 import json
 from contextlib import asynccontextmanager
+from yahooquery import Ticker as YQTicker
 
 load_dotenv()
 
@@ -61,7 +62,7 @@ async def update_screener_cache_task():
     while True:
         try:
             print("Fetching screener data for cache...")
-            data = build_screener()
+            data = await asyncio.to_thread(build_screener)
             if data:
                 conn = get_db_conn()
                 cur = conn.cursor()
@@ -121,7 +122,6 @@ def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d")
 @app.get("/api/index")
 def get_index_data(symbols: str):
     try:
-        from yahooquery import Ticker as YQTicker
         ticker_list = [s.strip() for s in symbols.split(",")]
         t = YQTicker(ticker_list)
         price_data = t.price
@@ -140,7 +140,6 @@ def get_index_data(symbols: str):
 
 def fetch_ticker(symbol, delay=0):
     try:
-        from yahooquery import Ticker as YQTicker
         if delay > 0:
             import time
             time.sleep(delay)
