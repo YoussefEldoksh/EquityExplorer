@@ -6,6 +6,11 @@ import { useState, type ChangeEvent, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import { useEffect } from 'react';
+import { House, LogIn, MailQuestionMark, MonitorStop, Tv } from 'lucide-react';
+import logo1 from '@/assets/logos/EE-black-logo.jpeg'
+import logo2 from '@/assets/logos/EE-logo-white.jpeg'
+
+import { motion } from 'framer-motion'
 import {
   Drawer,
   DrawerContent,
@@ -155,7 +160,7 @@ function Navbar() {
 
               <div className='flex items-center gap-3 px-5 font-bold text-white '>
                 <Link to="/contact">
-                  <Button className={`font-excon rounded-xl   text-lg  bg-transparent border-none text-white  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white  hover:text-black hover:bg-white"}` }>Contact</Button>
+                  <Button className={`font-excon rounded-xl   text-lg  bg-transparent border-none text-white  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white  hover:text-black hover:bg-white"}`}>Contact</Button>
                 </Link>
                 <Link to="/tickerslist">
                   <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Screener</Button>
@@ -176,7 +181,7 @@ function Navbar() {
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setShowSuggestions(true)}
-                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-black bg-black/5" : "text-white bg-black/70" }`}
+                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-black bg-black/5" : "text-white bg-black/70"}`}
                   />
 
                   <Button
@@ -210,21 +215,21 @@ function Navbar() {
                   </div>
                 )}
                 {isAuthed ?
-                (<UserMenu username={user?.username} className='ml-5'/>)
-                :
-                  (                 
-                  <>
-                    <Link to="/signin">
-                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                        Sign-in
-                      </Button>
-                    </Link>
-                    <Link to="/register">
-                      <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                        Register
-                      </Button>
-                    </Link>
-                  </>)
+                  (<UserMenu username={user?.username} className='ml-5' />)
+                  :
+                  (
+                    <>
+                      <Link to="/signin">
+                        <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                          Sign-in
+                        </Button>
+                      </Link>
+                      <Link to="/register">
+                        <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
+                          Register
+                        </Button>
+                      </Link>
+                    </>)
                 }
               </div>
             </nav>
@@ -233,24 +238,49 @@ function Navbar() {
       }
       {isMobile && (
         <>
-          <div className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between  p-3  `}>
+          <motion.div className={`fixed bottom-0 right-0 left-0 z-50 flex flex-col justify-between border-none  `}
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
 
             <nav className={`
-${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black/40 backdrop-blur-md border-white/20"}
-      flex px-5 py-4 items-center justify-between rounded-lg shadow
+${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black backdrop-blur-md"}
+      flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold": "text-white" }
     `}>
               {/* Logo */}
-              <Link to="/">
-                <p className={`font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`}>
-                  EquityExplorer
-                </p>
-              </Link>
+
+              <div className={`flex gap-10 px-2  `}>
+                <Link to="/">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }} className={`flex flex-col items-center`}>
+                    <House ></House>
+                    <p className={`font-excon mt-1 text-xs font-bold  `}>
+                      Home
+                    </p>
+                  </motion.div>
+                </Link>
+
+                <Link to="/tickerslist">
+                  <div className='flex flex-col items-center'>
+                    <Tv />
+                    <p className={`font-excon mt-1 text-xs font-bold  `}>
+                      Stocks
+                    </p>
+                  </div>
+                </Link>
+
+              </div>
 
               <div className="flex items-center gap-2">
-                {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : null}
+
                 <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
                   <DrawerTrigger asChild>
-                    <Button className="rounded-md uppercase bg-white text-black font-bold font-excon">Menu</Button>
+                    <div className=' bg-white p-2 rounded-4xl  hover:bg-[#4335d6] object-contain'>
+                      
+                      <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
+                      {/* <Button className="  uppercase bg-transparent text-black font-bold font-excon text-md">EE</Button> */}
+                    </div>
                   </DrawerTrigger>
                   <DrawerContent>
                     <DrawerHeader className="sr-only">
@@ -339,9 +369,32 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                   </DrawerContent>
                 </Drawer>
               </div>
+
+              <div className='flex gap-10 px-2'>
+
+
+                <Link to="/contact">
+                  <div className='flex flex-col items-center '>
+                    <MailQuestionMark  />
+                    <p className={`font-excon mt-1 text-xs font-bold  `}>
+                      Contact
+                    </p>
+                  </div>
+                </Link>
+                {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : (
+                  <Link to="/signin">
+                    <div className='flex flex-col items-center'>
+                      <LogIn />
+                      <p className={`font-excon mt-1 text-xs font-bold  text-center`}>
+                        Signin
+                      </p>
+                    </div>
+                  </Link>)}
+              </div>
+
             </nav>
 
-          </div>
+          </motion.div>
         </>
       )}
     </>
