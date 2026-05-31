@@ -220,10 +220,45 @@ def get_sp500_tickers():
     return [s["Symbol"] for s in data]
 
 def build_screener():
-    tickers = get_sp500_tickers()
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        results = list(executor.map(fetch_ticker, tickers[:50]))
-    return [r for r in results if r is not None]
+    sp500_data = get_stock_list()[:100]
+    tickers = [s["Symbol"] for s in sp500_data]
+    try:
+        # yf.download bypasses the strict 401 Unauthorized errors that .info gets
+        hist = yf.download(tickers, period='5d', progress=False)
+        results = []
+        for stock in sp500_data:
+            symbol = stock["Symbol"]
+            try:
+                series_close = hist['Close'][symbol].dropna()
+                series_vol = hist['Volume'][symbol].dropna()
+                
+                if len(series_close) < 2:
+                    continue
+                    
+                price = float(series_close.iloc[-1])
+                prev_price = float(series_close.iloc[-2])
+                vol = float(series_vol.iloc[-1])
+                changePct = ((price - prev_price) / prev_price) * 100 if prev_price else 0
+                
+                results.append({
+                    "symbol": symbol,
+                    "name": stock["Name"],
+                    "vol": vol,
+                    "pe": 0,
+                    "eps": 0,
+                    "price": price,
+                    "div": 0,
+                    "changePct": changePct,
+                    "sector": "N/A",
+                    "marketCap": 0,
+                })
+            except Exception as e:
+                pass
+        return results
+    except Exception as e:
+        import sys
+        print(f"Screener bulk download failed: {e}", file=sys.stderr)
+        return []
 
 def get_cached_screener():
     now = time.time()
