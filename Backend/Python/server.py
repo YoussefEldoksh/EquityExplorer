@@ -240,10 +240,21 @@ def get_sp500_tickers():
 def build_screener():
     tickers = get_sp500_tickers()
     results = []
-    for symbol in tickers:
-        res = fetch_ticker(symbol, delay=1.5)
-        if res is not None:
-            results.append(res)
+    chunk_size = 20
+    
+    for i in range(0, len(tickers), chunk_size):
+        chunk = tickers[i:i + chunk_size]
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            # Add a tiny delay between individual threads in a chunk
+            chunk_results = list(executor.map(lambda x: fetch_ticker(x, delay=0.1), chunk))
+            
+        for res in chunk_results:
+            if res is not None:
+                results.append(res)
+                
+        # Sleep between blocks of 20 to avoid rate limits
+        time.sleep(2)
+        
     return [r for r in results if r is not None]
 
 def get_cached_screener():
