@@ -135,12 +135,18 @@ def get_index_data(symbols: str):
 
 
 
+# Global session to prevent Yahoo Finance Crumb errors
+yf_session = requests.Session()
+yf_session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+})
+
 def fetch_ticker(symbol, delay=0):
     try:
         if delay > 0:
             import time
             time.sleep(delay)
-        ticker = yf.Ticker(symbol)
+        ticker = yf.Ticker(symbol, session=yf_session)
         info = ticker.info
         if not info or len(info) <= 2:
             raise Exception("Rate limited or empty info")
