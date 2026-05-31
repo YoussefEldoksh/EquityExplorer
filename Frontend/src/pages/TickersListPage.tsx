@@ -138,20 +138,20 @@ function TickersListPage() {
                 </div>
 
                 {/* Table in its own scroll container */}
-                <div className="overflow-hidden">
-                    <Table className="text-xs sm:text-sm">
+                <div className="overflow-x-auto">
+                    <Table className="w-full  text-xs sm:text-sm">
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[80px] sm:w-[100px]">Ticker</TableHead>
-                                <TableHead className="hidden sm:table-cell">Name</TableHead>
+                                <TableHead className=" sm:table-cell">Name</TableHead>
                                 <TableHead>Price</TableHead>
                                 <TableHead>Chg %</TableHead>
-                                <TableHead className="text-right hidden md:table-cell">Vol</TableHead>
-                                <TableHead className="text-right hidden lg:table-cell">Mkt Cap</TableHead>
-                                <TableHead className="text-right hidden lg:table-cell">P/E</TableHead>
-                                <TableHead className="text-right hidden md:table-cell">EPS</TableHead>
-                                <TableHead className="text-right hidden lg:table-cell">Div Yield</TableHead>
-                                <TableHead className="text-center hidden lg:table-cell">Sector</TableHead>
+                                <TableHead className="text-right  md:table-cell">Vol</TableHead>
+                                <TableHead className="text-right  lg:table-cell">Mkt Cap</TableHead>
+                                <TableHead className="text-right  lg:table-cell">P/E</TableHead>
+                                <TableHead className="text-right  md:table-cell">EPS</TableHead>
+                                <TableHead className="text-right  lg:table-cell">Div Yield</TableHead>
+                                <TableHead className="text-center  lg:table-cell">Sector</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -159,15 +159,15 @@ function TickersListPage() {
                                 ? Array.from({ length: 20 }).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell><Skeleton className="h-8 w-16 rounded-lg" /></TableCell>
-                                        <TableCell className="hidden sm:table-cell"><Skeleton className="h-4 w-32" /></TableCell>
+                                        <TableCell className=" sm:table-cell"><Skeleton className="h-4 w-32" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-16" /></TableCell>
                                         <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-                                        <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
-                                        <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
-                                        <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
-                                        <TableCell className="hidden md:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
-                                        <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
-                                        <TableCell className="hidden lg:table-cell"><Skeleton className="h-4 w-24" /></TableCell>
+                                        <TableCell className=" md:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
+                                        <TableCell className=" lg:table-cell"><Skeleton className="h-4 w-20" /></TableCell>
+                                        <TableCell className=" lg:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
+                                        <TableCell className=" md:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
+                                        <TableCell className=" lg:table-cell"><Skeleton className="h-4 w-12" /></TableCell>
+                                        <TableCell className=" lg:table-cell"><Skeleton className="h-4 w-24" /></TableCell>
                                     </TableRow>
                                 ))
                                 : paginatedTickers.map((ticker: any) => (
@@ -181,29 +181,29 @@ function TickersListPage() {
                                                 {ticker?.symbol}
                                             </div>
                                         </TableCell>
-                                        <TableCell className="font-medium hidden sm:table-cell">{ticker?.name}</TableCell>
+                                        <TableCell className="font-medium  sm:table-cell">{ticker?.name}</TableCell>
                                         <TableCell className={ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}>
                                             ${ticker?.price}
                                         </TableCell>
                                         <TableCell className={ticker?.changePct > 0 ? "text-green-700" : "text-red-700"}>
                                             {ticker?.changePct?.toFixed(2)}%
                                         </TableCell>
-                                        <TableCell className="text-right hidden md:table-cell">
+                                        <TableCell className="text-right  md:table-cell">
                                             {formatVol(ticker?.vol)}
                                         </TableCell>
-                                        <TableCell className="text-right hidden lg:table-cell">
+                                        <TableCell className="text-right  lg:table-cell">
                                             {formatMarketCap(ticker?.marketCap)}
                                         </TableCell>
-                                        <TableCell className="text-right hidden lg:table-cell">
+                                        <TableCell className="text-right  lg:table-cell">
                                             x{ticker?.pe ? ticker.pe.toFixed(2) : '—'}
                                         </TableCell>
-                                        <TableCell className="text-right hidden md:table-cell">
+                                        <TableCell className="text-right  md:table-cell">
                                             x{ticker?.eps ?? '—'}
                                         </TableCell>
-                                        <TableCell className="text-right hidden lg:table-cell">
+                                        <TableCell className="text-right  lg:table-cell">
                                             {ticker?.div ? `${ticker.div}%` : '—'}
                                         </TableCell>
-                                        <TableCell className="text-center hidden lg:table-cell">
+                                        <TableCell className="text-center  lg:table-cell">
                                             {ticker?.sector ?? '—'}
                                         </TableCell>
                                     </TableRow>
