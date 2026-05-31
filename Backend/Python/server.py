@@ -1,15 +1,10 @@
 from fastapi import FastAPI, HTTPException, Cookie, Depends
 from pydantic import BaseModel
 import yfinance as yf
-import tempfile
 import pandas as pd
 import requests
 from io import StringIO
 import time
-
-# Create a unique temporary directory for yfinance timezone cache
-# to prevent 'database is locked' errors when multiple workers run
-yf.set_tz_cache_location(tempfile.mkdtemp())
 import os
 import jwt
 import psycopg2
@@ -225,10 +220,9 @@ def get_sp500_tickers():
     return [s["Symbol"] for s in data]
 
 def build_screener():
-    sp500_data = get_stock_list()[:100]
+    sp500_data = get_stock_list()[:30]
     tickers = [s["Symbol"] for s in sp500_data]
     try:
-        # yf.download bypasses the strict 401 Unauthorized errors that .info gets
         hist = yf.download(tickers, period='5d', progress=False)
         results = []
         for stock in sp500_data:
@@ -236,29 +230,17 @@ def build_screener():
             try:
                 series_close = hist['Close'][symbol].dropna()
                 series_vol = hist['Volume'][symbol].dropna()
-                
-                if len(series_close) < 2:
-                    continue
-                    
+                if len(series_close) < 2: continue
                 price = float(series_close.iloc[-1])
                 prev_price = float(series_close.iloc[-2])
                 vol = float(series_vol.iloc[-1])
                 changePct = ((price - prev_price) / prev_price) * 100 if prev_price else 0
-                
                 results.append({
-                    "symbol": symbol,
-                    "name": stock["Name"],
-                    "vol": vol,
-                    "pe": 0,
-                    "eps": 0,
-                    "price": price,
-                    "div": 0,
-                    "changePct": changePct,
-                    "sector": "N/A",
-                    "marketCap": 0,
+                    "symbol": symbol, "name": stock["Name"], "vol": vol,
+                    "pe": 0, "eps": 0, "price": price, "div": 0,
+                    "changePct": changePct, "sector": "N/A", "marketCap": 0,
                 })
-            except Exception as e:
-                pass
+            except Exception: pass
         return results
     except Exception as e:
         import sys
@@ -270,9 +252,8 @@ def get_cached_screener():
     if cache["data"] and now - cache["timestamp"] < CACHE_TTL:
         return cache["data"]
     data = build_screener()
-    # Only cache if data isn't mostly rate-limited zeroes
     valid_count = sum(1 for d in data if d.get("price", 0) != 0)
-    if valid_count > len(data) / 2:
+    if valid_count > len(data) / 2 or not data:
         cache["data"] = data
         cache["timestamp"] = now
     return data
