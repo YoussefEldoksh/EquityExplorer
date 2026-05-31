@@ -135,10 +135,15 @@ def get_index_data(symbols: str):
 
 
 
-def fetch_ticker(symbol):
+def fetch_ticker(symbol, delay=0):
     try:
+        if delay > 0:
+            import time
+            time.sleep(delay)
         ticker = yf.Ticker(symbol)
         info = ticker.info
+        if not info or len(info) <= 2:
+            raise Exception("Rate limited or empty info")
         return {
             "symbol": info.get("symbol"),
             "name": info.get("longName"),
@@ -234,8 +239,11 @@ def get_sp500_tickers():
 
 def build_screener():
     tickers = get_sp500_tickers()
-    with ThreadPoolExecutor(max_workers=2) as executor:
-        results = list(executor.map(fetch_ticker, tickers))
+    results = []
+    for symbol in tickers:
+        res = fetch_ticker(symbol, delay=1.5)
+        if res is not None:
+            results.append(res)
     return [r for r in results if r is not None]
 
 def get_cached_screener():
