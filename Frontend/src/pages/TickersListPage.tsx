@@ -26,12 +26,14 @@ function TickersListPage() {
     const [indexInfo, setIndexInfo] = useState<Record<string, any>>({});
     const [tickersList, setTickersList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
-    const [loadingIndices, setLoadingIndices] = useState(true);
-    const [loadingTickers, setLoadingTickers] = useState(true);
-    const ITEMS_PER_PAGE = 50;
+    const [loading, setLoading] = useState(true);
+    const ITEMS_PER_PAGE = 20;
 
-    const paginatedTickers = tickersList;
+    const totalPages = Math.ceil(tickersList.length / ITEMS_PER_PAGE);
+    const paginatedTickers = tickersList.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
     const isMobile = useIsMobile();
 
     const INDICES = ["^CASE30", "^GSPC", "^DJI", "^IXIC"];
@@ -39,38 +41,30 @@ function TickersListPage() {
     useEffect(() => {
         const getIndexInfo = async () => {
             try {
-                const indexResp = await fetch(`/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`);
-                if (indexResp.ok) {
-                    const data = await indexResp.json();
-                    setIndexInfo(data);
+                const [indexResp, tickersResp] = await Promise.all([
+                    fetch(`/api/index?symbols=^DJI,^IXIC,^GSPC,^CASE30`),
+                    fetch(`/api/snp500`)
+                ]);
+
+                if (!indexResp.ok || !tickersResp.ok) {
+                    throw new Error('Failed to fetch data');
                 }
+
+                const [data, tickersData] = await Promise.all([
+                    indexResp.json(),
+                    tickersResp.json()
+                ]);
+                setIndexInfo(data);
+                setTickersList(tickersData);
             } catch (error) {
                 console.error('Error fetching index data:', error);
             } finally {
-                setLoadingIndices(false);
+                setLoading(false);
             }
         };
+
         getIndexInfo();
     }, []);
-
-    useEffect(() => {
-        const getTickers = async () => {
-            setLoadingTickers(true);
-            try {
-                const tickersResp = await fetch(`/api/snp500?page=${currentPage}&limit=${ITEMS_PER_PAGE}`);
-                if (tickersResp.ok) {
-                    const tickersData = await tickersResp.json();
-                    setTickersList(tickersData.data);
-                    setTotalPages(tickersData.totalPages || 1);
-                }
-            } catch (error) {
-                console.error('Error fetching tickers data:', error);
-            } finally {
-                setLoadingTickers(false);
-            }
-        };
-        getTickers();
-    }, [currentPage]);
 
     const formatVol = (vol: number) => {
         if (!vol) return '—';
@@ -107,7 +101,7 @@ function TickersListPage() {
                 {INDICES.map((symbol) => (
                     <div key={symbol} className="bg-zinc-200 px-2 pt-2 pb-4 sm:pb-9 rounded-lg">
                         <div className={`bg-white rounded-lg p-2 sm:p-3 flex ${isMobile ? "h-full" : ""}`}>
-                            {loadingIndices ? (
+                            {loading ? (
                                 <div className="w-full flex flex-col gap-2">
                                     <Skeleton className="h-4 w-24" />
                                     <Skeleton className="h-5 w-40" />
@@ -161,7 +155,7 @@ function TickersListPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {loadingTickers
+                            {loading
                                 ? Array.from({ length: 20 }).map((_, i) => (
                                     <TableRow key={i}>
                                         <TableCell><Skeleton className="h-8 w-16 rounded-lg" /></TableCell>
