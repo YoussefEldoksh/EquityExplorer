@@ -121,11 +121,14 @@ def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d")
 @app.get("/api/index")
 def get_index_data(symbols: str):
     try:
+        from yahooquery import Ticker as YQTicker
         ticker_list = [s.strip() for s in symbols.split(",")]
+        t = YQTicker(ticker_list)
+        price_data = t.price
         result = {}
         for symbol in ticker_list:
-            ticker = yf.Ticker(symbol)
-            result[symbol] = ticker.info
+            if isinstance(price_data, dict) and symbol in price_data and isinstance(price_data[symbol], dict):
+                result[symbol] = price_data[symbol]
         return result
     except Exception as e:
         print(f"Error: {e}")
@@ -135,34 +138,38 @@ def get_index_data(symbols: str):
 
 
 
-# Global session to prevent Yahoo Finance Crumb errors
-yf_session = requests.Session()
-yf_session.headers.update({
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
-})
-
 def fetch_ticker(symbol, delay=0):
     try:
+        from yahooquery import Ticker as YQTicker
         if delay > 0:
             import time
             time.sleep(delay)
-        ticker = yf.Ticker(symbol, session=yf_session)
-        info = ticker.info
-        if not info or len(info) <= 2:
+            
+        t = YQTicker(symbol)
+        
+        # YahooQuery returns a dictionary keyed by symbol
+        p = t.price.get(symbol, {}) if isinstance(t.price, dict) else {}
+        sd = t.summary_detail.get(symbol, {}) if isinstance(t.summary_detail, dict) else {}
+        sp = t.summary_profile.get(symbol, {}) if isinstance(t.summary_profile, dict) else {}
+        ks = t.key_stats.get(symbol, {}) if isinstance(t.key_stats, dict) else {}
+
+        if not p or isinstance(p, str) or p.get("regularMarketPrice") is None:
             raise Exception("Rate limited or empty info")
+            
         return {
-            "symbol": info.get("symbol"),
-            "name": info.get("longName"),
-            "vol": info.get("volume"),
-            "pe": info.get("trailingPE"),
-            "eps": info.get("trailingEps"),
-            "price": info.get("regularMarketPrice"),
-            "div": info.get("dividendYield"),
-            "changePct": info.get("regularMarketChangePercent"),
-            "sector": info.get("sector"),
-            "marketCap": info.get("marketCap"),
+            "symbol": symbol,
+            "name": p.get("longName", p.get("shortName", "N/A")),
+            "vol": sd.get("volume", 0),
+            "pe": sd.get("trailingPE", 0),
+            "eps": ks.get("trailingEps", 0),
+            "price": p.get("regularMarketPrice", 0),
+            "div": sd.get("dividendYield", 0),
+            "changePct": (p.get("regularMarketChangePercent", 0) * 100) if p.get("regularMarketChangePercent") else 0,
+            "sector": sp.get("sector", "N/A"),
+            "marketCap": p.get("marketCap", 0),
         }
-    except:
+    except Exception as e:
+        print(f"Fetch failed for {symbol}: {e}")
         return {
             "symbol": symbol,
             "name": "N/A",
