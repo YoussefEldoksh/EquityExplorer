@@ -1,3 +1,7 @@
+
+
+![alt text](<Adobe Express - file.png>)
+
 # EquityExplorer
 
 EquityExplorer is a modern, high-performance financial analysis platform built to help traders and investors monitor stock movements, set price alerts, and manage their watchlists with ease.
