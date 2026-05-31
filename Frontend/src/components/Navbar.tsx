@@ -6,9 +6,8 @@ import { useState, type ChangeEvent, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserMenu from './UserMenu';
 import { useEffect } from 'react';
-import { House, LogIn, MailQuestionMark, MonitorStop, Tv } from 'lucide-react';
+import { House, LogIn, MailQuestionMark, Tv } from 'lucide-react';
 import logo1 from '@/assets/logos/EE-black-logo.jpeg'
-import logo2 from '@/assets/logos/EE-logo-white.jpeg'
 
 import { motion } from 'framer-motion'
 import {
