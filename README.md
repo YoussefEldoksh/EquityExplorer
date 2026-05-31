@@ -1,6 +1,8 @@
 
 
-![alt text](<Adobe Express - file.png>)
+<p align="center">
+  <img src="Adobe Express - file.png" alt="EquityExplorer" width="400" style="max-width:100%; height:auto; display:block; margin:0 auto;" />
+</p>
 
 # EquityExplorer
 

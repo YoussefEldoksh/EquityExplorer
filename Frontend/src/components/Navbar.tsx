@@ -8,6 +8,7 @@ import UserMenu from './UserMenu';
 import { useEffect } from 'react';
 import { House, LogIn, MailQuestionMark, Tv } from 'lucide-react';
 import logo1 from '@/assets/logos/EE-black-logo.jpeg'
+import logo2 from '@/assets/logos/EE-logo-white.png'
 
 import { motion } from 'framer-motion'
 import {
@@ -245,7 +246,7 @@ function Navbar() {
 
             <nav className={`
 ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black backdrop-blur-md"}
-      flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold": "text-white" }
+      flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
     `}>
               {/* Logo */}
 
@@ -275,11 +276,20 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
 
                 <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
                   <DrawerTrigger asChild>
-                    <div className=' bg-white p-2 rounded-4xl  hover:bg-[#4335d6] object-contain'>
-                      
-                      <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
-                      {/* <Button className="  uppercase bg-transparent text-black font-bold font-excon text-md">EE</Button> */}
-                    </div>
+                    {
+                      isOtherPage ? (
+                        <div className=' bg-black p-1 rounded-4xl  hover:bg-[#4335d6] object-contain'>
+
+                          <img src={logo2} alt="" className='w-11 h-11  object-contain ' />
+                        </div>
+                      ) : (
+                        <div className=' bg-white p-2 rounded-4xl  hover:bg-[#4335d6] object-contain'>
+                          <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
+                        </div>
+                      )
+                    }
+                    {/* <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' /> */}
+                    {/* <Button className="  uppercase bg-transparent text-black font-bold font-excon text-md">EE</Button> */}
                   </DrawerTrigger>
                   <DrawerContent>
                     <DrawerHeader className="sr-only">
@@ -374,7 +384,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
 
                 <Link to="/contact">
                   <div className='flex flex-col items-center '>
-                    <MailQuestionMark  />
+                    <MailQuestionMark />
                     <p className={`font-excon mt-1 text-xs font-bold  `}>
                       Contact
                     </p>
