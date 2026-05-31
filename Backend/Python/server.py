@@ -119,7 +119,9 @@ def fetch_ticker(symbol):
             "sector": info.get("sector"),
             "marketCap": info.get("marketCap"),
         }
-    except:
+    except Exception as e:
+        import sys
+        print(f"Fetch error for {symbol}: {e}", file=sys.stderr)
         return {
             "symbol": symbol,
             "name": "N/A",
