@@ -1,10 +1,15 @@
 from fastapi import FastAPI, HTTPException, Cookie, Depends
 from pydantic import BaseModel
 import yfinance as yf
+import tempfile
 import pandas as pd
 import requests
 from io import StringIO
 import time
+
+# Create a unique temporary directory for yfinance timezone cache
+# to prevent 'database is locked' errors when multiple workers run
+yf.set_tz_cache_location(tempfile.mkdtemp())
 import os
 import jwt
 import psycopg2
