@@ -11,6 +11,9 @@ import psycopg2
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from typing import Optional
+import asyncio
+import json
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
@@ -52,7 +55,37 @@ async def get_current_user(token: Optional[str] = Cookie(None)):
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Invalid token: {str(e)}")
 
-app = FastAPI()
+
+
+async def update_screener_cache_task():
+    while True:
+        try:
+            print("Fetching screener data for cache...")
+            data = build_screener()
+            if data:
+                conn = get_db_conn()
+                cur = conn.cursor()
+                cur.execute("""
+                    INSERT INTO application_cache (key, data, updated_at) 
+                    VALUES ('screener', %s, CURRENT_TIMESTAMP)
+                    ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data, updated_at = CURRENT_TIMESTAMP
+                """, (json.dumps(data),))
+                conn.commit()
+                cur.close()
+                conn.close()
+                print("Screener cache updated.")
+        except Exception as e:
+            print(f"Error updating screener cache: {e}")
+        
+        await asyncio.sleep(12 * 60 * 60) # 12 hours
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(update_screener_cache_task())
+    yield
+    task.cancel()
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 def read_root():
@@ -100,8 +133,7 @@ def get_index_data(symbols: str):
 
 
 
-cache = {"data": None, "timestamp": 0}
-CACHE_TTL = 300  # 5 minutes
+
 
 def fetch_ticker(symbol):
     try:
@@ -202,18 +234,45 @@ def get_sp500_tickers():
 
 def build_screener():
     tickers = get_sp500_tickers()
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(fetch_ticker, tickers[:100]))
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(fetch_ticker, tickers))
     return [r for r in results if r is not None]
 
 def get_cached_screener():
-    now = time.time()
-    if cache["data"] and now - cache["timestamp"] < CACHE_TTL:
-        return cache["data"]
-    data = build_screener()
-    cache["data"] = data
-    cache["timestamp"] = now
-    return data
+    try:
+        conn = get_db_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT data FROM application_cache WHERE key = 'screener'")
+        row = cur.fetchone()
+        cur.close()
+        conn.close()
+        if row and row[0]:
+            return row[0]
+    except Exception as e:
+        print(f"Error reading screener cache: {e}")
+    return []
+
+def get_stock_data_from_cache_or_yf(symbols):
+    cache_data = get_cached_screener()
+    cache_dict = {s["symbol"]: s for s in cache_data}
+    
+    results = []
+    missing_symbols = []
+    
+    for symbol in symbols:
+        if symbol in cache_dict:
+            results.append(cache_dict[symbol])
+        else:
+            missing_symbols.append(symbol)
+            
+    if missing_symbols:
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            fetched = list(executor.map(fetch_ticker, missing_symbols))
+        for r in fetched:
+            if r is not None:
+                results.append(r)
+                
+    return results
 
 # WATCHLIST ENDPOINTS
 @app.post("/api/watchlist/add")
@@ -261,10 +320,7 @@ async def get_watchlist_details(user_id: str = Depends(get_current_user)):
         if not symbols:
             return []
             
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            results = list(executor.map(fetch_ticker, symbols))
-            
-        return [r for r in results if r is not None]
+        return get_stock_data_from_cache_or_yf(symbols)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -320,23 +376,20 @@ async def get_alerts(user_id: str = Depends(get_current_user)):
         conn.close()
         
         # Fetch current prices for each symbol
+        symbols = list(set([row[1] for row in rows]))
+        stock_data_list = get_stock_data_from_cache_or_yf(symbols) if symbols else []
+        stock_price_dict = {s["symbol"]: s["price"] for s in stock_data_list}
+        
         alerts_with_price = []
         for row in rows:
             symbol = row[1]
-            try:
-                # We can cache this or fetch in parallel, but for now, simple fetch
-                ticker = yf.Ticker(symbol)
-                current_price = ticker.info.get("regularMarketPrice") or ticker.info.get("currentPrice")
-            except:
-                current_price = None
-                
             alerts_with_price.append({
                 "id": row[0],
                 "symbol": symbol,
                 "target_price": float(row[2]),
                 "condition": row[3],
                 "is_active": row[4],
-                "current_price": current_price
+                "current_price": stock_price_dict.get(symbol)
             })
         return alerts_with_price
     except Exception as e:
@@ -371,12 +424,23 @@ async def toggle_alert(alert_id: int, user_id: str = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/snp500")
-def screener(type: str = "all"):
+def screener(type: str = "all", page: int = 1, limit: int = 50):
     data = get_cached_screener()
+    
     if type == "gainers":
-        return sorted(data, key=lambda x: x["changePct"] or 0, reverse=True)[:25]
-    if type == "losers":
-        return sorted(data, key=lambda x: x["changePct"] or 0)[:25]
-    if type == "active":
-        return sorted(data, key=lambda x: x["vol"] or 0, reverse=True)[:25]
-    return data
+        data = sorted(data, key=lambda x: x["changePct"] or 0, reverse=True)
+    elif type == "losers":
+        data = sorted(data, key=lambda x: x["changePct"] or 0)
+    elif type == "active":
+        data = sorted(data, key=lambda x: x["vol"] or 0, reverse=True)
+        
+    start_idx = (page - 1) * limit
+    end_idx = start_idx + limit
+    
+    return {
+        "data": data[start_idx:end_idx],
+        "total": len(data),
+        "page": page,
+        "limit": limit,
+        "totalPages": (len(data) + limit - 1) // limit if limit > 0 else 0
+    }

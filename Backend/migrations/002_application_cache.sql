@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS application_cache (
+    key VARCHAR PRIMARY KEY,
+    data JSONB,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
