@@ -103,37 +103,54 @@ def get_index_data(symbols: str):
 cache = {"data": None, "timestamp": 0}
 CACHE_TTL = 300  # 5 minutes
 
-def fetch_ticker(symbol):
-    try:
-        ticker = yf.Ticker(symbol)
-        info = ticker.info
-        return {
-            "symbol": info.get("symbol"),
-            "name": info.get("longName"),
-            "vol": info.get("volume"),
-            "pe": info.get("trailingPE"),
-            "eps": info.get("trailingEps"),
-            "price": info.get("regularMarketPrice"),
-            "div": info.get("dividendYield"),
-            "changePct": info.get("regularMarketChangePercent"),
-            "sector": info.get("sector"),
-            "marketCap": info.get("marketCap"),
-        }
-    except Exception as e:
-        import sys
-        print(f"Fetch error for {symbol}: {e}", file=sys.stderr)
-        return {
-            "symbol": symbol,
-            "name": "N/A",
-            "vol": 0,
-            "pe": 0,
-            "eps": 0,
-            "price": 0,
-            "div": 0,
-            "changePct": 0,
-            "sector": "N/A",
-            "marketCap": 0,
-        }
+import requests
+import time
+import sys
+
+yf_session = requests.Session()
+yf_session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0"
+})
+
+def fetch_ticker(symbol, retries=2):
+    for attempt in range(retries):
+        try:
+            ticker = yf.Ticker(symbol, session=yf_session)
+            info = ticker.info
+            # sometimes info is empty or misses regularMarketPrice if rate limited
+            if not info or "regularMarketPrice" not in info:
+                if attempt < retries - 1:
+                    time.sleep(1)
+                    continue
+            return {
+                "symbol": info.get("symbol"),
+                "name": info.get("longName"),
+                "vol": info.get("volume"),
+                "pe": info.get("trailingPE"),
+                "eps": info.get("trailingEps"),
+                "price": info.get("regularMarketPrice"),
+                "div": info.get("dividendYield"),
+                "changePct": info.get("regularMarketChangePercent"),
+                "sector": info.get("sector"),
+                "marketCap": info.get("marketCap"),
+            }
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(1.5)
+            else:
+                print(f"Fetch error for {symbol} (attempt {attempt+1}): {e}", file=sys.stderr)
+                return {
+                    "symbol": symbol,
+                    "name": "N/A",
+                    "vol": 0,
+                    "pe": 0,
+                    "eps": 0,
+                    "price": 0,
+                    "div": 0,
+                    "changePct": 0,
+                    "sector": "N/A",
+                    "marketCap": 0,
+                }
 
 def get_sp500_data():
     url = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
@@ -204,8 +221,8 @@ def get_sp500_tickers():
 
 def build_screener():
     tickers = get_sp500_tickers()
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(fetch_ticker, tickers[:100]))
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        results = list(executor.map(fetch_ticker, tickers[:50]))
     return [r for r in results if r is not None]
 
 def get_cached_screener():
@@ -213,8 +230,11 @@ def get_cached_screener():
     if cache["data"] and now - cache["timestamp"] < CACHE_TTL:
         return cache["data"]
     data = build_screener()
-    cache["data"] = data
-    cache["timestamp"] = now
+    # Only cache if data isn't mostly rate-limited zeroes
+    valid_count = sum(1 for d in data if d.get("price", 0) != 0)
+    if valid_count > len(data) / 2:
+        cache["data"] = data
+        cache["timestamp"] = now
     return data
 
 # WATCHLIST ENDPOINTS
