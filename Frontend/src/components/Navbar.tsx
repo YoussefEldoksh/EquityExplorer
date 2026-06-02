@@ -32,7 +32,16 @@ function Navbar() {
   ];
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -145,45 +154,57 @@ function Navbar() {
       {
         !isMobile &&
         <>
-          <div className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between p-5 `}>
-
-
-            <nav className={` w-full flex px-10 py-5 rounded-xl shadow  justify-between border ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200" : "bg-black/40 backdrop-blur-md border-white/20"}`}>
-              <div className=''>
+          <motion.div
+            className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${
+              scrolled || isOtherPage
+                ? 'bg-white shadow-md'
+                : 'bg-transparent'
+            }`}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
+          >
+            <nav className="w-full flex px-10 py-4 justify-between items-center">
+              <div>
                 <Link to="/">
-                  <p className={` font-excon text-xl font-bold ${isOtherPage ? "text-black" : "text-white"}`} >EquityExplorer</p>
+                  <p className="font-excon text-xl font-bold text-black">EquityExplorer</p>
                 </Link>
-
               </div>
 
-
-
-              <div className='flex items-center gap-3 px-5 font-bold text-white '>
+              <div className="flex items-center gap-3 px-5 font-bold">
                 <Link to="/contact">
-                  <Button className={`font-excon rounded-xl   text-lg  bg-transparent border-none text-white  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white  hover:text-black hover:bg-white"}`}>Contact</Button>
+                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    Contact
+                  </Button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Screener</Button>
+                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    Screener
+                  </Button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >About</Button>
+                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    About
+                  </Button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >Methodology</Button>
+                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    Methodology
+                  </Button>
                 </Link>
-
               </div>
-              <div className='flex relative'>
 
-                <Field orientation="horizontal" className="w-120 flex  gap-0" >
-                  <Input type="search" placeholder="Search Symbol or Company..."
+              <div className="flex relative items-center">
+                <Field orientation="horizontal" className="w-120 flex gap-0">
+                  <Input
+                    type="search"
+                    placeholder="Search Symbol or Company..."
                     value={searchWord}
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setShowSuggestions(true)}
-                    className={`rounded-l-lg  border-none  placeholder-gray-100 font-excon text-xl ${isOtherPage ? "text-black bg-black/5" : "text-white bg-black/70"}`}
+                    className="rounded-l-lg border-none placeholder-gray-400 font-excon text-xl text-black bg-black/5"
                   />
-
                   <Button
                     onClick={() => selectTicker(searchWord)}
                     className="hover:text-black hover:bg-white py-4 font-excon rounded-r-lg"
@@ -202,8 +223,9 @@ function Navbar() {
                         key={item.symbol}
                         onClick={() => selectTicker(item.symbol)}
                         onMouseEnter={() => setSelectedIndex(index)}
-                        className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
-                          }`}
+                        className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${
+                          selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
+                        }`}
                       >
                         <div className="flex flex-col">
                           <span className="font-bold text-sm">{item.symbol}</span>
@@ -214,111 +236,92 @@ function Navbar() {
                     ))}
                   </div>
                 )}
-                {isAuthed ?
-                  (<UserMenu username={user?.username} className='ml-5' />)
-                  :
-                  (
-                    <>
-                      <Link to="/signin">
-                        <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                          Sign-in
-                        </Button>
-                      </Link>
-                      <Link to="/register">
-                        <Button variant="outline" className={`font-excon rounded-xl text-white bg-black text-lg  border-none bg-transparent  ${isOtherPage ? "text-black hover:text-white hover:bg-black" : "text-white hover:text-black hover:bg-white"}`} >
-                          Register
-                        </Button>
-                      </Link>
-                    </>)
-                }
+
+                {isAuthed ? (
+                  <UserMenu username={user?.username} className="ml-5" />
+                ) : (
+                  <>
+                    <Link to="/signin">
+                      <Button className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
+                        Sign-in
+                      </Button>
+                    </Link>
+                    <Link to="/register">
+                      <Button className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
+                        Register
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
-          </div>
+          </motion.div>
         </>
       }
+
+      {/* Mobile navbar — unchanged */}
       {isMobile && (
         <>
-          <motion.div className={`fixed bottom-0 right-0 left-0 z-50 flex flex-col justify-between border-none  `}
+          <motion.div className={`fixed bottom-0 right-0 left-0 z-50 flex flex-col justify-between border-none`}
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
-
             <nav className={`
-${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black backdrop-blur-md"}
-      flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
-    `}>
-              {/* Logo */}
-
-              <div className={`flex gap-10 px-2  `}>
+              ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black backdrop-blur-md"}
+              flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
+            `}>
+              <div className={`flex gap-10 px-2`}>
                 <Link to="/">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }} className={`flex flex-col items-center`}>
-                    <House ></House>
-                    <p className={`font-excon mt-1 text-xs font-bold  `}>
-                      Home
-                    </p>
+                  <motion.div whileHover={{ scale: 1.05 }} className={`flex flex-col items-center`}>
+                    <House />
+                    <p className={`font-excon mt-1 text-xs font-bold`}>Home</p>
                   </motion.div>
                 </Link>
-
                 <Link to="/tickerslist">
                   <div className='flex flex-col items-center'>
                     <Tv />
-                    <p className={`font-excon mt-1 text-xs font-bold  `}>
-                      Stocks
-                    </p>
+                    <p className={`font-excon mt-1 text-xs font-bold`}>Stocks</p>
                   </div>
                 </Link>
-
               </div>
 
               <div className="flex items-center gap-2">
-
                 <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction={"right"} modal={false}>
                   <DrawerTrigger asChild>
-                    {
-                      isOtherPage ? (
-                        <div className=' bg-black p-1 rounded-4xl  hover:bg-[#4335d6] object-contain'>
-
-                          <img src={logo2} alt="" className='w-11 h-11  object-contain ' />
-                        </div>
-                      ) : (
-                        <div className=' bg-white p-2 rounded-4xl  hover:bg-[#4335d6] object-contain'>
-                          <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
-                        </div>
-                      )
-                    }
-                    {/* <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' /> */}
-                    {/* <Button className="  uppercase bg-transparent text-black font-bold font-excon text-md">EE</Button> */}
+                    {isOtherPage ? (
+                      <div className='bg-black p-1 rounded-4xl hover:bg-[#4335d6] object-contain'>
+                        <img src={logo2} alt="" className='w-11 h-11 object-contain' />
+                      </div>
+                    ) : (
+                      <div className='bg-white p-2 rounded-4xl hover:bg-[#4335d6] object-contain'>
+                        <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
+                      </div>
+                    )}
                   </DrawerTrigger>
                   <DrawerContent>
                     <DrawerHeader className="sr-only">
                       <DrawerTitle>Navigation Menu</DrawerTitle>
                       <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
                     </DrawerHeader>
-
                     <div className='flex flex-col sm:flex-row px-3 sm:px-5 pt-3 sm:pt-10 relative gap-2 font-excon w-full'>
-
-                      <Field orientation="horizontal" className="w-full flex  gap-0" >
-                        <Input type="search" placeholder="Search..."
+                      <Field orientation="horizontal" className="w-full flex gap-0">
+                        <Input
+                          type="search"
+                          placeholder="Search..."
                           value={searchWord}
                           onChange={handleSearchChange}
                           onKeyDown={handleKeyDown}
                           onFocus={() => setShowSuggestions(true)}
                           className={`bg-black/5 rounded-l-lg text-xs`}
                         />
-
                         <Button
-                          onClick={() => {
-                            selectTicker(searchWord);
-                            setDrawerOpen(false);
-                          }}
+                          onClick={() => { selectTicker(searchWord); setDrawerOpen(false); }}
                           className="hover:text-black hover:bg-white rounded-r-lg text-xs"
                         >
                           Search
                         </Button>
                       </Field>
-
                       {showSuggestions && suggestions.length > 0 && (
                         <div
                           ref={dropdownRef}
@@ -327,13 +330,9 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                           {suggestions.map((item, index) => (
                             <div
                               key={item.symbol}
-                              onClick={() => {
-                                selectTicker(item.symbol);
-                                setDrawerOpen(false);
-                              }}
+                              onClick={() => { selectTicker(item.symbol); setDrawerOpen(false); }}
                               onMouseEnter={() => setSelectedIndex(index)}
-                              className={`px-3 sm:px-4 py-2 sm:py-3 cursor-pointer flex justify-between items-center text-xs ${selectedIndex === index ? "bg-gray-100" : ""
-                                }`}
+                              className={`px-3 sm:px-4 py-2 sm:py-3 cursor-pointer flex justify-between items-center text-xs ${selectedIndex === index ? "bg-gray-100" : ""}`}
                             >
                               <div className="flex flex-col min-w-0">
                                 <span className="font-bold text-xs text-black truncate">{item.symbol}</span>
@@ -343,9 +342,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                           ))}
                         </div>
                       )}
-
                     </div>
-
                     <div className="flex flex-col gap-2 px-3 sm:px-4 py-2 sm:py-2 pt-3 sm:pt-5">
                       {(() => {
                         const list = [...menuItems];
@@ -361,7 +358,7 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                           <>
                             {list.map((item) => (
                               <Link key={item.label} to={item.link} onClick={() => setDrawerOpen(false)}>
-                                <p className="w-full font-excon uppercase font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl active:text-[#4335d6] hover:text-[#4335d6] active:underline  underline ">{item.label}</p>
+                                <p className="w-full font-excon uppercase font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl active:text-[#4335d6] hover:text-[#4335d6] underline">{item.label}</p>
                               </Link>
                             ))}
                             {isAuthed && (
@@ -373,36 +370,29 @@ ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-bla
                         );
                       })()}
                     </div>
-
-
                   </DrawerContent>
                 </Drawer>
               </div>
 
               <div className='flex gap-10 px-2'>
-
-
                 <Link to="/contact">
-                  <div className='flex flex-col items-center '>
+                  <div className='flex flex-col items-center'>
                     <MailQuestionMark />
-                    <p className={`font-excon mt-1 text-xs font-bold  `}>
-                      Contact
-                    </p>
+                    <p className={`font-excon mt-1 text-xs font-bold`}>Contact</p>
                   </div>
                 </Link>
-                {isAuthed ? <UserMenu className="shrink-0" username={user?.username} /> : (
+                {isAuthed ? (
+                  <UserMenu className="shrink-0" username={user?.username} />
+                ) : (
                   <Link to="/signin">
                     <div className='flex flex-col items-center'>
                       <LogIn />
-                      <p className={`font-excon mt-1 text-xs font-bold  text-center`}>
-                        Signin
-                      </p>
+                      <p className={`font-excon mt-1 text-xs font-bold text-center`}>Signin</p>
                     </div>
-                  </Link>)}
+                  </Link>
+                )}
               </div>
-
             </nav>
-
           </motion.div>
         </>
       )}
