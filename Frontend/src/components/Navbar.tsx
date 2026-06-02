@@ -155,42 +155,63 @@ function Navbar() {
         !isMobile &&
         <>
           <motion.div
-            className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${
-              scrolled || isOtherPage
-                ? 'bg-white shadow-md'
-                : 'bg-transparent'
-            }`}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeInOut' }}
+            className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${scrolled || isOtherPage
+              ? 'bg-white shadow-md'
+              : 'bg-transparent'
+              }`}
+
           >
             <nav className="w-full flex px-10 py-4 justify-between items-center">
-              <div>
+              <motion.div className='flex gap-2 items-center h-fit '
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, ease: 'easeInOut' }}
+
+              >
+                <div className='h-full w-8 object-contain'>
+                  <img src={logo2} alt="" className='' />
+                </div>
                 <Link to="/">
                   <p className="font-excon text-xl font-bold text-black">EquityExplorer</p>
                 </Link>
-              </div>
+              </motion.div>
 
               <div className="flex items-center gap-3 px-5 font-bold">
                 <Link to="/contact">
-                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, ease: 'easeInOut' }}
+                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Contact
-                  </Button>
+                  </motion.button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.7, ease: 'easeInOut' }}
+                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Screener
-                  </Button>
+                  </motion.button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.9, ease: 'easeInOut' }}
+                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     About
-                  </Button>
+                  </motion.button>
                 </Link>
                 <Link to="/tickerslist">
-                  <Button className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.1, ease: 'easeInOut' }}
+                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Methodology
-                  </Button>
+                  </motion.button>
                 </Link>
               </div>
 
@@ -223,9 +244,8 @@ function Navbar() {
                         key={item.symbol}
                         onClick={() => selectTicker(item.symbol)}
                         onMouseEnter={() => setSelectedIndex(index)}
-                        className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${
-                          selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
-                        }`}
+                        className={`px-4 py-3 cursor-pointer flex justify-between items-center transition-colors ${selectedIndex === index ? "bg-gray-100 text-black" : "text-gray-700"
+                          }`}
                       >
                         <div className="flex flex-col">
                           <span className="font-bold text-sm">{item.symbol}</span>
@@ -241,16 +261,27 @@ function Navbar() {
                   <UserMenu username={user?.username} className="ml-5" />
                 ) : (
                   <>
-                    <Link to="/signin">
-                      <Button className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
-                        Sign-in
-                      </Button>
-                    </Link>
-                    <Link to="/register">
-                      <Button className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
-                        Register
-                      </Button>
-                    </Link>
+                    <div className='flex gap-2 mx-2'>
+
+                      <Link to="/signin">
+                        <motion.button
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 1.3, ease: 'easeInOut' }}
+                          className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
+                          Sign-in
+                        </motion.button>
+                      </Link>
+                      <Link to="/register">
+                        <motion.button
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 1.5, ease: 'easeInOut' }}
+                          className="font-outfit font-medium rounded-xl text-black text-lg border-none bg-transparent hover:bg-black/5">
+                          Register
+                        </motion.button>
+                      </Link>
+                    </div>
                   </>
                 )}
               </div>
