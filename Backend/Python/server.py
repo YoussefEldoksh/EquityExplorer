@@ -33,6 +33,7 @@ def set_user_context(conn, user_id):
     try:
         cur = conn.cursor()
         cur.execute("SELECT set_config('app.current_user_id', %s, false)", (user_id,))
+        
         cur.close()
     except Exception as e:
         print(f"Warning: Failed to set user context: {e}")

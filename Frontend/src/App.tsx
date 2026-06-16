@@ -15,6 +15,8 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import PrivacyPage from './pages/PrivacyPage'
 import DataDeletionPage from './pages/DataDeletionPage'
+import {AnimatePresence} from 'framer-motion'
+
 
 function App() {
 
@@ -23,8 +25,9 @@ function App() {
       <BrowserRouter >
         <Navbar />
         <Toaster position="bottom-right" richColors theme='system' className='font-mono' />
-
-        <Routes>
+        <AnimatePresence> 
+          
+        <Routes >
           <Route path="/" element={<HomePage />} />
           <Route path="/:stockTicker" element={<TickerPage />} />
           <Route path="/signin" element={<SignInPage />} />
@@ -37,6 +40,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/data-deletion" element={<DataDeletionPage />} />
         </Routes>
+           </AnimatePresence>
       </BrowserRouter>
       <SpeedInsights />
     </>

@@ -32,12 +32,17 @@ function Navbar() {
   ];
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolledDown, setScrolledDown] = useState(false);
   const navigate = useNavigate();
+  const lastY = useRef(0);
+
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+
+      const y = window.scrollY;
+      setScrolledDown(y > lastY.current || y > 50);
+      lastY.current = y;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -155,11 +160,12 @@ function Navbar() {
         !isMobile &&
         <>
           <motion.div
-            className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${scrolled || isOtherPage
-              ? 'bg-white shadow-md'
+            className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${scrolledDown
+              ? 'bg-white shadow-md '
               : 'bg-transparent'
               }`}
-
+            animate={{ y: scrolledDown  ? '-100%' : '0%' }}
+            transition={{ duration: 0.3 }}
           >
             <nav className="w-full flex px-10 py-4 justify-between items-center">
               <motion.div className='flex gap-2 items-center h-fit '
@@ -216,7 +222,7 @@ function Navbar() {
               </div>
 
               <div className="flex relative items-center">
-                <Field orientation="horizontal" className="w-120 flex gap-0">
+                <Field orientation="horizontal" className="w-120 flex gap-0 font-outfit">
                   <Input
                     type="search"
                     placeholder="Search Symbol or Company..."
@@ -224,11 +230,11 @@ function Navbar() {
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setShowSuggestions(true)}
-                    className="rounded-l-lg border-none placeholder-gray-400 font-excon text-xl text-black bg-black/5"
+                    className="rounded-l-lg border-none placeholder-gray-400  text-xl text-black bg-black/5"
                   />
                   <Button
                     onClick={() => selectTicker(searchWord)}
-                    className="hover:text-black hover:bg-white py-4 font-excon rounded-r-lg"
+                    className="hover:text-black hover:bg-white py-4  rounded-r-lg"
                   >
                     Search
                   </Button>

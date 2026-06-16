@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/jetbrains-mono";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -117,19 +118,6 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  html {
-    @apply font-mono;
-  }
-}
 
 
 @font-face {
@@ -142,9 +130,26 @@
   src: url(./assets/fonts/Outfit-Variable.ttf);
 }
 
+@font-face {
+  font-family: Outfit;
+  src: url(./assets/fonts/RedHatDisplay-Variable.ttf);
+}
+
+@font-face {
+  font-family: CabinetGrotesk;
+  src: url(./assets/fonts/CabinetGrotesk-Variable.ttf);
+}
+
+@font-face {
+  font-family: Archivo;
+  src: url(./assets/fonts/Archivo-Variable.ttf);
+}
 
 @theme {
   --font-excon: Excon, "sans-serif";
   --font-outfit: Outfit, "sans-serif";
+  --font-red-hat-display: RedHatDisplay, "sans-serif";
+  --font-cabinet-grotesk: CabinetGrotesk, "sans-serif";
+  --font-archivo: Archivo, "sans-serif";
 
 }
