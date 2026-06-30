@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { House, LogIn, MailQuestionMark, Tv } from 'lucide-react';
 import logo1 from '@/assets/logos/EE-black-logo.jpeg'
 import logo2 from '@/assets/logos/EE-logo-white.png'
-
+// import peeps from '@/assets/peeps.svg'
 import { motion } from 'framer-motion'
 import {
   Drawer,
@@ -36,17 +36,27 @@ function Navbar() {
   const navigate = useNavigate();
   const lastY = useRef(0);
 
+useEffect(() => {
+  const threshold = 10; // ignore jitter smaller than this
 
-  useEffect(() => {
-    const handleScroll = () => {
+  const handleScroll = () => {
+    const y = window.scrollY;
 
-      const y = window.scrollY;
-      setScrolledDown(y > lastY.current || y > 50);
+    if (y <= threshold) {
+      setScrolledDown(false);
       lastY.current = y;
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      return;
+    }
+
+    if (Math.abs(y - lastY.current) > threshold) {
+      setScrolledDown(y > lastY.current);
+      lastY.current = y;
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  return () => window.removeEventListener('scroll', handleScroll);
+}, []);
 
   const handleLogout = async () => {
     try {
@@ -164,7 +174,7 @@ function Navbar() {
               ? 'bg-white shadow-md '
               : 'bg-transparent'
               }`}
-            animate={{ y: scrolledDown  ? '-100%' : '0%' }}
+            animate={{ y: scrolledDown ? '-100%' : '0%' }}
             transition={{ duration: 0.3 }}
           >
             <nav className="w-full flex px-10 py-4 justify-between items-center">
@@ -299,14 +309,18 @@ function Navbar() {
       {/* Mobile navbar — unchanged */}
       {isMobile && (
         <>
-          <motion.div className={`fixed bottom-0 right-0 left-0 z-50 flex flex-col justify-between border-none`}
+          <motion.div className={`fixed bottom-2 right-0 left-0 z-50 flex flex-col justify-between border-none   ${scrolledDown ? 'bottom-5 ' : 'bottom-2'} transition-all duration-300 ease-in-out
+`}
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
           >
             <nav className={`
-              ${isOtherPage ? "bg-white/10 backdrop-blur-md border-slate-200 border" : "bg-black backdrop-blur-md"}
+              ${isOtherPage ? "bg-white/10 backdrop-blur-xs border-slate-200 border" : "bg-black/20 backdrop-blur-xs border-slate-400 border"}
               flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
+             rounded-full mx-4 transition-all duration-300 ease-in-out w-auto
+  ${scrolledDown ? 'scale-[0.8] translate-y-[15px]' : 'scale-[0.9]'}
+
             `}>
               <div className={`flex gap-10 px-2`}>
                 <Link to="/">
@@ -328,11 +342,11 @@ function Navbar() {
                   <DrawerTrigger asChild>
                     {isOtherPage ? (
                       <div className='bg-black p-1 rounded-4xl hover:bg-[#4335d6] object-contain'>
-                        <img src={logo2} alt="" className='w-11 h-11 object-contain' />
+                        <img src={logo2} alt="" className='w-8 h-8 object-contain' />
                       </div>
                     ) : (
                       <div className='bg-white p-2 rounded-4xl hover:bg-[#4335d6] object-contain'>
-                        <img src={logo1} alt="" className='w-8 h-8 object-contain mix-blend-multiply' />
+                        <img src={logo1} alt="" className='w-6 h-6 object-contain mix-blend-multiply' />
                       </div>
                     )}
                   </DrawerTrigger>
@@ -341,6 +355,7 @@ function Navbar() {
                       <DrawerTitle>Navigation Menu</DrawerTitle>
                       <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
                     </DrawerHeader>
+                    
                     <div className='flex flex-col sm:flex-row px-3 sm:px-5 pt-3 sm:pt-10 relative gap-2 font-excon w-full'>
                       <Field orientation="horizontal" className="w-full flex gap-0">
                         <Input
@@ -407,6 +422,11 @@ function Navbar() {
                         );
                       })()}
                     </div>
+{/* 
+                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 to-transparent flex justify-center items-center">
+                      <img src={peeps} alt="" />
+                    </div> */}
+                  
                   </DrawerContent>
                 </Drawer>
               </div>

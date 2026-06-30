@@ -5,6 +5,14 @@ import cania from '@/assets/companies/cania.svg'
 import white_castle from '@/assets/companies/69ea6ae1d2380db923fd56a9_white_and_case_transparent.png'
 import hubspot from '@/assets/companies/69c1b0dd6fc0c1a9e32587f4_hubspot.svg'
 import act from '@/assets/companies/act-customized.svg'
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/components/ui/avatar"
+
 
 const logos = [
   { src: clyde_and_co_black, alt: 'Clyde & Co', className: 'w-20' },
@@ -19,6 +27,29 @@ const logos = [
   },
 ]
 
+// Stagger container — controls timing between each child reveal
+const textContainer = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.25,
+      delayChildren: 0.3,
+    },
+  },
+}
+
+// Each text item starts blurred + faded + offset, then resolves into focus
+const textItem = {
+  hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    // use a readonly tuple so framer-motion accepts the cubic-bezier easing
+    transition: { duration: 0.8, ease: [0.42, 0, 0.58, 1] as const },
+  },
+}
+
 function HeroSection() {
   return (
     <>
@@ -31,53 +62,89 @@ function HeroSection() {
             transition={{ duration: 1.6, ease: 'easeOut', delay: 0.4 }}
             className='absolute inset-0 z-10 pointer-events-none'
             style={{
-              background: `radial-gradient(ellipse 120% 80% at 50% 100%, #6366f1 0%, #6366f1 20%, #fb923c 65%, transparent 80%)`,
+              background: `linear-gradient( #6366f1 0%, #6366f1 20%, #d6d7ff 65%,  transparent 90%)`,
             }}
           />
 
           {/* Hero content */}
-          <div className='absolute inset-0 z-40  flex flex-col items-center justify-center text-center px-4 sm:px-6 md:px-10 text-black'>
+          <motion.div
+            variants={textContainer}
+            initial='hidden'
+            animate='show'
+            className='absolute inset-0 z-40  flex flex-col items-center justify-center text-center px-4 sm:px-6 md:px-10 text-black'
+          >
+
             <motion.p
-              className='text-xs sm:text-sm font-outfit uppercase tracking-widest mb-2 sm:mb-4 font-light'
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: 'easeInOut', delay: 0.4 }}
+              variants={textItem}
+              className='text-xs sm:text-sm font-outfit uppercase tracking-widest mb-1 sm:mb-1 font-medium '
+            >
+              <div className='flex items-center justify-center gap-2'>
+                <div>
+                  <p className="text-[8px] font-bold">Trusted by 300+ retail <br /> investors world-wide</p>
+                </div>
+                <div>
+                  <AvatarGroup className="grayscale">
+                    <Avatar size='sm'>
+                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                    <Avatar size='sm'>
+                      <AvatarImage src="https://github.com/maxleiter.png" alt="@maxleiter" />
+                      <AvatarFallback>LR</AvatarFallback>
+                    </Avatar>
+                    <Avatar size='sm'>
+                      <AvatarImage
+                        src="https://github.com/evilrabbit.png"
+                        alt="@evilrabbit"
+                      />
+                      <AvatarFallback>ER</AvatarFallback>
+                    </Avatar>
+                    <AvatarGroupCount className='bg-black text-zinc-200 font-medium px-2 py-1'>
+                      +3
+                    </AvatarGroupCount>
+                  </AvatarGroup>
+                </div>
+
+
+
+              </div>
+
+            </motion.p>
+
+            <motion.p
+              variants={textItem}
+              className='text-xs sm:text-sm font-outfit uppercase tracking-widest mb-2 sm:mb-4 font-medium '
             >
               Real-time market intelligence
             </motion.p>
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: 'easeInOut', delay: 0.4 }}
-              className='font-outfit font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight'
+              variants={textItem}
+              className='font-outfit font-bold text-4xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight'
             >
               Explore the World's <br />
               <span className='italic font-medium'>Financial Markets</span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: 'easeInOut', delay: 0.4 }}
+              variants={textItem}
               className='text-xs sm:text-base md:text-lg max-w-xs sm:max-w-md md:max-w-xl mb-6 sm:mb-8 font-outfit '
             >
               Analyze stocks, track performance, and make informed decisions with powerful data at your fingertips.
             </motion.p>
 
-            <Link to="/tickerslist">
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.5, ease: 'easeInOut', delay: 1 }}
-                className='bg-black text-zinc-200 font-medium px-6 sm:px-8 sm:py-1 py-1 rounded-md hover:scale-125 active:scale-85 font-outfit transition duration-300 ease-in-out text-sm sm:text-base'
-              >
-                Start Learning
-              </motion.button>
-            </Link>
-          </div>
+            <motion.div variants={textItem}>
+              <Link to="/tickerslist">
+                <motion.button
+                  className='bg-black text-zinc-200 font-medium px-6 sm:px-8 sm:py-1 py-1 rounded-md hover:scale-125 active:scale-85 font-outfit transition duration-300 ease-in-out text-sm sm:text-base'
+                >
+                  Start Learning
+                </motion.button>
+              </Link>
+            </motion.div>
+          </motion.div>
 
           {/* Tagline */}
-          <motion.div className='absolute bottom-42 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-outfit'>
+          <motion.div className='absolute top-120 md:top-140 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-outfit'>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -90,7 +157,7 @@ function HeroSection() {
 
           {/* Infinite marquee */}
 
-          <div className=' absolute inset-x-0 bottom-24 md:bottom-20 h-24 z-10 overflow-hidden flex items-center justify-center'>
+          <div className=' absolute inset-x-0 top-120 md:top-140 md:bottom-20 h-24 z-10 overflow-hidden flex items-center justify-center'>
 
             {/* Infinite marquee */}
             <motion.div
