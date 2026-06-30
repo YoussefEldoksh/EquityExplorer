@@ -144,7 +144,7 @@ function HeroSection() {
           </motion.div>
 
           {/* Tagline */}
-          <motion.div className='absolute top-120 md:top-140 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-outfit'>
+          <motion.div className='absolute top-140 md:top-140 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-outfit'>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -157,7 +157,7 @@ function HeroSection() {
 
           {/* Infinite marquee */}
 
-          <div className=' absolute inset-x-0 top-120 md:top-140 md:bottom-20 h-24 z-10 overflow-hidden flex items-center justify-center'>
+          <div className=' absolute inset-x-0 top-140 md:top-140 md:bottom-20 h-24 z-10 overflow-hidden flex items-center justify-center'>
 
             {/* Infinite marquee */}
             <motion.div
