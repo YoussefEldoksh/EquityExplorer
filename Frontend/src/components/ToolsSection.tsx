@@ -34,7 +34,7 @@ function ToolsSection() {
 
           {/* Heading */}
           <motion.div
-            className='relative z-20 w-full flex flex-col text-center items-center justify-start pt-16 sm:pt-20 px-4 font-general-sans'
+            className='relative z-20 w-full flex flex-col text-center items-center justify-start  sm:pt-20 px-4 font-general-sans'
             initial='hidden'
             whileInView='visible'
             viewport={{ once: true, amount: 0.4 }}
@@ -56,8 +56,8 @@ function ToolsSection() {
             variants={blurReveal}
             transition={{ delay: 0.1 }}
           >
-            <div>
-              <p className='text-[14px] sm:text-[16px] md:text-[20px] text-zinc-600 leading-[1.4] sm:leading-[1.15] max-w-[90%] sm:max-w-none'>
+            <div className='w-full flex flex-col text-center items-center justify-start max-w-3xl'>
+              <p className='text-[14px] sm:text-[16px] md:text-[20px]  text-zinc-600 leading-[1.4] sm:leading-[1.15] max-w-[90%] sm:max-w-none'>
                 Screen, value, and track Egyptian equities with real fundamentals. From P/E and
                 <br className='hidden sm:block' />
                 DDM to risk and liquidity, Equity Explorer brings the whole picture together.

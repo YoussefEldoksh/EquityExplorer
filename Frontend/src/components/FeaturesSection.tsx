@@ -84,7 +84,7 @@ function FeaturesSection() {
             }}
             >
             <BadgeCheck className='text-white' fill='#898bff' />
-            <p className='font-red-hat-display font-bold text-[15px] capitalize font-normal leading-tight text-center text-[#898bff] '
+            <p className='font-general-sans  text-[15px] capitalize font-medium leading-tight text-center text-[#898bff] '
 
             >  Run on facts</p>
           </div>
