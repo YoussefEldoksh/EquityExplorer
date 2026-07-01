@@ -36,27 +36,27 @@ function Navbar() {
   const navigate = useNavigate();
   const lastY = useRef(0);
 
-useEffect(() => {
-  const threshold = 10; // ignore jitter smaller than this
+  useEffect(() => {
+    const threshold = 10; // ignore jitter smaller than this
 
-  const handleScroll = () => {
-    const y = window.scrollY;
+    const handleScroll = () => {
+      const y = window.scrollY;
 
-    if (y <= threshold) {
-      setScrolledDown(false);
-      lastY.current = y;
-      return;
-    }
+      if (y <= threshold) {
+        setScrolledDown(false);
+        lastY.current = y;
+        return;
+      }
 
-    if (Math.abs(y - lastY.current) > threshold) {
-      setScrolledDown(y > lastY.current);
-      lastY.current = y;
-    }
-  };
+      if (Math.abs(y - lastY.current) > threshold) {
+        setScrolledDown(y > lastY.current);
+        lastY.current = y;
+      }
+    };
 
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  return () => window.removeEventListener('scroll', handleScroll);
-}, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -173,7 +173,7 @@ useEffect(() => {
             className={`fixed top-0 right-0 left-0 z-50 flex flex-col justify-between transition-all duration-300 ${scrolledDown
               ? 'bg-white shadow-md '
               : 'bg-transparent'
-              }`}
+              } `}
             animate={{ y: scrolledDown ? '-100%' : '0%' }}
             transition={{ duration: 0.3 }}
           >
@@ -198,7 +198,7 @@ useEffect(() => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, ease: 'easeInOut' }}
-                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    className="font-archivo font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Contact
                   </motion.button>
                 </Link>
@@ -207,7 +207,7 @@ useEffect(() => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.7, ease: 'easeInOut' }}
-                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    className="font-archivo font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Screener
                   </motion.button>
                 </Link>
@@ -216,7 +216,7 @@ useEffect(() => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.9, ease: 'easeInOut' }}
-                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    className="font-archivo font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     About
                   </motion.button>
                 </Link>
@@ -225,7 +225,7 @@ useEffect(() => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.1, ease: 'easeInOut' }}
-                    className="font-outfit font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
+                    className="font-archivo font-medium rounded-xl text-lg bg-transparent border-none text-black hover:bg-black/5">
                     Methodology
                   </motion.button>
                 </Link>
@@ -240,7 +240,7 @@ useEffect(() => {
                     onChange={handleSearchChange}
                     onKeyDown={handleKeyDown}
                     onFocus={() => setShowSuggestions(true)}
-                    className="rounded-l-lg border-none placeholder-gray-400  text-xl text-black bg-black/5"
+                    className="rounded-l-lg border-none placeholder-gray-800  text-xl text-black bg-black/10 "
                   />
                   <Button
                     onClick={() => selectTicker(searchWord)}
@@ -317,9 +317,9 @@ useEffect(() => {
           >
             <nav className={`
               ${isOtherPage ? "bg-white/10 backdrop-blur-xs border-slate-200 border" : "bg-black/20 backdrop-blur-xs border-slate-400 border"}
-              flex px-5 py-4 items-center justify-between shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
-             rounded-full mx-4 transition-all duration-300 ease-in-out w-auto
-  ${scrolledDown ? 'scale-[0.8] translate-y-[15px]' : 'scale-[0.9]'}
+              flex px-5 py-3 items-center justify-evenly shadow ${isOtherPage ? "text-black font-bold" : "text-white"}
+             rounded-full mx-4 transition-all duration-300 ease-in-out w-auto 
+  ${scrolledDown ? 'scale-[0.8] translate-y-[15px]' : 'scale-[0.9]'} 
 
             `}>
               <div className={`flex gap-10 px-2`}>
@@ -329,6 +329,11 @@ useEffect(() => {
                     <p className={`font-excon mt-1 text-xs font-bold`}>Home</p>
                   </motion.div>
                 </Link>
+
+              </div>
+
+              <div className={`flex gap-10 px-2`}>
+
                 <Link to="/tickerslist">
                   <div className='flex flex-col items-center'>
                     <Tv />
@@ -355,9 +360,9 @@ useEffect(() => {
                       <DrawerTitle>Navigation Menu</DrawerTitle>
                       <DrawerDescription>Browse stocks and manage your account</DrawerDescription>
                     </DrawerHeader>
-                    
+
                     <div className='flex flex-col sm:flex-row px-3 sm:px-5 pt-3 sm:pt-10 relative gap-2 font-excon w-full'>
-                      <Field orientation="horizontal" className="w-full flex gap-0">
+                      <Field orientation="horizontal" className="w-full flex  gap-0">
                         <Input
                           type="search"
                           placeholder="Search..."
@@ -422,15 +427,14 @@ useEffect(() => {
                         );
                       })()}
                     </div>
-{/* 
+                    {/* 
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white/90 to-transparent flex justify-center items-center">
                       <img src={peeps} alt="" />
                     </div> */}
-                  
+
                   </DrawerContent>
                 </Drawer>
               </div>
-
               <div className='flex gap-10 px-2'>
                 <Link to="/contact">
                   <div className='flex flex-col items-center'>
@@ -438,6 +442,10 @@ useEffect(() => {
                     <p className={`font-excon mt-1 text-xs font-bold`}>Contact</p>
                   </div>
                 </Link>
+
+              </div>
+              <div className='flex gap-10 px-2'>
+
                 {isAuthed ? (
                   <UserMenu className="shrink-0" username={user?.username} />
                 ) : (

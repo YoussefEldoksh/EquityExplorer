@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef } from 'react';
 import { useIsMobile } from '../hooks/use-mobile';
+import { BadgeCheck } from 'lucide-react';
 
 // Each word gets its own slice of the overall scroll progress.
 // As scrollYProgress moves through that slice, the word lightens up.
@@ -30,30 +31,30 @@ function FeaturesSection() {
   // scrollYProgress goes 0 -> 1 as the section travels through this scroll window
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 0.9', 'end 0.8'],
+    offset: ['start 0.9', 'end 0.95'],
   });
 
-const paragraphsMobile = [
-  'Equity Explorer is the',
-  'leading screening platform',
-  'for the Egyptian Exchange,',
-  'built for retail investors',
-  'who want institutional-grade',
-  'analysis without the noise.',
-  'We combine deep financial',
-  'data with Shariah screening.',
-];
+  const paragraphsMobile = [
+    'Equity Explorer is the',
+    'leading screening platform',
+    'for the Egyptian Exchange,',
+    'built for retail investors',
+    'who want institutional-grade',
+    'analysis without the noise.',
+    'We combine deep financial',
+    'data with Shariah screening.',
+  ];
 
-const paragraphsDesktop = [
-  'Equity Explorer works with investors,',
-  'analysts, and traders to transform',
-  'raw EGX market data into clear,',
-  'actionable insight. Through real-time',
-  'screening, fundamental analysis, and',
-  'Shariah compliance tools, we help',
-  'investors navigate the Egyptian market',
-  'with confidence.',
-];
+  const paragraphsDesktop = [
+    'Equity Explorer works with investors,',
+    'analysts, and traders to transform',
+    'raw EGX market data into clear,',
+    'actionable insight. Through real-time',
+    'screening, fundamental analysis, and',
+    'Shariah compliance tools, we help',
+    'investors navigate the Egyptian market',
+    'with confidence.',
+  ];
   const paragraphs = isMobile ? paragraphsMobile : paragraphsDesktop;
 
   // Flatten into lines-of-words so we can render line breaks but
@@ -75,6 +76,19 @@ const paragraphsDesktop = [
           background: `linear-gradient(360deg, #898bff 0%, #a2a4ff 20%, #d6d7ff 65%,  transparent 90%)`,
         }}
       >
+
+        <div className='w-full mb-5 flex flex-col text-center items-center justify-start'>
+          <div className='px-4 py-1 rounded-full flex w-fit gap-2 text-center items-center justify-start bg-white/50 backdrop-blur-xs border-slate-300 border'
+            style={{
+              background: `linear-gradient(45deg, #c4c5fc 0%, #ffffff 20%, #d6d7ff 65%,  transparent 90%)`,
+            }}
+            >
+            <BadgeCheck className='text-white' fill='#898bff' />
+            <p className='font-red-hat-display font-bold text-[15px] capitalize font-normal leading-tight text-center text-[#898bff] '
+
+            >  Run on facts</p>
+          </div>
+        </div>
         <div className='h-full flex flex-col text-center h-full items-center justify-start'>
           {lines.map((words, lineIdx) => (
             <p

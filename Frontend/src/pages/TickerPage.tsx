@@ -169,7 +169,7 @@ function TickerPage() {
 
       <div className="grid grid-cols-4 gap-5 ">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+          <div key={i} className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
             <div className="bg-white rounded-lg p-3 space-y-2">
               <Skeleton className="h-4 w-24 bg-zinc-300 rounded-lg" />
               <Skeleton className="h-5 w-16 bg-zinc-300 rounded-lg" />
@@ -181,7 +181,7 @@ function TickerPage() {
 
       {/* Chart + stats panel */}
       <div className="grid grid-cols-3  gap-2 ">
-        <Skeleton className="col-span-2 bg-zinc-200 px-2 pt-2 pb-9 rounded-lg bg-zinc-300 rounded-lg">
+        <Skeleton className="col-span-2 bg-zinc-300 px-2 pt-2 pb-9 rounded-lg bg-zinc-300 rounded-lg">
           <div className='flex flex-col'>
 
             <div className="bg-white rounded-lg p-3">
@@ -211,7 +211,7 @@ function TickerPage() {
           <div className=" bg-white rounded-lg p-3">
             <div className="grid grid-cols-3 gap-3">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="bg-zinc-200 rounded-lg p-2 space-y-1">
+                <div key={i} className="bg-zinc-300 rounded-lg p-2 space-y-1">
                   <Skeleton className="h-5 w-14 bg-zinc-300 rounded-lg" />
                   <Skeleton className="h-5 w-10 bg-zinc-300 rounded-lg" />
                 </div>
@@ -385,7 +385,7 @@ function TickerPage() {
 
       <div className="grid grid-cols-2 gap-5 ">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+          <div key={i} className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
             <div className="bg-white rounded-lg p-3 space-y-2">
               <Skeleton className="h-4 w-24 bg-zinc-300 rounded-lg" />
               <Skeleton className="h-5 w-16 bg-zinc-300 rounded-lg" />
@@ -397,7 +397,7 @@ function TickerPage() {
 
       {/* Chart + stats panel */}
       <div className="grid grid-cols-1  gap-2 ">
-        <Skeleton className="col-span-2 bg-zinc-200 px-2 pt-2 pb-9 rounded-lg bg-zinc-300 rounded-lg">
+        <Skeleton className="col-span-2 bg-zinc-300 px-2 pt-2 pb-9 rounded-lg bg-zinc-300 rounded-lg">
           <div className='flex flex-col'>
 
             <div className="bg-white rounded-lg p-3">
@@ -427,7 +427,7 @@ function TickerPage() {
           <div className=" bg-white rounded-lg p-3">
             <div className="grid grid-cols-3 gap-3">
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="bg-zinc-200 rounded-lg p-2 space-y-1">
+                <div key={i} className="bg-zinc-300 rounded-lg p-2 space-y-1">
                   <Skeleton className="h-5 w-14 bg-zinc-300 rounded-lg" />
                   <Skeleton className="h-5 w-10 bg-zinc-300 rounded-lg" />
                 </div>
@@ -590,7 +590,8 @@ function TickerPage() {
       {!isMobile && (
         loading ? pageSkeleton : (
           <>
-            <div className=" px-3 sm:px-5 md:px-8 lg:px-15 mt-20 sm:mt-25 md:mt-30">
+            <div className=" px-3 sm:px-5 md:px-8 lg:px-15 mt-20 sm:mt-25 md:mt-30"
+            >
               <p className="font-excon text-xs sm:text-sm md:text-base">
                 {stockData.fullExchangeName} • {stockData.exchange} • {' '}
                 {stockData.currency}
@@ -603,7 +604,7 @@ function TickerPage() {
                 </p>
                 <>
                   {isInWatchlist &&
-                    <div className='p-2 bg-black text-white rounded-lg cursor-pointer' onClick={handleClick}>
+                    <div className='p-2  text-white rounded-lg cursor-pointer' onClick={handleClick}>
                       <Eye size={20} />
                     </div>
                   }
@@ -636,7 +637,7 @@ function TickerPage() {
                 </p>
 
               </div>
-              <div className="flex gap-3 items-center flex-wrap">
+              <div className="flex gap-3 items-center flex-wrap ">
                 <p
                   className={`font-bold text-lg sm:text-xl ${isPositive ? 'text-green-700' : 'text-red-700'}  `}
                 >
@@ -652,7 +653,7 @@ function TickerPage() {
             </div>
 
             <div className=" px-3 sm:px-5 md:px-8 lg:px-10 gap-3 sm:gap-5 grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
                 <div className="bg-white rounded-lg p-3 flex ">
                   <div className="w-full">
                     <div className="flex justify-between items-center  ">
@@ -669,7 +670,7 @@ function TickerPage() {
                   </div>
                 </div>
               </div>
-              <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
                 <div className="bg-white rounded-lg p-3 flex">
                   <div className="w-full">
                     <div className="flex justify-between items-center">
@@ -691,7 +692,7 @@ function TickerPage() {
                   <div></div>
                 </div>
               </div>
-              <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
                 <div className="bg-white rounded-lg p-3 flex">
                   <div className="w-full">
                     <div className="flex justify-between items-center">
@@ -711,7 +712,7 @@ function TickerPage() {
                   <div></div>
                 </div>
               </div>
-              <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+              <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
                 <div className="bg-white rounded-lg p-3 flex">
                   <div className="w-full">
                     <div className="flex justify-between items-center">
@@ -731,7 +732,7 @@ function TickerPage() {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 mx-2 sm:mx-4 md:mx-6 lg:mx-9 gap-2 sm:gap-3 md:gap-2">
-              <div className="bg-zinc-200 col-span-2  px-2 pt-2 pb-9 rounded-lg mt-5  ">
+              <div className="bg-zinc-300 col-span-2  px-2 pt-2 pb-9 rounded-lg mt-5  ">
                 <div className="bg-white rounded-lg p-3 flex">
                   <Chart timeseries={timeseries}></Chart>
                 </div>
@@ -788,10 +789,10 @@ function TickerPage() {
                   </Button>
                 </div>
               </div>
-              <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg mt-5 ">
+              <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg mt-5 ">
                 <div className="bg-white rounded-lg p-3 flex">
                   <div className="grid grid-cols-3 gap-3 text-sm">
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Market Cap</p>
                         <div className="justify-self-end">
@@ -802,7 +803,7 @@ function TickerPage() {
                         ${(stockData.marketCap / 1e9).toFixed(2)}B
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Volume</p>
                         <div className="justify-self-end">
@@ -815,7 +816,7 @@ function TickerPage() {
                           : 'N/A'}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">52W High</p>
                         <div className="justify-self-end">
@@ -827,7 +828,7 @@ function TickerPage() {
                         ${stockData.fiftyTwoWeekHigh?.toFixed(2)}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">52W Low</p>
                         <div className="justify-self-end">
@@ -839,7 +840,7 @@ function TickerPage() {
                         ${stockData.fiftyTwoWeekLow?.toFixed(2)}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">P/E Ratio</p>
                         <div className="justify-self-end">
@@ -851,7 +852,7 @@ function TickerPage() {
                         {stockData.trailingPE?.toFixed(2) ?? 'N/A'}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Dividend Yield</p>
                         <div className="justify-self-end">
@@ -865,7 +866,7 @@ function TickerPage() {
                           : 'N/A'}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500 uppercase">ebitda</p>
                         <div className="justify-self-end">
@@ -880,7 +881,7 @@ function TickerPage() {
                         B
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Outstanding Shares</p>
                         <div className="justify-self-end">
@@ -895,7 +896,7 @@ function TickerPage() {
                         B
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">EPS</p>
                         <div className="justify-self-end">
@@ -905,7 +906,7 @@ function TickerPage() {
 
                       <p className="font-semibold">x{stockData.trailingEps}</p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Float Shares</p>
                         <div className="justify-self-end">
@@ -920,7 +921,7 @@ function TickerPage() {
                         B
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Book Value</p>
                         <div className="justify-self-end">
@@ -932,7 +933,7 @@ function TickerPage() {
                         ${stockData.bookValue ? stockData.bookValue : 'N/A'}
                       </p>
                     </div>
-                    <div className="bg-zinc-200 rounded p-2">
+                    <div className="bg-zinc-300 rounded p-2">
                       <div className="flex justify-between items-center">
                         <p className="text-zinc-500">Industry</p>
                         <div className="justify-self-end">
@@ -983,7 +984,7 @@ function TickerPage() {
                             Valuation
                           </p>
                           <div className=" grid grid-cols-3 gap-2">
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Forward P/E</p>
                                 <div className="justify-self-end">
@@ -994,7 +995,7 @@ function TickerPage() {
                                 {stockData.forwardPE?.toFixed(2) ?? 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Price to Book</p>
                                 <div className="justify-self-end">
@@ -1005,7 +1006,7 @@ function TickerPage() {
                                 {stockData.priceToBook?.toFixed(2) ?? 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">EV/EBITDA</p>
                                 <div className="justify-self-end">
@@ -1024,7 +1025,7 @@ function TickerPage() {
                             Profitability
                           </p>
                           <div className=" grid grid-cols-3 gap-2">
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Profit Margin</p>
                                 <div className="justify-self-end">
@@ -1038,7 +1039,7 @@ function TickerPage() {
                                   : 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Return on Equity</p>
                                 <div className="justify-self-end">
@@ -1052,7 +1053,7 @@ function TickerPage() {
                                   : 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Gross Margin</p>
                                 <div className="justify-self-end">
@@ -1073,7 +1074,7 @@ function TickerPage() {
                             Risk
                           </p>
                           <div className=" grid grid-cols-3 gap-2">
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Beta</p>
                                 <div className="justify-self-end">
@@ -1084,7 +1085,7 @@ function TickerPage() {
                                 {stockData.beta?.toFixed(2) ?? 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Short Ratio</p>
                                 <div className="justify-self-end">
@@ -1095,7 +1096,7 @@ function TickerPage() {
                                 {stockData.shortRatio?.toFixed(2) ?? 'N/A'}
                               </p>
                             </div>
-                            <div className="bg-zinc-200 rounded p-2">
+                            <div className="bg-zinc-300 rounded p-2">
                               <div className="flex justify-between">
                                 <p className="text-zinc-500">Short % of Float</p>
                                 <div className="justify-self-end">
@@ -1189,7 +1190,7 @@ function TickerPage() {
           </div>
 
           <div className=" px-10 gap-5 grid  grid-cols-2">
-            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+            <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
               <div className="bg-white rounded-lg p-3 flex ">
                 <div className="w-full">
                   <div className="flex justify-between items-center  ">
@@ -1206,7 +1207,7 @@ function TickerPage() {
                 </div>
               </div>
             </div>
-            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+            <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
@@ -1228,7 +1229,7 @@ function TickerPage() {
                 <div></div>
               </div>
             </div>
-            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+            <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
               <div className="bg-white rounded-lg p-3 pb-7 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
@@ -1248,7 +1249,7 @@ function TickerPage() {
                 <div></div>
               </div>
             </div>
-            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg">
+            <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg">
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="w-full">
                   <div className="flex justify-between items-center">
@@ -1270,7 +1271,7 @@ function TickerPage() {
             </div>
           </div>
           <div className=" mx-9 gap-2">
-            <div className="bg-zinc-200  px-2 pt-2 pb-9 rounded-lg mt-5  ">
+            <div className="bg-zinc-300  px-2 pt-2 pb-9 rounded-lg mt-5  ">
               <div className="bg-white rounded-lg pt-3 pr-2 flex">
                 <Chart timeseries={timeseries}></Chart>
               </div>
@@ -1327,10 +1328,10 @@ function TickerPage() {
                 </Button>
               </div>
             </div>
-            <div className="bg-zinc-200 px-2 pt-2 pb-9 rounded-lg mt-5 ">
+            <div className="bg-zinc-300 px-2 pt-2 pb-9 rounded-lg mt-5 ">
               <div className="bg-white rounded-lg p-3 flex">
                 <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Market Cap</p>
                       <div className="justify-self-end">
@@ -1341,7 +1342,7 @@ function TickerPage() {
                       ${(stockData.marketCap / 1e9).toFixed(2)}B
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Volume</p>
                       <div className="justify-self-end">
@@ -1355,7 +1356,7 @@ function TickerPage() {
                         : 'N/A'}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">52W High</p>
                       <div className="justify-self-end">
@@ -1367,7 +1368,7 @@ function TickerPage() {
                       ${stockData.fiftyTwoWeekHigh?.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">52W Low</p>
                       <div className="justify-self-end">
@@ -1379,7 +1380,7 @@ function TickerPage() {
                       ${stockData.fiftyTwoWeekLow?.toFixed(2)}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">P/E Ratio</p>
                       <div className="justify-self-end">
@@ -1391,7 +1392,7 @@ function TickerPage() {
                       {stockData.trailingPE?.toFixed(2) ?? 'N/A'}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Dividend Yield</p>
                       <div className="justify-self-end">
@@ -1405,7 +1406,7 @@ function TickerPage() {
                         : 'N/A'}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500 uppercase">ebitda</p>
                       <div className="justify-self-end">
@@ -1420,7 +1421,7 @@ function TickerPage() {
                       B
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Outstanding Shares</p>
                       <div className="justify-self-end">
@@ -1435,7 +1436,7 @@ function TickerPage() {
                       B
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">EPS</p>
                       <div className="justify-self-end">
@@ -1445,7 +1446,7 @@ function TickerPage() {
 
                     <p className="font-semibold">x{stockData.trailingEps}</p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Float Shares</p>
                       <div className="justify-self-end">
@@ -1460,7 +1461,7 @@ function TickerPage() {
                       B
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Book Value</p>
                       <div className="justify-self-end">
@@ -1472,7 +1473,7 @@ function TickerPage() {
                       ${stockData.bookValue ? stockData.bookValue : 'N/A'}
                     </p>
                   </div>
-                  <div className="bg-zinc-200 rounded p-2">
+                  <div className="bg-zinc-300 rounded p-2">
                     <div className="flex justify-between items-center">
                       <p className="text-zinc-500">Industry</p>
                       <div className="justify-self-end">
@@ -1521,7 +1522,7 @@ function TickerPage() {
                           Valuation
                         </p>
                         <div className=" grid grid-cols-3 gap-2">
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Forward P/E</p>
                               <div className="justify-self-end">
@@ -1532,7 +1533,7 @@ function TickerPage() {
                               {stockData.forwardPE?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Price to Book</p>
                               <div className="justify-self-end">
@@ -1543,7 +1544,7 @@ function TickerPage() {
                               {stockData.priceToBook?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">EV/EBITDA</p>
                               <div className="justify-self-end">
@@ -1562,7 +1563,7 @@ function TickerPage() {
                           Profitability
                         </p>
                         <div className=" grid grid-cols-3 gap-2">
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Profit Margin</p>
                               <div className="justify-self-end">
@@ -1576,7 +1577,7 @@ function TickerPage() {
                                 : 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Return on Equity</p>
                               <div className="justify-self-end">
@@ -1590,7 +1591,7 @@ function TickerPage() {
                                 : 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Gross Margin</p>
                               <div className="justify-self-end">
@@ -1611,7 +1612,7 @@ function TickerPage() {
                           Risk
                         </p>
                         <div className=" grid grid-cols-3 gap-2">
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Beta</p>
                               <div className="justify-self-end">
@@ -1622,7 +1623,7 @@ function TickerPage() {
                               {stockData.beta?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Short Ratio</p>
                               <div className="justify-self-end">
@@ -1633,7 +1634,7 @@ function TickerPage() {
                               {stockData.shortRatio?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Short % of Float</p>
                               <div className="justify-self-end">
@@ -1655,7 +1656,7 @@ function TickerPage() {
                           Liquidity Ratios
                         </p>
                         <div className=" grid grid-cols-3 gap-2">
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Current Ratio</p>
                               <div className="justify-self-end">
@@ -1666,7 +1667,7 @@ function TickerPage() {
                               {stockData.currentRatio?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Quick Ratio</p>
                               <div className="justify-self-end">
@@ -1677,7 +1678,7 @@ function TickerPage() {
                               {stockData.quickRatio?.toFixed(2) ?? 'N/A'}
                             </p>
                           </div>
-                          <div className="bg-zinc-200 rounded p-2">
+                          <div className="bg-zinc-300 rounded p-2">
                             <div className="flex justify-between">
                               <p className="text-zinc-500">Free Cash flow</p>
                               <div className="justify-self-end">

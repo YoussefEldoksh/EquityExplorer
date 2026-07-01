@@ -145,10 +145,16 @@
   src: url(./assets/fonts/Archivo-Variable.ttf);
 }
 
+@font-face {
+  font-family: GeneralSans;
+  src: url(./assets/fonts/GeneralSans-Variable.ttf);
+}
+
 @theme {
   --font-excon: Excon, "sans-serif";
   --font-outfit: Outfit, "sans-serif";
   --font-red-hat-display: RedHatDisplay, "sans-serif";
   --font-cabinet-grotesk: CabinetGrotesk, "sans-serif";
   --font-archivo: Archivo, "sans-serif";
+  --font-general-sans: GeneralSans, "sans-serif";
 }
