@@ -12,7 +12,7 @@ import {
   AvatarGroupCount,
   AvatarImage,
 } from "@/components/ui/avatar"
-
+import youngGuy from '@/assets/young-guy-invites-you-come-inside.jpg'
 
 const logos = [
   { src: clyde_and_co_black, alt: 'Clyde & Co', className: 'w-20' },
@@ -94,7 +94,7 @@ function HeroSection() {
                     </Avatar>
                     <Avatar size='sm'>
                       <AvatarImage
-                        src="https://github.com/evilrabbit.png"
+                        src={youngGuy}
                         alt="@evilrabbit"
                       />
                       <AvatarFallback>ER</AvatarFallback>

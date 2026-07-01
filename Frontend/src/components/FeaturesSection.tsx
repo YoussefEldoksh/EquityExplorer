@@ -30,18 +30,18 @@ function FeaturesSection() {
   // scrollYProgress goes 0 -> 1 as the section travels through this scroll window
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 0.85', 'end 0.4'],
+    offset: ['start 0.9', 'end 0.8'],
   });
 
 const paragraphsMobile = [
-  '"Equity Explorer is the',
+  'Equity Explorer is the',
   'leading screening platform',
   'for the Egyptian Exchange,',
   'built for retail investors',
   'who want institutional-grade',
   'analysis without the noise.',
   'We combine deep financial',
-  'data with Shariah screening."',
+  'data with Shariah screening.',
 ];
 
 const paragraphsDesktop = [
@@ -81,8 +81,8 @@ const paragraphsDesktop = [
               key={lineIdx}
               className={
                 isMobile
-                  ? 'font-cabinet-grotesk text-[30px] capitalize  font-normal leading-tight text-justify'
-                  : 'font-cabinet-groteskarchio text-[50px] capitalize font-normal leading-tight '
+                  ? 'font-cabinet-grotesk text-[30px] capitalize  font-normal leading-tight text-justify text-center'
+                  : 'font-cabinet-groteskarchio text-[50px] capitalize font-normal leading-tight text-center'
               }
             >
               {words.map((word, wIdx) => {
