@@ -7,8 +7,9 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import dollarImg from '../assets/Dollar.jpg';
+// import dollarImg from '../assets/Dollar.jpg';
 import { useState, type ChangeEvent } from 'react';
+import Iridescence from './Iridescence';
 
 export function ContactForm({
   className,
@@ -38,14 +39,14 @@ export function ContactForm({
 
   return (
     <>
-    <div className={cn('w-5/6 flex flex-col gap-6', className)} {...props}>
+    <div className={cn('w-5/6 flex flex-col gap-6 font-general-sans', className)} {...props}>
       <Card className="rounded-lg overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Contact Us</h1>
-                <p className="text-balance text-muted-foreground">
+                <h1 className="text-2xl font-semibold ">Contact Us</h1>
+                <p className="text-balance text-muted-foreground ">
                   We'd love to hear from you. Please fill out this form.
                 </p>
               </div>
@@ -99,16 +100,23 @@ export function ContactForm({
                 />
               </Field>
               <Field>
-                <Button type="submit">Send Message</Button>
+                <Button type="submit" >Send Message</Button>
               </Field>
             </FieldGroup>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <img
-              src={dollarImg}
-              alt="Contact Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
+              <div className='absolute inset-0 w-full h-full'>
+                <Iridescence
+                  color={[0.5137254901960784, 0.5215686274509804, 1]}
+                  mouseReact
+                  amplitude={0.1}
+                  speed={1}
+                />
+              </div>
+              <div className='relative z-10  h-full flex flex-col text-center items-center justify-center font-instrument-serif py-10'>
+                <p className='text-[60px] font-bold text-white leading-[1]'>We're here to provide all the help you need.</p>
+              </div>
+
           </div>
         </CardContent>
       </Card>

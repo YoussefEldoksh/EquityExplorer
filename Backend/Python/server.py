@@ -11,11 +11,14 @@ import psycopg2
 from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from typing import Optional
+# from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
+
+app = FastAPI()
 
 # DB Connection Helper
 def get_db_conn():
@@ -72,7 +75,7 @@ def get_stock_data(symbol: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/timeseries/{symbol}")
-def get_stock_timeseries(symbol: str, period: str = "1mo", interval: str = "1d"):
+def get_stock_timeseries(symbol: str, period: str = "1d", interval: str = "1m"):
     try:
         ticker = yf.Ticker(symbol.upper())
         hist = ticker.history(period=period, interval=interval)
@@ -424,3 +427,17 @@ def screener(type: str = "all"):
     if type == "active":
         return sorted(data, key=lambda x: x["vol"] or 0, reverse=True)[:25]
     return data
+
+
+@app.get("/api/shariaah-compliant/{symbol}")
+def check_shariaa_compliance(symbol:str):
+    try:
+        url = f"https://b2b-api.akinda.io/api/v1/compliance/{symbol}?apikey={os.getenv('AKINDA_API_KEY')}"
+        response = requests.get(url)
+        data = response.json()
+        return data
+           
+    except:
+        raise HTTPException(status_code=500, detail="Error checking Shariah compliance")
+    finally:
+        response.close()
