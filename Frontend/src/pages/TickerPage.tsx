@@ -618,39 +618,8 @@ function TickerPage() {
                 {stockData.currency}
               </p>
             </div>
-            <div className='w-full mb-5 flex  text-center items-start justify-start  px-10'>
-              <div className='flex items-center justify-start  px-4 py-1 font-general-sans font-medium'>
-                <p>{stockData.symbol}</p>
-              </div>
-              {
-                shariaa_compliant ?
 
-                  <div className='px-4 py-1 rounded-full flex w-fit gap-2 text-center items-center justify-start bg-white/50 backdrop-blur-xs border-green-300 border'
-                    style={{
-                      background: `linear-gradient(45deg, #b0ffc6 0%, #ffffff 60%, #b0ffc6 100%,  transparent 90%)`,
-                    }}
-                  >
-                    <BadgeCheck className='text-green-600' fill='#b9ffcd' />
-                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-green-600 '
-
-                    >  Shariaah-compliant </p>
-                  </div>
-
-                  :
-
-                  <div className='px-4 py-1 rounded-full flex w-fit gap-2 text-center items-center justify-start bg-white/50 backdrop-blur-xs border-red-300 border'
-                    style={{
-                      background: `linear-gradient(45deg, #fca4a4 0%, #ffffff 60%, #fdb9b9 100%,  transparent 90%)`,
-                    }}
-                  >
-                    <BadgeX className='text-[#ff3434] ' fill='#ff8989' />
-                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
-
-                    >  Not Shariaah-compliant </p>
-                  </div>
-              }
-            </div>
-            <div className=" px-3 sm:px-5 md:px-8 lg:px-15   gap-5 mb-5">
+            <div className=" px-3 sm:px-5 md:px-8 lg:px-15   gap-5 mb-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="font-general-sans font-bold text-xl sm:text-2xl md:text-3xl">
                   {stockData.longName}{' '}
@@ -703,6 +672,36 @@ function TickerPage() {
                   {priceChangePct}%
                 </p>
               </div>
+
+
+            </div>
+
+            <div className='w-full mb-5 flex  text-center items-start justify-start  px-5 '>
+              <div className='flex items-center justify-start  px-4  font-general-sans font-medium'>
+              </div>
+              {
+                shariaa_compliant ?
+
+                  <div className='px-2 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
+
+                  >
+                    <BadgeCheck className='text-green-600' fill='#b9ffcd' />
+                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-green-600 '
+
+                    >  Shariaah-compliant </p>
+                  </div>
+
+                  :
+
+                  <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+
+                  >
+                    <BadgeX className='text-[#ff3434] ' fill='#fac7c7' />
+                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+
+                    >  Not Shariaah-compliant </p>
+                  </div>
+              }
             </div>
 
             <div className=" px-3 sm:px-5 md:px-8 lg:px-10 gap-3 sm:gap-5 grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -1185,38 +1184,7 @@ function TickerPage() {
             </p>
           </div>
 
-          <div className='w-full mb-5 flex  text-center items-start justify-start  px-10'>
-            <div className='flex items-center justify-start  px-4 py-1 font-general-sans font-medium'>
-              <p>{stockData.symbol}</p>
-            </div>
-            {
-              shariaa_compliant ?
 
-                <div className='px-4 py-1 rounded-full flex w-fit gap-2 text-center items-center justify-start bg-white/50 backdrop-blur-xs border-green-300 border'
-                  style={{
-                    background: `linear-gradient(45deg, #b0ffc6 0%, #ffffff 60%, #b0ffc6 100%,  transparent 90%)`,
-                  }}
-                >
-                  <BadgeCheck className='text-green-600' fill='#b9ffcd' size={18}  />
-                  <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-green-600 '
-
-                  >  Shariaah-compliant </p>
-                </div>
-
-                :
-
-                <div className='px-4 py-1 rounded-full flex w-fit gap-2 text-center items-center justify-start bg-white/50 backdrop-blur-xs border-red-300 border'
-                  style={{
-                    background: `linear-gradient(45deg, #fca4a4 0%, #ffffff 60%, #fdb9b9 100%,  transparent 90%)`,
-                  }}
-                >
-                  <BadgeX className='text-[#ff3434] ' fill='#ff8989'  size={18} />
-                  <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
-
-                  >  Not Shariaah-compliant </p>
-                </div>
-            }
-          </div>
           <div className=" px-12   gap-5 mb-5">
             <p className="font-general-sans bold text-sm">
               {stockData.symbol}
@@ -1272,6 +1240,33 @@ function TickerPage() {
               >
                 {priceChangePct}%
               </p>
+            </div>
+            <div className='w-full mb-5 flex  text-center items-start justify-start mt-1'>
+              <div className='flex items-center justify-start  py-1 font-general-sans font-medium'>
+              </div>
+              {
+                shariaa_compliant ?
+
+                  <div className='px-4 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
+
+                  >
+                    <BadgeCheck className='text-green-600' fill='#b9ffcd' size={18} />
+                    <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-green-600 '
+
+                    >  Shariaah-compliant </p>
+                  </div>
+
+                  :
+
+                  <div className='px-4 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+
+                  >
+                    <BadgeX className='text-[#ff3434] ' fill='#ffcbcb' size={18} />
+                    <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+
+                    >  Not Shariaah-compliant </p>
+                  </div>
+              }
             </div>
           </div>
 
