@@ -1,218 +1,71 @@
-import { Card, CardHeader, CardTitle } from './ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import apple_logo from '../assets/logos/apple-logo.svg';
-import microsoft_logo from '../assets/logos/microsoft-logo.svg';
-import tesla_logo from '../assets/logos/tesla-logo.svg';
-import amazon_logo from '../assets/logos/amazon-logo.svg';
-import google_logo from '../assets/logos/google-logo.svg';
-import vanguard_logo from '../assets/logos/vanguard_logo.svg';
-import ishares_logo from '../assets/logos/ishares-logo.svg';
-import ark_invest_logo from '../assets/logos/ark-Invest-logo.svg';
-import spdr_logo from '../assets/logos/spdr-logo.svg';
-import fidelity_logo from '../assets/logos/fidelity-investment-logo.svg';
-import trowe_price_logo from '../assets/logos/trow-logo.svg';
-import capital_group_logo from '../assets/logos/capital_group_american_funds-logo.svg';
-import dodge_and_cox_logo from '../assets/logos/Dodge-and-cox-logo.png';
-import aberdeen_logo from '../assets/logos/aberdeen-logo.svg';
-import vaneck_logo from '../assets/logos/vaneck-logo.svg';
-import barrick_logo from '../assets/logos/barrick-logo.svg';
+// import logo2 from '@/assets/logos/EE-black-logo.jpeg'
+import { ChevronRight } from 'lucide-react';
+import Iridescence from './Iridescence';
+
 
 function InvestSuggestions() {
-  const companyStocks = [
-    {
-      name: 'Apple',
-      symbol: 'AAPL',
-      logo: apple_logo,
-    },
-    {
-      name: 'Microsoft',
-      symbol: 'MSFT',
-      logo: microsoft_logo,
-    },
-    {
-      name: 'Tesla',
-      symbol: 'TSLA',
-      logo: tesla_logo,
-    },
-    {
-      name: 'Amazon',
-      symbol: 'AMZN',
-      logo: amazon_logo,
-    },
-    {
-      name: 'Google',
-      symbol: 'GOOGL',
-      logo: google_logo,
-    },
-  ];
-
-  const equityFunds = [
-    {
-      name: 'Vanguard S&P 500 ETF',
-      symbol: 'VOO',
-      logo: vanguard_logo,
-    },
-    {
-      name: 'iShares Core S&P 500',
-      symbol: 'IVV',
-      logo: ishares_logo,
-    },
-    {
-      name: 'ARK Innovation ETF',
-      symbol: 'ARKK',
-      logo: ark_invest_logo,
-    },
-    {
-      name: 'SPDR S&P 500 ETF',
-      symbol: 'SPY',
-      logo: spdr_logo,
-    },
-    {
-      name: 'Fidelity Blue Chip',
-      symbol: 'FBGRX',
-      logo: fidelity_logo,
-    },
-  ];
-
-  const mutualFunds = [
-    {
-      name: 'Vanguard Total Market',
-      symbol: 'VTSAX',
-      logo: vanguard_logo,
-    },
-    {
-      name: 'Fidelity Contrafund',
-      symbol: 'FCNTX',
-      logo: fidelity_logo,
-    },
-    {
-      name: 'T. Rowe Price Growth',
-      symbol: 'PRGFX',
-      logo: trowe_price_logo,
-    },
-    {
-      name: 'American Growth Fund',
-      symbol: 'AGTHX',
-      logo: capital_group_logo,
-    },
-    {
-      name: 'Dodge & Cox',
-      symbol: 'DODGX',
-      logo: dodge_and_cox_logo,
-    },
-  ];
-
-  const goldAssets = [
-    {
-      name: 'SPDR Gold Shares',
-      symbol: 'GLD',
-      logo: spdr_logo,
-    },
-    {
-      name: 'iShares Gold Trust',
-      symbol: 'IAU',
-      logo: ishares_logo,
-    },
-    {
-      name: 'Aberdeen Gold',
-      symbol: 'SGOL',
-      logo: aberdeen_logo,
-    },
-    {
-      name: 'VanEck Gold Miners',
-      symbol: 'GDX',
-      logo: vaneck_logo,
-    },
-    {
-      name: 'Barrick Gold',
-      symbol: 'GOLD',
-      logo: barrick_logo,
-    },
-  ];
-  const renderGrid = (data: any[]) => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 mt-3 sm:mt-4">
-      {data.map((item: any, i: number) => (
-        <div key={i} className="bg-zinc-200 p-2 sm:p-3 flex items-center gap-2 sm:gap-3">
-          <img
-            src={item.logo}
-            alt={item.name}
-            className="w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-white p-1 flex-shrink-0"
-          />
-          <div className="min-w-0">
-            <p className="font-semibold text-xs sm:text-sm truncate">{item.name}</p>
-            <p className="text-xs text-zinc-500">{item.symbol}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
   return (
-    <div className="w-full my-3 sm:my-5 px-3 sm:px-5">
-      <div className="w-full py-4 sm:py-8 px-4 sm:px-8 mb-4 sm:mb-6">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-          What tools do financial markets provide ? 
-        </h2>
-      </div>
-      <div className="flex w-full justify-center my-3 sm:my-5 px-2 sm:px-5">
-        <Tabs defaultValue="company" className="w-full">
-          <TabsList className="w-full bg-zinc-300 p-1 rounded-none flex flex-wrap sm:flex-nowrap">
-            <TabsTrigger value="company" className="flex-1 rounded-none text-xs sm:text-sm">
-              Company Stocks
-            </TabsTrigger>
+    <>
+      <div className='bg-white'>
+        <div className='relative min-h-screen bg-white overflow-hidden '>
 
-            <TabsTrigger value="equity" className="flex-1 rounded-none text-xs sm:text-sm">
-              Equity Funds
-            </TabsTrigger>
-
-            <TabsTrigger value="mutual" className="flex-1 rounded-none text-xs sm:text-sm">
-              Mutual Funds
-            </TabsTrigger>
-
-            <TabsTrigger value="gold" className="flex-1 rounded-none text-xs sm:text-sm">
-              Gold
-            </TabsTrigger>
-          </TabsList>
+          {/* Gradient overlay */}
+          <div
+            className='absolute inset-0'
+            style={{
+              background: `linear-gradient(360deg, #898bff 0%, #a2a4ff 20%, #d6d7ff 65%, transparent 90%)`,
+              opacity: 0.85,
+            }}
+          />
 
           {/* Content */}
-          <TabsContent value="company">
-            <Card>
-              <CardHeader>
-                <CardTitle>Company Stocks</CardTitle>
-                {renderGrid(companyStocks)}
-              </CardHeader>
-            </Card>
-          </TabsContent>
+          <div className="relative z-10 w-full h-full flex flex-col items-center justify-center gap-4 sm:gap-6 px-4 sm:px-6 md:px-10 py-20">
+            <div className='relative px-10 py-5 rounded-xl flex w-fit gap-2 text-center items-center justify-start backdrop-blur-xs border-slate-300 border overflow-hidden'>
 
-          <TabsContent value="equity">
-            <Card>
-              <CardHeader>
-                <CardTitle>Equity Funds</CardTitle>
-                {renderGrid(equityFunds)}
-              </CardHeader>
-            </Card>
-          </TabsContent>
+              {/* Iridescence as the card's background */}
+              <div className='absolute inset-0 w-full h-full'>
+                <Iridescence
+                  color={[0.5137254901960784, 0.5215686274509804, 1]}
+                  mouseReact
+                  amplitude={0.1}
+                  speed={1}
+                />
+              </div>
 
-          <TabsContent value="mutual">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mutual Funds</CardTitle>
-                {renderGrid(mutualFunds)}
-              </CardHeader>
-            </Card>
-          </TabsContent>
+              {/* Card content, above Iridescence */}
+              <div className='relative z-10 h-full flex flex-col text-center items-center justify-start font-general-sans py-10'>
 
-          <TabsContent value="gold">
-            <Card>
-              <CardHeader>
-                <CardTitle>Gold</CardTitle>
-                {renderGrid(goldAssets)}
-              </CardHeader>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                <div className=' backdrop-blur-xs flex items-center justify-center'>
+                  <p className='font-bold text-xl sm:text-2xl md:text-3xl text-white font-excon'>
+                    EquityExplorer
+                  </p>
+                </div>
+
+                <p className='text-[32px] sm:text-[44px] md:text-[80px] font-semibold leading-[0.95]  font-instrument-serif text-white'>
+                  Stop running on guesswork.
+                </p>
+                <p className='text-[14px] sm:text-[16px] md:text-[20px] text-zinc-100 leading-[1.4] sm:leading-[1.15] max-w-[100%] sm:max-w-none mt-3'>
+                  Real valuation data on every listed stock, from P/E to EV/EBITDA. <br />
+                  No spreadsheets, no guesswork.
+                </p>
+
+
+
+                <button className="shadow-xl rounded-full mt-20 hover:scale-105 transition-transform duration-300 active:scale-95">
+                  <div className="flex items-center justify-center rounded-full p-1 sm:p-2 bg-[#898bff] backdrop-blur-xs mt-4 shadow-xl">
+                    <p className="text-[12px] flex items-center font-semibold sm:text-[12px] md:text-[15px] leading-[1.4] sm:leading-[1.15] max-w-[100%] sm:max-w-none text-white px-2">
+                      Join The Wave Today <ChevronRight />
+                    </p>
+                  </div>
+                </button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

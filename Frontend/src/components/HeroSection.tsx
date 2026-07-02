@@ -119,15 +119,15 @@ function HeroSection() {
             </motion.p>
             <motion.h1
               variants={textItem}
-              className='font-outfit font-bold text-4xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight'
+              className='font-general-sans font-bold text-4xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight'
             >
               Explore the World's <br />
-              <span className='italic font-medium'>Financial Markets</span>
+              <span className='font-bold font-instrument-serif '>Financial Markets</span>
             </motion.h1>
 
             <motion.p
               variants={textItem}
-              className='text-xs sm:text-base md:text-lg max-w-xs sm:max-w-md md:max-w-xl mb-6 sm:mb-8 font-outfit '
+              className='text-xs sm:text-base md:text-lg max-w-xs sm:max-w-md md:max-w-xl mb-6 sm:mb-8 font-general-sans '
             >
               Analyze stocks, track performance, and make informed decisions with powerful data at your fingertips.
             </motion.p>
@@ -135,7 +135,7 @@ function HeroSection() {
             <motion.div variants={textItem}>
               <Link to="/tickerslist">
                 <motion.button
-                  className='bg-black text-zinc-200 font-medium px-6 sm:px-8 sm:py-1 py-1 rounded-md hover:scale-125 active:scale-85 font-outfit transition duration-300 ease-in-out text-sm sm:text-base'
+                  className='bg-black text-zinc-200 font-medium px-6 sm:px-8 sm:py-1 py-1 rounded-md hover:scale-125 active:scale-85 font-general-sans transition duration-300 ease-in-out text-sm sm:text-base'
                 >
                   Start Learning
                 </motion.button>
@@ -144,7 +144,7 @@ function HeroSection() {
           </motion.div>
 
           {/* Tagline */}
-          <motion.div className='absolute top-140 md:top-140 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-outfit'>
+          <motion.div className='absolute top-140 md:top-140 md:bottom-38 z-20 w-full flex justify-center items-center gap-2 font-general-sans'>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

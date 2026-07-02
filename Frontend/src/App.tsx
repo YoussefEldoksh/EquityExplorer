@@ -16,10 +16,11 @@ import { SpeedInsights } from '@vercel/speed-insights/react';
 import PrivacyPage from './pages/PrivacyPage'
 import DataDeletionPage from './pages/DataDeletionPage'
 import {AnimatePresence} from 'framer-motion'
+import useSmoothScroll from './hooks/use-smoothscroll'
 
 
 function App() {
-
+useSmoothScroll()
   return (
     <>
       <BrowserRouter >

@@ -150,6 +150,11 @@
   src: url(./assets/fonts/GeneralSans-Variable.ttf);
 }
 
+@font-face {
+  font-family: InstrumentSerif;
+  src: url(./assets/fonts/InstrumentSerif-Regular.ttf);
+}
+
 @theme {
   --font-excon: Excon, "sans-serif";
   --font-outfit: Outfit, "sans-serif";
@@ -157,4 +162,6 @@
   --font-cabinet-grotesk: CabinetGrotesk, "sans-serif";
   --font-archivo: Archivo, "sans-serif";
   --font-general-sans: GeneralSans, "sans-serif";
+  --font-instrument-serif: InstrumentSerif, "serif";
+
 }

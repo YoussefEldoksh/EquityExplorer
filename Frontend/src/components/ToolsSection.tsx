@@ -132,7 +132,7 @@ function ToolsSection() {
                   charts and sentiment, all without leaving the screener.
                 </motion.p>
               </div>
-              <motion.div variants={blurReveal} className="flex items-center justify-center">
+              <motion.div variants={blurReveal} className="flex items-center justify-center border border-zinc-300 rounded-lg p-1 sm:p-2 bg-white/50 backdrop-blur-xs ">
                 <video
                   src={video}
                   className="w-full h-auto max-h-[550px] object-contain rounded-lg shadow-lg"
