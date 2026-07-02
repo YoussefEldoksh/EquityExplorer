@@ -12,7 +12,7 @@ import {
 import Chart from '../components/Chart';
 import {
   Card,
-  CardContent,
+  // CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
