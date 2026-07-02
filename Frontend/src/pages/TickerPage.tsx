@@ -592,19 +592,19 @@ function TickerPage() {
           <>
             <div className=" px-3 sm:px-5 md:px-8 lg:px-15 mt-20 sm:mt-25 md:mt-30"
             >
-              <p className="font-excon text-xs sm:text-sm md:text-base">
+              <p className="font-general-sans text-xs sm:text-sm md:text-base">
                 {stockData.fullExchangeName} • {stockData.exchange} • {' '}
                 {stockData.currency}
               </p>
             </div>
             <div className=" px-3 sm:px-5 md:px-8 lg:px-15   gap-5 mb-5">
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="font-excon font-bold text-xl sm:text-2xl md:text-3xl">
+                <p className="font-general-sans font-bold text-xl sm:text-2xl md:text-3xl">
                   {stockData.longName} ({stockData.symbol}){' '}
                 </p>
                 <>
                   {isInWatchlist &&
-                    <div className='p-2  text-white rounded-lg cursor-pointer' onClick={handleClick}>
+                    <div className='p-2   text-white rounded-lg cursor-pointer' onClick={handleClick}>
                       <Eye size={20} />
                     </div>
                   }
@@ -1126,18 +1126,18 @@ function TickerPage() {
       {isMobile && (loading ? pageSkeletonMobile : (
         <>
           <div className=" px-12 mt-25">
-            <p className="font-excon text-md">
+            <p className="font-general-sans text-md">
               {stockData.fullExchangeName} • {stockData.exchange} • {' '}
               {stockData.currency}
             </p>
           </div>
           <div className=" px-12   gap-5 mb-5">
-            <p className="font-excon bold text-sm">
+            <p className="font-general-sans bold text-sm">
               {stockData.symbol}
             </p>
             <div className="flex items-end gap-1">
 
-              <p className="font-excon font-bold text-3xl">
+              <p className="font-general-sans font-bold text-3xl">
                 {stockData.longName} ({stockData.symbol}) {' '}
               </p>
               <>
