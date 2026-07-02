@@ -384,6 +384,7 @@ function TickerPage() {
               </CardHeader>
             </Card>
           </TabsContent>
+
         </Tabs>
       </div>
       <Footer></Footer>
@@ -1031,7 +1032,7 @@ function TickerPage() {
                     <CardHeader>
                       <CardTitle>Analytics</CardTitle>
                       <CardDescription>
-                        <div className="mb-2">
+                        <div className="mb-2 font-general-sans">
                           <p className="font-bold  uppercase text-zinc-500 mb-2">
                             Valuation
                           </p>
@@ -1168,6 +1169,16 @@ function TickerPage() {
                       </CardDescription>
                     </CardHeader>
                   </Card>
+
+                </TabsContent>
+                <TabsContent value="reports">
+                  <div>
+                    <div className="flex justify-center items-center mb-2 font-general-sans">
+                      <p className="font-bold uppercase text-zinc-500 flex gap-2 text-[60px]">
+                        Upcoming Feature Stay Tuned.
+                      </p>
+                    </div>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
@@ -1781,19 +1792,15 @@ function TickerPage() {
                 </Card>
               </TabsContent>
               <TabsContent value="reports">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Reports</CardTitle>
-                    <CardDescription>
-                      Generate and download your detailed reports. Export data
-                      in multiple formats for analysis.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-sm text-muted-foreground">
-                    You have 5 reports ready and available to export.
-                  </CardContent>
-                </Card>
+                <div>
+                  <div className="flex justify-center items-center mb-2">
+                    <p className="font-bold uppercase text-zinc-500 text-center flex gap-2 text-[60px] leading-[1]">
+                      Upcoming Feature Stay Tuned.
+                    </p>
+                  </div>
+                </div>
               </TabsContent>
+
             </Tabs>
           </div>
           <Footer></Footer>

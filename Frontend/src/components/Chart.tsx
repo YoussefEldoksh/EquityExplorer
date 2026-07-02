@@ -36,10 +36,13 @@ export default function Chart({ timeseries }: Props) {
                 />
                 <YAxis
                     domain={["auto", "auto"]}
+                    width={0}
+
                     tick={{ fontSize: 11 }}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(v) => `$${v.toFixed(0)}`}
+                    
                 />
                 <Tooltip
                     formatter={(value: any) => [`$${Number(value).toFixed(2)}`, "Close"]}
