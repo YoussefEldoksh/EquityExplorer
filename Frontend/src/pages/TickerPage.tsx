@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
-import { TrendingUp, TrendingDown, EyeClosed, Eye, BadgeCheck, BadgeX } from 'lucide-react';
+import { TrendingUp, TrendingDown, EyeClosed, Eye, BadgeCheck, BadgeX, BadgeAlert } from 'lucide-react';
 import AlertModal from '../components/AlertModal';
 
 import {
@@ -45,7 +45,7 @@ function TickerPage() {
       : null;
   const isPositive = priceChange ? priceChange >= 0 : true;
 
-  const [shariaa_compliant, setShariaaCompliant] = useState(false);
+  const [shariaa_compliant, setShariaaCompliant] = useState("");
 
   const fetchStockTimeSeries = useCallback(async (period: string, interval: string) => {
     try {
@@ -68,12 +68,9 @@ function TickerPage() {
       const response = await fetch(`/api/shariaah-compliant/${stockTicker?.toUpperCase()}`);
       const data = await response.json();
 
-      if (data.halal_status == "HALAL") {
-        setShariaaCompliant(true);
-      }
-      else {
-        setShariaaCompliant(false);
-      }
+      setShariaaCompliant(data.halal_status);
+
+
 
     } catch (error) {
       console.error('Error fetching Shariah compliance data:', error);
@@ -681,27 +678,43 @@ function TickerPage() {
               <div className='flex items-center justify-start  px-4  font-general-sans font-medium'>
               </div>
               {
-                shariaa_compliant ?
+                shariaa_compliant === "HALAL" ?
 
-                  <div className='px-2 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
+                  (
+                    <div className='px-2 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
 
-                  >
-                    <BadgeCheck className='text-green-600' fill='#b9ffcd' />
-                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-green-600 '
+                    >
+                      <BadgeCheck className='text-green-600' fill='#b9ffcd' />
+                      <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-green-600 '
 
-                    >  Shariaah-compliant </p>
-                  </div>
-
+                      >  Shariaah-compliant </p>
+                    </div>
+                  )
                   :
 
-                  <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+                  (
 
-                  >
-                    <BadgeX className='text-[#ff3434] ' fill='#fac7c7' />
-                    <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+                    shariaa_compliant === "DOUBTFUL" ?
+                      <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-yellow-100'
 
-                    >  Not Shariaah-compliant </p>
-                  </div>
+                      >
+                        <BadgeAlert className='text-[#fe9634] ' fill='#fde2c9' />
+                        <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#fe9634] '
+
+                        >  Doubtful </p>
+                      </div>
+                      :
+
+                      <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+
+                      >
+                        <BadgeX className='text-[#ff3434] ' fill='#fac7c7' />
+                        <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+
+                        >  Not Shariaah-compliant </p>
+                      </div>
+
+                  )
               }
             </div>
 
@@ -1252,31 +1265,47 @@ function TickerPage() {
                 {priceChangePct}%
               </p>
             </div>
-            <div className='w-full mb-5 flex  text-center items-start justify-start mt-1'>
-              <div className='flex items-center justify-start  py-1 font-general-sans font-medium'>
+            <div className='w-full mb-5 flex  text-center items-start justify-start mt-2 '>
+              <div className='flex items-center justify-start   font-general-sans font-medium'>
               </div>
               {
-                shariaa_compliant ?
+                shariaa_compliant === "HALAL" ?
 
-                  <div className='px-4 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
+                  (
+                    <div className='px-2 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-green-300 border bg-green-100'
 
-                  >
-                    <BadgeCheck className='text-green-600' fill='#b9ffcd' size={18} />
-                    <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-green-600 '
+                    >
+                      <BadgeCheck className='text-green-600' fill='#b9ffcd' />
+                      <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-green-600 '
 
-                    >  Shariaah-compliant </p>
-                  </div>
-
+                      >  Shariaah-compliant </p>
+                    </div>
+                  )
                   :
 
-                  <div className='px-4 py-[1px]  rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+                  (
 
-                  >
-                    <BadgeX className='text-[#ff3434] ' fill='#ffcbcb' size={18} />
-                    <p className='font-general-sans  text-[12px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+                    shariaa_compliant === "DOUBTFUL" ?
+                      <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-yellow-100'
 
-                    >  Not Shariaah-compliant </p>
-                  </div>
+                      >
+                        <BadgeAlert className='text-[#fe9634] ' fill='#fde2c9' />
+                        <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#fe9634] '
+
+                        >  Doubtful </p>
+                      </div>
+                      :
+
+                      <div className='px-4 py-[1px] rounded-full flex w-fit gap-2 text-center items-center justify-start  backdrop-blur-xs border-red-300 border bg-red-100'
+
+                      >
+                        <BadgeX className='text-[#ff3434] ' fill='#fac7c7' />
+                        <p className='font-general-sans  text-[13px] capitalize font-semibold leading-tight text-center text-[#ff3434] '
+
+                        >  Not Shariaah-compliant </p>
+                      </div>
+
+                  )
               }
             </div>
           </div>
